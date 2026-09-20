@@ -788,6 +788,9 @@
     }
 
     const isLast = stateObj.index === questions.length - 1;
+    const nextLabel = !isLast
+      ? 'Volgende vraag →'
+      : (levelName === 'level3' ? 'Bekijk resultaat →' : 'Verder naar Level 3 →');
 
     document.getElementById('view-root').innerHTML = `
       <span class="level-kicker">${kicker}</span>
@@ -805,7 +808,7 @@
       <div class="actions-row">
         <button class="btn btn-primary" id="mcq-next" ${stateObj.answered ? '' : 'disabled'}
           onclick="${nextFn}()">
-          ${isLast ? 'Bekijk resultaat →' : 'Volgende vraag →'}
+          ${nextLabel}
         </button>
       </div>
     `;
