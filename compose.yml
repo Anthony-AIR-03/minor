@@ -1,0 +1,11 @@
+services:
+  minor:
+    build: .
+    container_name: minor
+    restart: unless-stopped
+    networks:
+      - npm
+
+networks:
+  npm:
+    external: true

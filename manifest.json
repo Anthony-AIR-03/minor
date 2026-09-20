@@ -1,0 +1,10 @@
+{
+  "items": [
+    {
+      "title": "Example game",
+      "description": "Placeholder entry — replace or delete once real work is added.",
+      "type": "game",
+      "path": "games/example-game/index.html"
+    }
+  ]
+}

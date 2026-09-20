@@ -1,0 +1,93 @@
+:root {
+  color-scheme: light dark;
+  --bg: #0f1115;
+  --card: #1a1d24;
+  --text: #e8e9ec;
+  --muted: #9aa0ab;
+  --accent: #6ea8fe;
+  --border: #2a2e37;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 2.5rem 1.25rem 4rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+header {
+  max-width: 900px;
+  margin: 0 auto 2.5rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+header p {
+  color: var(--muted);
+  margin: 0;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section h2 {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem 1.2rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
