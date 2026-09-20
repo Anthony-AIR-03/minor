@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Hunter — Level 1: Onthouden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFE7D2;
+    --paper-2:#E5DAC0;
+    --ink:#242F1F;
+    --forest:#33452C;
+    --forest-2:#425A38;
+    --moss:#6E8F58;
+    --moss-deep:#4C6B3E;
+    --amber:#C1832F;
+    --amber-deep:#93601F;
+    --rust:#A24B2E;
+    --cream:#FBF7EA;
+    --line: rgba(36,47,31,.28);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{ margin:0; padding:0; }
+
+  body{
+    background-color:var(--paper);
+    background-image:
+      repeating-linear-gradient(rgba(36,47,31,.05) 0 1px, transparent 1px 34px);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+    padding: 28px 18px 60px;
+  }
+
+  .stage{
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap: 24px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+  }
+
+  .masthead-text h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight: 600;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+    color: var(--forest);
+  }
+
+  .masthead-text p{
+    margin:0;
+    color: rgba(36,47,31,.72);
+    font-size: 0.98rem;
+    max-width: 46ch;
+  }
+
+  .stamp{
+    flex-shrink:0;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 2px dashed var(--rust);
+    color: var(--rust);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transform: rotate(-9deg);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+    padding: 6px;
+  }
+
+  .stamp span.b{ display:block; font-size:0.52rem; opacity:.75; }
+  .stamp span.v{ display:block; font-size:0.82rem; margin-top:2px; }
+
+  /* ---------- Trail / progress ---------- */
+  .trail{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .trail-step{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(36,47,31,.45);
+  }
+
+  .trail-dot{
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    background: var(--cream);
+    color: rgba(36,47,31,.5);
+  }
+
+  .trail-step.done .trail-dot{
+    background: var(--moss-deep);
+    border-color: var(--moss-deep);
+    color: var(--cream);
+  }
+
+  .trail-step.active .trail-dot{
+    background: var(--amber);
+    border-color: var(--amber-deep);
+    color: var(--cream);
+  }
+
+  .trail-step.active .trail-label{ color: var(--ink); font-weight:600; }
+
+  .trail-line{
+    width: 22px;
+    height: 1px;
+    background: repeating-linear-gradient(to right, var(--line) 0 4px, transparent 4px 8px);
+  }
+
+  /* ---------- Generic level shell ---------- */
+  .level-kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--amber-deep);
+    font-weight: 700;
+  }
+
+  .level-head h2{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin: 4px 0 8px;
+    color: var(--forest);
+  }
+
+  .level-instructions{
+    color: rgba(36,47,31,.75);
+    margin: 0 0 22px;
+    max-width: 58ch;
+  }
+
+  .card-plain{
+    background: var(--cream);
+    border: 1.5px solid var(--ink);
+    box-shadow: 5px 5px 0 rgba(36,47,31,.14);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  /* ---------- Intro screen ---------- */
+  .intro-goal{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--forest);
+    border-left: 3px solid var(--amber);
+    padding-left: 16px;
+    margin: 18px 0 22px;
+  }
+
+  .intro-list{
+    list-style:none;
+    margin: 0 0 26px;
+    padding:0;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .intro-list li{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.86rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 8px 10px;
+    color: var(--forest-2);
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family:'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    padding: 12px 22px;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    background: var(--cream);
+    color: var(--ink);
+    transition: transform .12s ease;
+  }
+
+  .btn:hover{ transform: translateY(-1px); }
+  .btn:active{ transform: translateY(0); }
+
+  .btn-primary{
+    background: var(--forest);
+    border-color: var(--forest);
+    color: var(--cream);
+    box-shadow: 4px 4px 0 rgba(36,47,31,.25);
+  }
+
+  .btn-primary:disabled{
+    opacity: .4;
+    cursor: not-allowed;
+    transform:none;
+  }
+
+  /* ---------- Level 1: matching ---------- */
+  .match-board{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .tag-chip, .meaning-card{
+    width:100%;
+    text-align:left;
+    font-family:'Inter', sans-serif;
+    background: var(--paper-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    padding: 13px 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 rgba(36,47,31,.15);
+    transition: transform .1s ease, box-shadow .1s ease;
+  }
+
+  .tag-chip{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--amber-deep);
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+
+  .tag-chip::before{
+    content:'';
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid var(--amber-deep);
+    background: var(--paper);
+    flex-shrink:0;
+  }
+
+  .tag-chip:nth-child(2n){ transform: rotate(-0.6deg); }
+  .tag-chip:nth-child(2n+1){ transform: rotate(0.5deg); }
+
+  .meaning-card{ color: var(--ink); font-size: 0.92rem; }
+  .meaning-card:nth-child(2n){ transform: rotate(0.5deg); }
+  .meaning-card:nth-child(2n+1){ transform: rotate(-0.5deg); }
+
+  .tag-chip:hover:not(.matched), .meaning-card:hover:not(.matched){
+    transform: translateY(-2px) rotate(0deg);
+    box-shadow: 4px 5px 0 rgba(36,47,31,.2);
+  }
+
+  .tag-chip.selected{
+    background: var(--amber);
+    color: var(--cream);
+    border-color: var(--amber-deep);
+    transform: rotate(0deg);
+  }
+  .tag-chip.selected::before{ background: var(--cream); }
+
+  .tag-chip.matched, .meaning-card.matched{
+    background: var(--moss);
+    color: var(--cream);
+    border-color: var(--moss-deep);
+    cursor: default;
+    opacity: .85;
+    transform: rotate(0deg);
+    box-shadow:none;
+  }
+  .tag-chip.matched::before{ display:none; }
+
+  @keyframes shake{
+    10%,90%{ transform: translateX(-2px) rotate(0deg); }
+    20%,80%{ transform: translateX(3px) rotate(0deg); }
+    30%,50%,70%{ transform: translateX(-5px) rotate(0deg); }
+    40%,60%{ transform: translateX(5px) rotate(0deg); }
+  }
+  .shake{ animation: shake .4s ease; }
+
+  .column-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(36,47,31,.5);
+    margin: 0 0 10px;
+    text-transform: lowercase;
+  }
+
+  /* ---------- Feedback ---------- */
+  .feedback{
+    min-height: 30px;
+    margin: 18px 0;
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-size: 0.92rem;
+    display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback.correct{ background:#E3ECD9; border:1.5px solid var(--moss-deep); color: var(--forest); }
+  .feedback.incorrect{ background:#F1E0D6; border:1.5px solid var(--rust); color: var(--rust); }
+  .feedback code{ background: rgba(0,0,0,.06); padding: 1px 5px; border-radius:3px; font-family:'JetBrains Mono', monospace; }
+
+  /* ---------- Level 2/3: MCQ ---------- */
+  .snippet{
+    background: var(--ink);
+    color: var(--cream);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    padding: 16px 18px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+    white-space: pre;
+    overflow-x:auto;
+  }
+
+  .prompt-card{
+    font-family:'Fraunces', serif;
+    font-size: 1.15rem;
+    color: var(--forest);
+    margin-bottom: 20px;
+  }
+
+  .q-progress{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(36,47,31,.5);
+    margin-bottom: 6px;
+  }
+
+  .option-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .option-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align:left;
+    background: var(--cream);
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    padding: 13px 14px;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  .option-btn:hover:not(:disabled){ background: var(--paper-2); }
+
+  .option-btn.correct{
+    background: var(--moss);
+    border-color: var(--moss-deep);
+    color: var(--cream);
+  }
+  .option-btn.wrong{
+    background: var(--rust);
+    border-color: #7C3620;
+    color: var(--cream);
+  }
+  .option-btn:disabled{ cursor: default; }
+
+  .actions-row{
+    display:flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+  }
+
+  /* ---------- Result screen ---------- */
+  .result-score{
+    font-family:'Fraunces', serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: var(--forest);
+    margin: 6px 0 2px;
+  }
+
+  .result-sub{ color: rgba(36,47,31,.7); margin-bottom: 22px; }
+
+  .stat-row{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .stat-box{
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px;
+    text-align:center;
+  }
+
+  .stat-box .num{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--forest);
+    display:block;
+  }
+  .stat-box .lbl{ font-size: 0.76rem; color: rgba(36,47,31,.6); }
+
+  .mastery-banner{
+    padding: 14px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .mastery-banner.pass{ background:#E3ECD9; border:1.5px solid var(--moss-deep); color: var(--forest); }
+  .mastery-banner.fail{ background:#F1E0D6; border:1.5px solid var(--rust); color: var(--rust); }
+
+  .badge-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 22px; }
+  .badge-pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: var(--amber);
+    color: var(--cream);
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--amber-deep);
+  }
+
+  .unlock-note{
+    font-size: 0.9rem;
+    color: rgba(36,47,31,.75);
+    margin-bottom: 22px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--forest);
+    background: var(--paper-2);
+  }
+
+  details.payload{
+    margin-top: 8px;
+    font-size: 0.82rem;
+  }
+  details.payload summary{
+    cursor:pointer;
+    font-family:'JetBrains Mono', monospace;
+    color: var(--forest-2);
+    margin-bottom: 8px;
+  }
+  details.payload pre{
+    background: var(--ink);
+    color: #CFE3C4;
+    padding: 14px;
+    border-radius: 4px;
+    overflow-x:auto;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 640px){
+    .match-board{ grid-template-columns: 1fr; gap: 4px; }
+    .option-grid{ grid-template-columns: 1fr; }
+    .intro-list{ grid-template-columns: 1fr; }
+    .stat-row{ grid-template-columns: 1fr; }
+    .masthead{ flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="masthead">
+    <div class="masthead-text">
+      <h1>HTML Hunter</h1>
+      <p>Herken de bouwstenen van het web voor je begint met bouwen.</p>
+    </div>
+    <div class="stamp"><span class="b">bloom-niveau</span><span class="v">Onthouden</span></div>
+  </div>
+
+  <div class="trail" id="trail"></div>
+
+  <main id="view-root" class="card-plain"></main>
+</div>
+
+<script>
+  /* =====================================================================
+     DATA
+  ===================================================================== */
+  const ELEMENTS = {
+    html:   { tag: '&lt;html&gt;',   explain: 'de buitenste wrapper van de hele pagina' },
+    h1:     { tag: '&lt;h1&gt;',     explain: 'de belangrijkste titel van een pagina' },
+    p:      { tag: '&lt;p&gt;',      explain: 'een tekstparagraaf' },
+    img:    { tag: '&lt;img&gt;',    explain: 'het tonen van een afbeelding' },
+    a:      { tag: '&lt;a&gt;',      explain: 'een klikbare link naar een andere pagina' },
+    button: { tag: '&lt;button&gt;', explain: 'een klikbare knop' },
+    div:    { tag: '&lt;div&gt;',    explain: 'een blok waarmee je inhoud groepeert' },
+    ul:     { tag: '&lt;ul&gt;',     explain: 'een lijst met opsommingstekens' },
+    li:     { tag: '&lt;li&gt;',     explain: 'één item binnen een lijst' },
+    head:   { tag: '&lt;head&gt;',   explain: 'onzichtbare pagina-informatie, zoals de titel in het tabblad' },
+    body:   { tag: '&lt;body&gt;',   explain: 'de zichtbare inhoud van de pagina' }
+  };
+
+  const LEVEL1_IDS = ['h1', 'p', 'img', 'a', 'button', 'div'];
+
+  const LEVEL2_QUESTIONS = [
+    {
+      snippet: '&lt;body&gt;\n  &lt;h1&gt;Bakkerij De Warme Oven&lt;/h1&gt;\n  &lt;p&gt;Al 20 jaar vers brood uit Utrecht.&lt;/p&gt;\n  &lt;img src="brood.jpg"&gt;\n  &lt;a href="contact.html"&gt;Neem contact op&lt;/a&gt;\n&lt;/body&gt;',
+      prompt: 'Welk element bepaalt de hoofdtitel van de pagina?',
+      correctId: 'h1',
+      options: ['h1', 'p', 'img', 'a']
+    },
+    {
+      snippet: '&lt;body&gt;\n  &lt;h1&gt;Bakkerij De Warme Oven&lt;/h1&gt;\n  &lt;p&gt;Al 20 jaar vers brood uit Utrecht.&lt;/p&gt;\n  &lt;img src="brood.jpg"&gt;\n  &lt;a href="contact.html"&gt;Neem contact op&lt;/a&gt;\n&lt;/body&gt;',
+      prompt: 'Welk element zorgt ervoor dat de foto van het brood te zien is?',
+      correctId: 'img',
+      options: ['img', 'a', 'p', 'h1']
+    },
+    {
+      snippet: '&lt;div&gt;\n  &lt;ul&gt;\n    &lt;li&gt;Wit brood&lt;/li&gt;\n    &lt;li&gt;Volkoren brood&lt;/li&gt;\n  &lt;/ul&gt;\n  &lt;button&gt;Bestel nu&lt;/button&gt;\n&lt;/div&gt;',
+      prompt: 'Welk element maakt van de twee broodsoorten een lijst?',
+      correctId: 'ul',
+      options: ['ul', 'li', 'div', 'button']
+    },
+    {
+      snippet: '&lt;div&gt;\n  &lt;ul&gt;\n    &lt;li&gt;Wit brood&lt;/li&gt;\n    &lt;li&gt;Volkoren brood&lt;/li&gt;\n  &lt;/ul&gt;\n  &lt;button&gt;Bestel nu&lt;/button&gt;\n&lt;/div&gt;',
+      prompt: 'Welk element markeert "Wit brood" als los item in de lijst?',
+      correctId: 'li',
+      options: ['li', 'ul', 'div', 'button']
+    },
+    {
+      snippet: '&lt;html&gt;\n  &lt;head&gt;\n    &lt;title&gt;Bakkerij De Warme Oven&lt;/title&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;h1&gt;Welkom&lt;/h1&gt;\n  &lt;/body&gt;\n&lt;/html&gt;',
+      prompt: 'Welk element bevat onzichtbare pagina-informatie, zoals de titel in het tabblad?',
+      correctId: 'head',
+      options: ['head', 'body', 'html', 'h1']
+    },
+    {
+      snippet: '&lt;html&gt;\n  &lt;head&gt;\n    &lt;title&gt;Bakkerij De Warme Oven&lt;/title&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;h1&gt;Welkom&lt;/h1&gt;\n  &lt;/body&gt;\n&lt;/html&gt;',
+      prompt: 'Welk element omvat de hele pagina, zowel de head als de body?',
+      correctId: 'html',
+      options: ['html', 'head', 'body', 'div']
+    }
+  ];
+
+  const LEVEL3_QUESTIONS = [
+    { prompt: 'Ik wil een klikbare link maken.', correctId: 'a', options: ['a', 'button', 'p', 'div'] },
+    { prompt: 'Ik wil een grote hoofdtitel bovenaan de pagina.', correctId: 'h1', options: ['h1', 'p', 'ul', 'img'] },
+    { prompt: 'Ik wil een afbeelding laten zien.', correctId: 'img', options: ['img', 'a', 'div', 'li'] },
+    { prompt: 'Ik wil een knop die de gebruiker kan aanklikken.', correctId: 'button', options: ['button', 'a', 'h1', 'ul'] },
+    { prompt: 'Ik wil meerdere elementen samen groeperen in één blok.', correctId: 'div', options: ['div', 'p', 'head', 'li'] }
+  ];
+
+  const MASTERY_THRESHOLD = 0.8;
+
+  /* =====================================================================
+     STATE
+  ===================================================================== */
+  let screen = 'intro';
+  let attemptsLog = []; // { id, correct } — every scored answer across the game
+
+  let level1 = null;   // { order, meaningOrder, matched:{}, wrongOnce:{}, selected }
+  let level2 = null;   // { index, score, answered, selectedId }
+  let level3 = null;
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function resetGame(){
+    attemptsLog = [];
+    level1 = {
+      order: shuffle(LEVEL1_IDS),
+      meaningOrder: shuffle(LEVEL1_IDS),
+      matched: {},
+      wrongOnce: {},
+      selected: null
+    };
+    level2 = { index: 0, score: 0, answered: false, selectedId: null };
+    level3 = { index: 0, score: 0, answered: false, selectedId: null };
+    screen = 'intro';
+  }
+
+  /* =====================================================================
+     TRAIL / PROGRESS
+  ===================================================================== */
+  const TRAIL_STEPS = [
+    { id: 'level1', label: 'Matchen' },
+    { id: 'level2', label: 'Herkennen' },
+    { id: 'level3', label: 'Omgekeerd' },
+    { id: 'result', label: 'Resultaat' }
+  ];
+
+  function renderTrail(){
+    const order = ['intro', 'level1', 'level2', 'level3', 'result'];
+    const currentIdx = order.indexOf(screen);
+    const html = TRAIL_STEPS.map((step, i) => {
+      const stepIdx = order.indexOf(step.id);
+      const state = stepIdx < currentIdx ? 'done' : (stepIdx === currentIdx ? 'active' : '');
+      const dotContent = state === 'done' ? '✓' : (i + 1);
+      const connector = i < TRAIL_STEPS.length - 1 ? '<span class="trail-line"></span>' : '';
+      return `<span class="trail-step ${state}">
+                <span class="trail-dot">${dotContent}</span>
+                <span class="trail-label">${step.label}</span>
+              </span>${connector}`;
+    }).join('');
+    document.getElementById('trail').innerHTML = html;
+  }
+
+  /* =====================================================================
+     INTRO
+  ===================================================================== */
+  function renderIntro(){
+    document.getElementById('view-root').innerHTML = `
+      <span class="level-kicker">Skill 1 van 8 · Onthouden</span>
+      <div class="level-head">
+        <h2>Welkom bij HTML Hunter</h2>
+      </div>
+      <p class="level-instructions">
+        Voor je een website kunt bouwen, moet je de bouwstenen herkennen. In deze game leer je
+        de meest gebruikte HTML-elementen herkennen en hun basisfunctie benoemen.
+      </p>
+      <p class="intro-goal">Kan jij elke tag koppelen aan wat hij betekent?</p>
+      <ul class="intro-list">
+        ${LEVEL1_IDS.concat(['html','ul','li','head','body']).map(id =>
+          `<li>${ELEMENTS[id].tag}</li>`
+        ).join('')}
+      </ul>
+      <button class="btn btn-primary" onclick="goToLevel1()">Start de jacht →</button>
+    `;
+  }
+
+  /* =====================================================================
+     LEVEL 1 — MATCHEN
+  ===================================================================== */
+  function renderLevel1(){
+    const allMatched = level1.order.every(id => level1.matched[id]);
+
+    const tagsHtml = level1.order.map(id => {
+      const cls = ['tag-chip'];
+      if (level1.matched[id]) cls.push('matched');
+      if (level1.selected === id) cls.push('selected');
+      return `<button class="${cls.join(' ')}" id="tag-${id}"
+                onclick="selectTag('${id}')" ${level1.matched[id] ? 'disabled' : ''}>
+                ${ELEMENTS[id].tag}
+              </button>`;
+    }).join('');
+
+    const meaningsHtml = level1.meaningOrder.map(id => {
+      const cls = ['meaning-card'];
+      if (level1.matched[id]) cls.push('matched');
+      return `<button class="${cls.join(' ')}" id="meaning-${id}"
+                onclick="matchMeaning('${id}')" ${level1.matched[id] ? 'disabled' : ''}>
+                ${ELEMENTS[id].explain}
+              </button>`;
+    }).join('');
+
+    document.getElementById('view-root').innerHTML = `
+      <span class="level-kicker">Level 1 · Matchen</span>
+      <div class="level-head"><h2>Vang elke tag bij zijn betekenis</h2></div>
+      <p class="level-instructions">Klik op een tag-kaart en daarna op de betekenis die erbij hoort.</p>
+
+      <div class="match-board">
+        <div>
+          <p class="column-label">tags</p>
+          ${tagsHtml}
+        </div>
+        <div>
+          <p class="column-label">betekenis</p>
+          ${meaningsHtml}
+        </div>
+      </div>
+
+      <div class="feedback" id="level1-feedback"></div>
+
+      <div class="actions-row">
+        <button class="btn btn-primary" id="level1-continue"
+          onclick="goToLevel2()" ${allMatched ? '' : 'disabled'}>
+          Verder naar Level 2 →
+        </button>
+      </div>
+    `;
+  }
+
+  function showFeedback(elId, type, html){
+    const el = document.getElementById(elId);
+    el.className = `feedback show ${type}`;
+    el.innerHTML = html;
+  }
+
+  function selectTag(id){
+    if (level1.matched[id]) return;
+    level1.selected = (level1.selected === id) ? null : id;
+    renderLevel1();
+  }
+
+  function matchMeaning(id){
+    if (level1.matched[id]) return;
+    if (!level1.selected){
+      showFeedback('level1-feedback', 'incorrect', 'Kies eerst een tag hiernaast, klik daarna op een betekenis.');
+      return;
+    }
+    const chosenTag = level1.selected;
+
+    if (chosenTag === id){
+      level1.matched[id] = true;
+      const wasFirstTry = !level1.wrongOnce[id];
+      attemptsLog.push({ id, correct: wasFirstTry });
+      level1.selected = null;
+      renderLevel1();
+      showFeedback('level1-feedback', 'correct',
+        `Goed! <code>${ELEMENTS[id].tag}</code> wordt gebruikt voor ${ELEMENTS[id].explain}.`);
+    } else {
+      level1.wrongOnce[chosenTag] = true;
+      showFeedback('level1-feedback', 'incorrect',
+        `Niet helemaal. <code>${ELEMENTS[chosenTag].tag}</code> is bedoeld voor ${ELEMENTS[chosenTag].explain}.`);
+      const meaningEl = document.getElementById('meaning-' + id);
+      if (meaningEl){
+        meaningEl.classList.add('shake');
+        setTimeout(() => meaningEl.classList.remove('shake'), 400);
+      }
+    }
+  }
+
+  function goToLevel1(){ screen = 'level1'; renderTrail(); renderLevel1(); }
+
+  /* =====================================================================
+     LEVEL 2 & 3 — MEERKEUZE (herkennen / omgekeerde vraag)
+  ===================================================================== */
+  function renderMCQLevel(levelName, questions, stateObj, kicker, title, instructions, nextFn){
+    const q = questions[stateObj.index];
+    const snippetHtml = q.snippet ? `<div class="snippet">${q.snippet}</div>` : '';
+
+    const optionsHtml = q.options.map(optId => {
+      let cls = 'option-btn';
+      let disabledAttr = '';
+      if (stateObj.answered){
+        disabledAttr = 'disabled';
+        if (optId === q.correctId) cls += ' correct';
+        else if (optId === stateObj.selectedId) cls += ' wrong';
+      }
+      return `<button class="${cls}" ${disabledAttr}
+                onclick="handleMCQAnswer('${levelName}', '${optId}')">
+                ${ELEMENTS[optId].tag}
+              </button>`;
+    }).join('');
+
+    let feedbackHtml = '';
+    if (stateObj.answered){
+      const correct = stateObj.selectedId === q.correctId;
+      feedbackHtml = correct
+        ? `<div class="feedback show correct">Goed! <code>${ELEMENTS[q.correctId].tag}</code> wordt gebruikt voor ${ELEMENTS[q.correctId].explain}.</div>`
+        : `<div class="feedback show incorrect">Niet helemaal. <code>${ELEMENTS[q.correctId].tag}</code> is bedoeld voor ${ELEMENTS[q.correctId].explain}.</div>`;
+    }
+
+    const isLast = stateObj.index === questions.length - 1;
+
+    document.getElementById('view-root').innerHTML = `
+      <span class="level-kicker">${kicker}</span>
+      <div class="level-head"><h2>${title}</h2></div>
+      <p class="level-instructions">${instructions}</p>
+
+      <p class="q-progress">Vraag ${stateObj.index + 1} van ${questions.length}</p>
+      ${snippetHtml}
+      <p class="prompt-card">${q.prompt}</p>
+
+      <div class="option-grid">${optionsHtml}</div>
+
+      ${feedbackHtml}
+
+      <div class="actions-row">
+        <button class="btn btn-primary" id="mcq-next" ${stateObj.answered ? '' : 'disabled'}
+          onclick="${nextFn}()">
+          ${isLast ? 'Bekijk resultaat →' : 'Volgende vraag →'}
+        </button>
+      </div>
+    `;
+  }
+
+  function renderLevel2(){
+    renderMCQLevel('level2', LEVEL2_QUESTIONS, level2,
+      'Level 2 · Herkennen',
+      'Welk element zie je hier?',
+      'Bekijk het codefragment en kies het element dat wordt gebruikt.',
+      'nextLevel2Question');
+  }
+
+  function renderLevel3(){
+    renderMCQLevel('level3', LEVEL3_QUESTIONS, level3,
+      'Level 3 · Omgekeerde vraag',
+      'Welk element heb je hiervoor nodig?',
+      'Lees wat de speler wil bereiken en kies het juiste element.',
+      'nextLevel3Question');
+  }
+
+  function handleMCQAnswer(levelName, optId){
+    const stateObj = levelName === 'level2' ? level2 : level3;
+    const questions = levelName === 'level2' ? LEVEL2_QUESTIONS : LEVEL3_QUESTIONS;
+    if (stateObj.answered) return;
+
+    const q = questions[stateObj.index];
+    stateObj.answered = true;
+    stateObj.selectedId = optId;
+    const correct = optId === q.correctId;
+    if (correct) stateObj.score++;
+    attemptsLog.push({ id: q.correctId, correct });
+
+    if (levelName === 'level2') renderLevel2(); else renderLevel3();
+  }
+
+  function nextLevel2Question(){
+    if (level2.index < LEVEL2_QUESTIONS.length - 1){
+      level2.index++; level2.answered = false; level2.selectedId = null;
+      renderLevel2();
+    } else {
+      goToLevel3();
+    }
+  }
+
+  function nextLevel3Question(){
+    if (level3.index < LEVEL3_QUESTIONS.length - 1){
+      level3.index++; level3.answered = false; level3.selectedId = null;
+      renderLevel3();
+    } else {
+      goToResult();
+    }
+  }
+
+  function goToLevel2(){ screen = 'level2'; renderTrail(); renderLevel2(); }
+  function goToLevel3(){ screen = 'level3'; renderTrail(); renderLevel3(); }
+
+  /* =====================================================================
+     RESULT
+  ===================================================================== */
+  function computeResults(){
+    const level1Score = Object.keys(level1.matched).filter(id => !level1.wrongOnce[id]).length;
+    const totalQuestions = LEVEL1_IDS.length + LEVEL2_QUESTIONS.length + LEVEL3_QUESTIONS.length;
+    const totalCorrect = level1Score + level2.score + level3.score;
+    const accuracy = Math.round((totalCorrect / totalQuestions) * 100);
+    const mastery = accuracy >= MASTERY_THRESHOLD * 100;
+    const xp = totalCorrect * 10 + (mastery ? 50 : 0);
+
+    const badges = [];
+    if (accuracy === 100) badges.push('Tag Collector');
+    if (mastery) badges.push('HTML Hunter voltooid');
+
+    return { level1Score, totalQuestions, totalCorrect, accuracy, mastery, xp, badges };
+  }
+
+  function goToResult(){
+    screen = 'result';
+    renderTrail();
+    const results = computeResults();
+    renderResult(results);
+
+    /* Bouw en "verstuur" de resultaten — zie sectie hieronder in de code. */
+    const payload = buildResultsPayload(results);
+    submitResults(payload);
+    const payloadEl = document.getElementById('payload-json');
+    if (payloadEl) payloadEl.textContent = JSON.stringify(payload, null, 2);
+  }
+
+  function renderResult(results){
+    const masteryBanner = results.mastery
+      ? `<div class="mastery-banner pass">Beheersing behaald — je zit boven de 80%-norm.</div>`
+      : `<div class="mastery-banner fail">Nog niet op niveau — probeer opnieuw om boven de 80% te komen.</div>`;
+
+    const unlockNote = results.mastery
+      ? `Skill vrijgespeeld: <strong>Build the DOM</strong> (Begrijpen). Je snapt nu wat de losse elementen betekenen — de volgende game leert je hoe ze samen een pagina vormen.`
+      : `<strong>Build the DOM</strong> blijft nog op slot 🔒. Rond HTML Hunter met minimaal 80% af om deze skill te openen.`;
+
+    document.getElementById('view-root').innerHTML = `
+      <span class="level-kicker">Resultaat</span>
+      <div class="level-head"><h2>HTML Hunter afgerond</h2></div>
+
+      <p class="result-score">${results.accuracy}%</p>
+      <p class="result-sub">${results.totalCorrect} van de ${results.totalQuestions} vragen goed op de eerste poging</p>
+
+      <div class="stat-row">
+        <div class="stat-box"><span class="num">${results.xp}</span><span class="lbl">XP verdiend</span></div>
+        <div class="stat-box"><span class="num">${results.level1Score}/${LEVEL1_IDS.length}</span><span class="lbl">Level 1 · Matchen</span></div>
+        <div class="stat-box"><span class="num">${level2.score + level3.score}/${LEVEL2_QUESTIONS.length + LEVEL3_QUESTIONS.length}</span><span class="lbl">Level 2 &amp; 3 · Meerkeuze</span></div>
+      </div>
+
+      ${masteryBanner}
+
+      ${results.badges.length ? `
+        <div class="badge-row">
+          ${results.badges.map(b => `<span class="badge-pill">🏅 ${b}</span>`).join('')}
+        </div>` : ''}
+
+      <div class="unlock-note">${unlockNote}</div>
+
+      <div class="actions-row" style="justify-content:space-between; align-items:flex-start;">
+        <details class="payload">
+          <summary>Voorbeeld: resultaten-payload (toekomstige verzending, nog niet actief)</summary>
+          <pre id="payload-json"></pre>
+        </details>
+        <button class="btn btn-primary" onclick="restartGame()">Opnieuw spelen</button>
+      </div>
+    `;
+  }
+
+  function restartGame(){
+    resetGame();
+    renderTrail();
+    renderIntro();
+  }
+
+  /* =====================================================================
+     RESULTATEN VERZENDEN — ontwerp voor later, nog NIET geïmplementeerd
+     ---------------------------------------------------------------------
+     Zodra de skilltree een backend heeft, stuurt elke game na afronding
+     een payload zoals hieronder naar de server. Dat bepaalt of:
+       - de volgende skill wordt unlocked (mastery >= 80%);
+       - XP en badges worden bijgeschreven op het profiel;
+       - per-element statistieken worden opgeslagen, zodat een latere
+         game (zoals Bug Hunter) al weet welke tags een speler lastig vond.
+     Voor nu wordt er niets verstuurd: de functie logt alleen naar de
+     console, zodat de vorm van de data al vastligt.
+  ===================================================================== */
+  function buildResultsPayload(results){
+    const elementStats = {};
+    attemptsLog.forEach(({ id, correct }) => {
+      if (!elementStats[id]) elementStats[id] = { attempts: 0, correct: 0 };
+      elementStats[id].attempts++;
+      if (correct) elementStats[id].correct++;
+    });
+
+    return {
+      gameId: 'html-hunter',
+      bloomLevel: 'onthouden',
+      completedAt: new Date().toISOString(),
+      levels: [
+        { id: 'matchen', score: results.level1Score, total: LEVEL1_IDS.length },
+        { id: 'herkennen', score: level2.score, total: LEVEL2_QUESTIONS.length },
+        { id: 'omgekeerde-vraag', score: level3.score, total: LEVEL3_QUESTIONS.length }
+      ],
+      totalCorrect: results.totalCorrect,
+      totalQuestions: results.totalQuestions,
+      accuracy: results.accuracy,
+      masteryThreshold: MASTERY_THRESHOLD * 100,
+      masteryAchieved: results.mastery,
+      xpEarned: results.xp,
+      badgesEarned: results.badges,
+      elementStats,
+      unlocks: results.mastery ? ['build-the-dom'] : []
+    };
+  }
+
+  function submitResults(payload){
+    // TODO: nog niet geïmplementeerd. Toekomstige versie stuurt dit bijvoorbeeld naar:
+    //
+    //   await fetch('/api/skilltree/progress', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(payload)
+    //   });
+    //
+    // Voor nu alleen loggen, zodat het dataformaat al vaststaat.
+    console.log('[HTML Hunter] Resultaten klaar om te versturen (nog niet geïmplementeerd):', payload);
+  }
+
+  /* =====================================================================
+     INIT
+  ===================================================================== */
+  resetGame();
+  renderTrail();
+  renderIntro();
+</script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 {
   "items": [
     {
-      "title": "Example game",
-      "description": "Placeholder entry — replace or delete once real work is added.",
+      "title": "HTML Hunter",
+      "description": "Herken de bouwstenen van het web voor je begint met bouwen.",
       "type": "game",
-      "path": "games/example-game/index.html"
+      "path": "games/html-hunter/index.html"
     }
   ]
 }
