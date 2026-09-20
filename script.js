@@ -1,31 +1,24 @@
-const DEFAULT_ICON = { game: "🎮", pdf: "📄" };
-
 async function main() {
   const res = await fetch("manifest.json");
   const { items } = await res.json();
 
-  const grids = {
-    game: document.querySelector('[data-grid="game"]'),
-    pdf: document.querySelector('[data-grid="pdf"]'),
+  const sections = {
+    pdf: document.querySelector('[data-section="pdf"] .grid'),
+    game: document.querySelector('[data-section="game"] .grid'),
   };
 
-  document.getElementById("stat-games").textContent = items.filter((i) => i.type === "game").length;
-  document.getElementById("stat-pdfs").textContent = items.filter((i) => i.type === "pdf").length;
-
-  for (const type of Object.keys(grids)) {
-    const inType = items.filter((item) => item.type === type);
-    if (inType.length === 0) {
-      grids[type].innerHTML = '<p class="empty">Nog niks hier — binnenkort meer.</p>';
+  for (const key of Object.keys(sections)) {
+    const inSection = items.filter((item) => item.type === key);
+    if (inSection.length === 0) {
+      sections[key].innerHTML = '<p class="empty">Nothing here yet.</p>';
       continue;
     }
-    grids[type].innerHTML = inType
+    sections[key].innerHTML = inSection
       .map(
         (item) => `
-        <a class="item-card" href="${item.path}" target="_blank" rel="noopener">
-          <div class="item-icon">${item.icon ?? DEFAULT_ICON[type]}</div>
+        <a class="card" href="${item.path}" target="_blank" rel="noopener">
           <h3>${item.title}</h3>
           <p>${item.description ?? ""}</p>
-          <span class="item-link">Open <span class="arrow">→</span></span>
         </a>`
       )
       .join("");

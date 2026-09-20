@@ -3,68 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Minor — Anthony Ramos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Minor</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="site">
-    <a class="brand" href="https://anthony-air.nl">
-      <span class="brand-mark">M</span>
-      minor.
-    </a>
-    <nav class="site-nav">
-      <a href="#games">Games</a>
-      <a href="#pdfs">PDF's</a>
-    </nav>
-    <a class="pill-link" href="https://anthony-air.nl" target="_blank" rel="noopener">
-      anthony-air.nl ↗
-    </a>
+  <header>
+    <h1>Minor</h1>
+    <p>Work from my minor — reports, games, and other pieces.</p>
   </header>
-
-  <div class="bento">
-    <div class="card hero-card">
-      <p class="eyebrow">portfolio bijvak</p>
-      <h1>Werk uit mijn minor</h1>
-      <p>Een verzameling van wat ik heb gebouwd tijdens mijn minor — kleine games en verslagen, verzameld op één plek.</p>
-    </div>
-    <div class="card stats-card" id="stats-card">
-      <div class="stat">
-        <span class="num" id="stat-games">0</span>
-        <span class="lbl">games</span>
-      </div>
-      <div class="stat">
-        <span class="num" id="stat-pdfs">0</span>
-        <span class="lbl">pdf's</span>
-      </div>
-    </div>
-  </div>
-
-  <section class="section" id="games">
-    <div class="section-head">
+  <main>
+    <section class="section" data-section="game">
       <h2>Games</h2>
-    </div>
-    <div class="grid" data-grid="game"></div>
-  </section>
-
-  <section class="section" id="pdfs">
-    <div class="section-head">
-      <h2>PDF's</h2>
-    </div>
-    <div class="grid" data-grid="pdf"></div>
-  </section>
-
-  <footer class="site">
-    <span>Copyright © 2026 Anthony Ramos</span>
-    <nav>
-      <a href="https://anthony-air.nl">Home</a>
-      <a href="#games">Games</a>
-      <a href="#pdfs">PDF's</a>
-    </nav>
-  </footer>
-
+      <div class="grid"></div>
+    </section>
+    <section class="section" data-section="pdf">
+      <h2>PDFs</h2>
+      <div class="grid"></div>
+    </section>
+  </main>
   <script src="script.js"></script>
 </body>
 </html>
