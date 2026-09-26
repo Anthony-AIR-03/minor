@@ -3,9 +3,53 @@ services:
     build: .
     container_name: minor
     restart: unless-stopped
+    depends_on:
+      - minor-php
     networks:
       - npm
+      - minor-internal
+
+  minor-php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    container_name: minor-php
+    restart: unless-stopped
+    volumes:
+      - ./private/db-config.php:/usr/share/nginx/private/db-config.php:ro
+    networks:
+      - minor-internal
+
+  minor-db:
+    image: mariadb:lts
+    container_name: minor-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: skilltree
+      # Bewust GEEN MARIADB_USER: die krijgt alle rechten. De gebruiker 'spel' maak je zelf met alleen SELECT+INSERT.
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      - minor-internal
+
+  minor-pma:
+    image: phpmyadmin:5
+    container_name: minor-pma
+    restart: unless-stopped
+    depends_on:
+      - minor-db
+    environment:
+      PMA_HOST: minor-db
+    ports:
+      - "8082:80"          # alleen LAN/VPN; NIET in NPM of Cloudflare zetten
+    networks:
+      - minor-internal
+      - lan                 # nodig: een 'internal' netwerk kan geen poorten publiceren
 
 networks:
   npm:
     external: true
+  minor-internal:
+    internal: true          # geen internettoegang en niet bereikbaar van buiten
+  lan: {}

@@ -986,17 +986,17 @@
   }
 
   function submitResults(payload){
-    // TODO: nog niet geïmplementeerd. Toekomstige versie stuurt dit bijvoorbeeld naar:
-    //
-    //   await fetch('/api/skilltree/progress', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(payload)
-    //   });
-    //
-    // Voor nu alleen loggen, zodat het dataformaat al vaststaat.
-    console.log('[HTML Hunter] Resultaten klaar om te versturen (nog niet geïmplementeerd):', payload);
+  console.log('[HTML Hunter] Resultaten:', payload);
+  // Alleen bij gehaald slaagcriterium (mastery >= 80%): een rij voor een echte game betekent 'voltooid'.
+  if (payload.masteryAchieved && window.parent !== window) {
+    window.parent.postMessage({
+      type: 'GAME_COMPLETED',
+      gameId: 'html-hunter',
+      score: payload.totalCorrect,
+      maxScore: payload.totalQuestions
+    }, window.location.origin);
   }
+}
 
   /* =====================================================================
      INIT

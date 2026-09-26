@@ -1,0 +1,46 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node / frontend dependencies and logs
+node_modules/
+.npm/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build output
+/dist/
+/build/
+/out/
+coverage/
+*.log
+
+# Cache / temp
+.cache/
+.tmp/
+.temp/
+
+# PHP / local config
+private/*.php
+!private/db-config.example.php
+
+# Database files
+db/
+private/db-config.php
+
+# Optional: keep generated assets or archives if needed
+# *.zip
+# *.tar.gz

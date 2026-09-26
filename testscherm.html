@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="nl">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bijeenkomst 3 – Opslag testen</title>
+<style>
+body{font:17px/1.55 system-ui,sans-serif;color:#173042;background:#f5f8fa;margin:0}main{max-width:950px;margin:auto;padding:24px}h1{line-height:1.2}section{background:white;padding:22px;margin:20px 0;border:1px solid #d4dde3;border-radius:8px}h2{margin-top:0}label{display:block;margin:12px 0}input{display:block;box-sizing:border-box;width:100%;max-width:620px;font:inherit;padding:8px;border:1px solid #879ba8;border-radius:4px}button{font:inherit;cursor:pointer;padding:9px 14px;background:#007da8;color:white;border:0;border-radius:4px;margin:5px 5px 5px 0}button:disabled{opacity:.5;cursor:wait}output{display:block;white-space:pre-wrap;background:#eef4f7;padding:12px;margin-top:12px;overflow-wrap:anywhere}iframe{width:100%;height:550px;border:1px solid #879ba8;margin-top:16px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;padding:8px;text-align:left}.error{color:#9b2600}small{display:block}
+</style>
+<main>
+<h1>Je game aansluiten op opslag</h1>
+<p>Test eerst de API. Sluit daarna je bestaande game aan. Gebruik verzonnen codes; deze oefenomgeving heeft geen gebruikerslogin.</p>
+<label>Jouw verzonnen testcode <input id="code" value="test-speler-1" maxlength="40" pattern="[a-z0-9][a-z0-9-]*"></label>
+<small>Kleine letters, cijfers en koppeltekens. Met dezelfde code kun je resultaten na herladen terugvinden. Iedereen die die code kent kan de demoresultaten opvragen.</small>
+<section><h2>1. Werkt de verbinding?</h2><button id="health">Controleer API en database</button><output id="connection" aria-live="polite">Nog niet getest.</output></section>
+<section><h2>2. Test opslaan zonder game</h2><p>De testknop bewaart 2 van 3 punten voor <code>verbindingstest</code>. Klik daarna op teruglezen en controleer ook de rij in phpMyAdmin.</p><button id="save">Bewaar testscore 2 / 3</button><button id="read">Lees resultaten terug</button><button id="bad">Test ongeldige score 4 / 3</button><output id="status" aria-live="polite">Nog geen aanvraag gedaan.</output><div id="results"></div></section>
+<section><h2>3. Test je bestaande single-file game</h2><p>Neem de game-id uit de gamestekker exact over. Het testscherm opent de game op jouw eigen website en bewaart het <code>GAME_COMPLETED</code>-bericht. De losse game roept de API niet aan.</p>
+<label>Game-id <input id="gameId" placeholder="t2-samira-breuken" maxlength="80"></label>
+<label>Pad op deze website <input id="path" placeholder="games/t2-samira-breuken/index.html"></label>
+<button id="open">Open game / begin nieuwe ronde</button><button id="retry" hidden>Probeer dezelfde opslag opnieuw</button><output id="gameStatus" aria-live="polite">Nog geen game geopend.</output><div id="frameHost"></div>
+<p>Speel tot het slaagcriterium is bereikt. Controleer de rij in phpMyAdmin. Herlaad het testscherm en klik op ‘Lees resultaten terug’. Begin een nieuwe speelronde met de knop hierboven.</p></section>
+</main>
+<script>
+'use strict';
+const el=id=>document.getElementById(id);
+const api=new URL('api.php',location.href);
+let frame=null,round=null,busy=false;
+const validCode=(v,n)=>typeof v==='string'&&v.length<=n&&/^[a-z0-9][a-z0-9-]*$/.test(v);
+try{el('code').value=localStorage.getItem('les-testcode')||el('code').value;}catch{}
+function code(){const v=el('code').value.trim();if(!validCode(v,40))throw Error('Gebruik een testcode met kleine letters, cijfers en koppeltekens (maximaal 40 tekens).');try{localStorage.setItem('les-testcode',v);}catch{}return v;}
+function show(id,message,error=false){el(id).textContent=message;el(id).classList.toggle('error',error);}
+async function request(url,options){const response=await fetch(url,{...options,cache:'no-store'});let data;try{data=await response.json();}catch{throw Error('HTTP '+response.status+': geen JSON. Controleer of api.php op de juiste plek staat en PHP actief is.');}if(!response.ok||data.ok!==true)throw Error('HTTP '+response.status+': '+(data.message||'Aanvraag geweigerd.'));return data;}
+function post(data){return request(api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+async function read(pseudonym){const url=new URL(api);url.searchParams.set('pseudonym',pseudonym);const data=await request(url);const holder=el('results');holder.replaceChildren();if(!data.results.length){holder.textContent='Nog geen resultaten voor '+pseudonym+'.';return;}const table=document.createElement('table');const head=table.createTHead().insertRow();for(const title of ['Game','Beste score','Pogingen']){const th=document.createElement('th');th.textContent=title;head.append(th);}for(const result of data.results){const row=table.insertRow();for(const value of [result.gameId,result.bestScore+' / '+result.maxScore,result.attempts])row.insertCell().textContent=value;}holder.append(table);}
+async function action(id,fn){if(busy)return;busy=true;for(const b of document.querySelectorAll('button'))b.disabled=true;el('code').disabled=true;try{await fn();}catch(e){show(id,e.message,true);}finally{busy=false;for(const b of document.querySelectorAll('button'))b.disabled=false;el('code').disabled=false;}}
+el('health').onclick=()=>action('connection',async()=>{const url=new URL(api);url.search='?action=health';const d=await request(url);show('connection',d.message);});
+el('save').onclick=()=>action('status',async()=>{const d=await post({pseudonym:code(),gameId:'verbindingstest',score:2,maxScore:3});show('status',d.message+' Controleer de rij in phpMyAdmin en lees terug.');});
+el('read').onclick=()=>action('status',async()=>{const p=code();await read(p);show('status','Resultaten teruggelezen voor '+p+'.');});
+el('bad').onclick=()=>action('status',async()=>{const response=await fetch(api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pseudonym:code(),gameId:'verbindingstest',score:4,maxScore:3})});const d=await response.json();if(response.status!==400||d.ok!==false)throw Error('Test niet geslaagd: verwacht HTTP 400.');show('status','Test geslaagd: score 4 / 3 is geweigerd (HTTP 400). Er hoort geen nieuwe rij te zijn.');});
+el('open').onclick=()=>{if(busy)return;try{const p=code(),id=el('gameId').value.trim();if(!validCode(id,80))throw Error('Vul de exacte game-id in (kleine letters, cijfers en koppeltekens).');const path=el('path').value.trim();if(!path)throw Error('Vul het pad naar je game in.');const url=new URL(path,location.href);if(url.origin!==location.origin||url.username||url.password)throw Error('Game en testscherm moeten op exact dezelfde website staan.');if(url.pathname===location.pathname||url.pathname===api.pathname)throw Error('Kies je HTML-game.');round={pseudonym:p,gameId:id,received:false,pending:null};frame=document.createElement('iframe');frame.title='Game '+id;frame.src=url.href;el('frameHost').replaceChildren(frame);el('retry').hidden=true;show('gameStatus','Game geopend voor '+p+'. Speel tot het slaagcriterium.');try{localStorage.setItem('les-game-id',id);localStorage.setItem('les-game-pad',path);}catch{}}catch(e){show('gameStatus',e.message,true);}};
+async function storeRound(current){await action('gameStatus',async()=>{try{await post(current.pending);current.pending=null;el('retry').hidden=true;show('gameStatus','Game-resultaat opgeslagen voor '+current.pseudonym+'. Controleer phpMyAdmin en herladen.');await read(current.pseudonym);}catch(e){el('retry').hidden=!current.pending;throw e;}});}
+window.addEventListener('message',event=>{if(!round||!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;const d=event.data;if(!d||d.type!=='GAME_COMPLETED')return;if(round.received)return;if(d.gameId!==round.gameId||!Number.isInteger(d.score)||!Number.isInteger(d.maxScore)||d.maxScore<1||d.maxScore>1000000||d.score<0||d.score>d.maxScore){show('gameStatus','Bericht geweigerd: game-id of scorevelden kloppen niet.',true);return;}if(busy){show('gameStatus','Andere test nog bezig. Begin daarna een nieuwe speelronde.',true);return;}round.received=true;round.pending={pseudonym:round.pseudonym,gameId:d.gameId,score:d.score,maxScore:d.maxScore};show('gameStatus','Completion-bericht ontvangen; resultaat opslaan…');storeRound(round);});
+el('retry').onclick=()=>{if(round?.pending&&!busy)storeRound(round);};
+try{el('gameId').value=localStorage.getItem('les-game-id')||'';el('path').value=localStorage.getItem('les-game-pad')||'';}catch{}
+if(location.protocol!=='https:')show('connection','Open dit testscherm via HTTPS op je Junda-server. Een lokaal geopend HTML-bestand kan de PHP-API niet gebruiken.',true);
+</script>
+</html>
