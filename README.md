@@ -27,6 +27,9 @@ it into games and PDFs.
 - **HTML Hunter** (Dutch): learn to recognise the building blocks of the web before you start
   building. Four stages (matching, recognising, the reverse direction and a result screen) move from
   remembering which HTML element is which to understanding what each one does.
+- **Build the DOM** (Dutch): learn how HTML elements fit together into one page. Three levels
+  (building the main structure, placing visible content and spotting structure errors) move from
+  placing elements in a DOM tree to explaining why a structure is wrong.
 
 ## Adding something
 
