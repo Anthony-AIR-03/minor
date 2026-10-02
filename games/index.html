@@ -4,11 +4,138 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Games — Minor</title>
-  <meta name="description" content="All games from Anthony's minor: AI, Games & Digitale geletterdheid." />
+  <meta name="description" content="The skill tree of games from Anthony's minor: each game trains one Bloom level and unlocks the next." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* ---------- skill tree page ---------- */
+    .tree-intro { display: grid; gap: 18px; }
+    .tree-intro .track-copy { margin-bottom: 0; }
+    .tree-meta { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; }
+    .legend .chip { display: inline-flex; align-items: center; gap: 8px; }
+    .legend i {
+      width: 12px; height: 14px; display: inline-block;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+    .legend .k-live i { background: var(--code); box-shadow: 0 0 8px var(--code); }
+    .legend .k-next i { background: var(--make); }
+    .legend .k-locked i { background: var(--border-strong); }
+    .live-count { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .live-count b { color: var(--ink); font-weight: 600; }
+
+    /* the tree panel: dark board with a faint hex grid, like a game's perk screen */
+    .board {
+      position: relative;
+      margin-top: 22px;
+      border-radius: var(--radius-tile);
+      border: 1px solid var(--border);
+      background-color: var(--bg);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 1 54 16v30L28 61 2 46V16Z M28 61v36' fill='none' stroke='%239747ff' stroke-opacity='.10' stroke-width='1'/%3E%3C/svg%3E");
+      background-size: 56px 97px;
+      overflow: hidden;
+    }
+    .board::after {
+      /* soft vignette so the grid fades toward the edges */
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 30% 50%, transparent 40%, var(--bg) 100%);
+      opacity: 0.85;
+    }
+    .board svg { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+    .board text { font-family: var(--font); }
+
+    .edge { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
+    .edge.lit { stroke: var(--code); stroke-width: 2.5; filter: drop-shadow(0 0 4px var(--code)); }
+    .edge.next { stroke: var(--code-text); stroke-width: 2; stroke-dasharray: 5 6; opacity: 0.7; }
+
+    .tier { fill: var(--muted-2); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+
+    .hex { cursor: pointer; outline: none; }
+    .hex .shape { fill: var(--surface); stroke: var(--border-strong); stroke-width: 1.5; transition: stroke 0.15s ease, fill 0.15s ease; }
+    .hex .name { fill: var(--muted); font-size: 12.5px; font-weight: 500; }
+    .hex .mark { fill: var(--muted-2); font-size: 18px; font-weight: 700; }
+    .hex .lock { fill: none; stroke: var(--muted-2); stroke-width: 1.6; stroke-linecap: round; }
+
+    .hex.live .shape { fill: var(--surface-2); stroke: var(--code); stroke-width: 2.5; filter: drop-shadow(0 0 10px var(--code)); }
+    .hex.live .mark { fill: var(--code-text); font-size: 20px; }
+    .hex.live .name { fill: var(--ink); font-weight: 600; }
+
+    .hex.next .shape { stroke: var(--make); stroke-width: 2; stroke-dasharray: 6 5; }
+    .hex.next .name { fill: var(--ink); }
+    .hex.next .lock { stroke: var(--make); }
+
+    .hex:hover .shape { stroke: var(--ink); }
+    .hex.live:hover .shape { fill: var(--code-soft); }
+    .hex.selected .shape { stroke: var(--ink); stroke-width: 3; stroke-dasharray: none; }
+    .hex:focus-visible .shape { stroke: var(--ink); stroke-width: 3; }
+
+    /* detail + explanation */
+    .tree-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-bottom: 16px; }
+    .detail { display: grid; gap: 14px; align-content: start; }
+    .detail-top { display: flex; gap: 16px; align-items: center; }
+    .detail-hex {
+      width: 58px; height: 64px; flex-shrink: 0; display: grid; place-items: center;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--surface-2); color: var(--muted-2); font-weight: 700; font-size: 1.15rem;
+    }
+    .detail[data-state="live"] .detail-hex { background: var(--code); color: #fff; }
+    .detail[data-state="next"] .detail-hex { background: var(--make-soft); color: var(--make); }
+    .eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); }
+    .detail h2 { font-size: 1.4rem; line-height: 1.2; }
+    .question { font-size: 1.05rem; color: var(--ink); }
+    .question::before { content: "“"; color: var(--code-text); }
+    .question::after { content: "”"; color: var(--code-text); }
+    .detail .goal { color: var(--muted); font-size: 0.95rem; max-width: 60ch; }
+    .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 0.9rem; }
+    .facts dt { color: var(--muted-2); }
+    .facts dd { margin: 0; }
+    .status { font-weight: 600; }
+    .status.live { color: var(--code-text); }
+    .status.next { color: var(--make); }
+    .play-btn {
+      justify-self: start; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      background: var(--code); color: #fff; font-weight: 600; font-size: 0.95rem;
+      padding: 11px 20px; border-radius: var(--pill);
+    }
+    .play-btn svg { width: 15px; height: 15px; }
+    .muted-note { font-size: 0.88rem; color: var(--muted-2); }
+
+    .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; counter-reset: step; }
+    .steps li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; counter-increment: step; }
+    .steps li::before {
+      content: counter(step); width: 30px; height: 34px; display: grid; place-items: center;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--code-soft); color: var(--code-text); font-weight: 700; font-size: 0.9rem;
+    }
+    .steps b { font-weight: 600; }
+    .steps p { color: var(--muted); font-size: 0.92rem; }
+
+    .ladder { list-style: none; margin: 0; padding: 0; }
+    .ladder li {
+      display: grid; grid-template-columns: 34px 130px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+      padding: 13px 0; border-top: 1px solid var(--border);
+    }
+    .ladder .lv { font-weight: 700; color: var(--muted-2); font-variant-numeric: tabular-nums; }
+    .ladder .lv-name { font-weight: 600; }
+    .ladder .lv-do { color: var(--muted); font-size: 0.9rem; }
+    .ladder .lv-games { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+    .ladder .chip.on { color: var(--code-text); border-color: var(--code-soft); background: var(--code-soft); }
+
+    @media (max-width: 860px) {
+      .tree-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .ladder li { grid-template-columns: 28px 1fr; }
+      .ladder .lv-do, .ladder .lv-games { grid-column: 2; justify-content: flex-start; }
+    }
+    @media (prefers-color-scheme: light) {
+      .board::after { opacity: 0.6; }
+      .hex.live .shape { filter: drop-shadow(0 0 6px var(--code-soft)); }
+      .edge.lit { filter: none; }
+    }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -33,15 +160,51 @@
 
     <main id="main">
       <section class="card track track-code">
-        <div class="track-head">
-          <span class="track-dot" aria-hidden="true"></span>
-          <h2>All games</h2>
+        <div class="tree-intro">
+          <div>
+            <div class="track-head">
+              <span class="track-dot" aria-hidden="true"></span>
+              <h2>Game skill tree</h2>
+            </div>
+            <p class="track-copy">
+              Eight games, one route: from recognising your first HTML tag to building a small website on your own.
+              Every game trains one level of Bloom's taxonomy, and you unlock the next one by passing the game before it.
+            </p>
+          </div>
+          <div class="tree-meta">
+            <div class="legend" aria-label="Legend">
+              <span class="chip k-live"><i aria-hidden="true"></i>Playable</span>
+              <span class="chip k-next"><i aria-hidden="true"></i>Up next</span>
+              <span class="chip k-locked"><i aria-hidden="true"></i>Locked</span>
+            </div>
+            <span class="live-count" data-live-count></span>
+          </div>
         </div>
-        <p class="track-copy">
-          Every game made for the computational thinking and vibe-coding part of this minor, in one
-          place. Each one still ships from its own small domain.
+        <div class="board" data-board>
+          <svg data-tree role="group" aria-label="Skill tree of all games"></svg>
+        </div>
+      </section>
+
+      <div class="tree-grid">
+        <section class="card detail" data-detail aria-live="polite"></section>
+
+        <section class="card">
+          <p class="eyebrow">How unlocking works</p>
+          <ol class="steps" style="margin-top:14px">
+            <li><div><b>Play the open game.</b><p>Each game has three levels and ends with a score.</p></div></li>
+            <li><div><b>Pass it with at least 80%.</b><p>Only your first try per task counts. Passing shows you master the skill; extra points don't buy your way in.</p></div></li>
+            <li><div><b>The next game opens.</b><p>After Build the DOM the tree splits: Style Lab and Layout Builder open together, and Bug Hunter waits until you have passed both.</p></div></li>
+          </ol>
+        </section>
+      </div>
+
+      <section class="card track track-code">
+        <p class="eyebrow">The Bloom ladder</p>
+        <p class="track-copy" style="margin-top:10px">
+          Higher in the tree doesn't mean more questions; it means a different kind of thinking.
+          Each step asks something new of you.
         </p>
-        <div class="shelf" data-games-all></div>
+        <ol class="ladder" data-ladder></ol>
       </section>
     </main>
 
@@ -52,32 +215,215 @@
   </div>
 
   <script>
+    // The route through the minor. A game lights up as soon as manifest.json lists games/<id>/.
+    const BLOOM = [
+      { id: "remember", name: "Remember", does: "Recognise the building blocks and name what they are." },
+      { id: "understand", name: "Understand", does: "Explain how the parts fit together." },
+      { id: "apply", name: "Apply", does: "Use what you know to reach a given result." },
+      { id: "analyse", name: "Analyse", does: "Take code apart: find causes and predict behaviour." },
+      { id: "evaluate", name: "Evaluate", does: "Compare solutions and argue which one is better." },
+      { id: "create", name: "Create", does: "Combine everything into something of your own." }
+    ];
+
+    const GAMES = [
+      { id: "html-hunter", title: "HTML Hunter", lines: ["HTML", "Hunter"], bloom: "remember", requires: [],
+        question: "What does this element mean?",
+        goal: "Recognise common HTML elements and name what each one does." },
+      { id: "build-the-dom", title: "Build the DOM", lines: ["Build the", "DOM"], bloom: "understand", requires: ["html-hunter"],
+        question: "How do these parts fit together?",
+        goal: "Explain how HTML elements form the structure of a page, nest them correctly and spot structure errors." },
+      { id: "style-lab", title: "Style Lab", lines: ["Style", "Lab"], bloom: "apply", requires: ["build-the-dom"],
+        question: "How do I use CSS to get this result?",
+        goal: "Apply simple CSS properties such as colour, font size, padding and borders to style elements." },
+      { id: "layout-builder", title: "Layout Builder", lines: ["Layout", "Builder"], bloom: "apply", requires: ["build-the-dom"],
+        question: "How do I build this layout?",
+        goal: "Use basic CSS and flexbox to position elements according to a given layout." },
+      { id: "bug-hunter", title: "Bug Hunter", lines: ["Bug", "Hunter"], bloom: "analyse", requires: ["style-lab", "layout-builder"],
+        question: "Why doesn't this work?",
+        goal: "Find simple HTML and CSS bugs, point out their cause and fix them." },
+      { id: "code-detective", title: "Code Detective", lines: ["Code", "Detective"], bloom: "analyse", requires: ["bug-hunter"],
+        question: "What will this code do?",
+        goal: "Read HTML and CSS and predict the visual result before seeing it." },
+      { id: "code-review", title: "Code Review", lines: ["Code", "Review"], bloom: "evaluate", requires: ["code-detective"],
+        question: "Which solution is better, and why?",
+        goal: "Compare two working solutions and back up a choice with concrete quality criteria." },
+      { id: "website-challenge", title: "Website Challenge", lines: ["Website", "Challenge"], bloom: "create", requires: ["code-review"],
+        question: "Can I build this on my own?",
+        goal: "Combine HTML and CSS to build a small, working website from a list of requirements." }
+    ];
+
+    // Grid positions: column = step along the route, row = lane (-1 above, 0 middle, 1 below).
+    const POS = {
+      "html-hunter": [0, 0], "build-the-dom": [1, 0], "style-lab": [2, -1], "layout-builder": [2, 1],
+      "bug-hunter": [3, 0], "code-detective": [4, 0], "code-review": [5, 0], "website-challenge": [6, 0]
+    };
+    const TIER_COLS = { remember: [0], understand: [1], apply: [2], analyse: [3, 4], evaluate: [5], create: [6] };
+
+    const byId = Object.fromEntries(GAMES.map((g) => [g.id, g]));
+    const unlocks = (id) => GAMES.filter((g) => g.requires.includes(id));
+    let livePaths = {};
+    let selected = null;
+
+    function stateOf(g) {
+      if (livePaths[g.id]) return "live";
+      return g.requires.every((r) => livePaths[r]) ? "next" : "locked";
+    }
     function initials(title) {
-      return title.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+      return title.split(/\s+/).filter((w) => /^[A-Z]/.test(w)).map((w) => w[0]).join("").slice(0, 2);
+    }
+    function hexPoints(cx, cy, r) {
+      const pts = [];
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 180) * (60 * i - 90);
+        pts.push(`${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`);
+      }
+      return pts.join(" ");
+    }
+
+    // Horizontal on wide screens, top-to-bottom on phones.
+    function layout(wide) {
+      if (wide) {
+        const R = 58, colW = 148, x0 = 82, mid = 210, lane = 78;
+        return {
+          R, w: x0 * 2 + colW * 6, h: 370,
+          at: ([c, l]) => [x0 + c * colW, mid + l * lane],
+          tiers: BLOOM.map((b) => {
+            const cols = TIER_COLS[b.id];
+            return { text: b.name, x: x0 + colW * (cols[0] + cols[cols.length - 1]) / 2, y: 40, anchor: "middle" };
+          })
+        };
+      }
+      const R = 50, rowH = 132, y0 = 96, mid = 180, lane = 82;
+      return {
+        R, w: 360, h: y0 * 2 + rowH * 6 - 30,
+        at: ([c, l]) => [mid + l * lane, y0 + c * rowH],
+        tiers: GAMES.map((g) => {
+          const [c, l] = POS[g.id];
+          if (l === 1) return null;
+          const name = BLOOM.find((b) => b.id === g.bloom).name;
+          // the split row (Apply) gets its label between its two hexes
+          return l === -1 ? { text: name, x: mid, y: y0 + c * rowH + 4, anchor: "middle" }
+                          : { text: name, x: 12, y: y0 + c * rowH + 4, anchor: "start" };
+        }).filter(Boolean)
+      };
+    }
+
+    function renderTree() {
+      const svg = document.querySelector("[data-tree]");
+      const wide = svg.parentElement.clientWidth >= 760;
+      const L = layout(wide);
+      const pos = Object.fromEntries(GAMES.map((g) => [g.id, L.at(POS[g.id])]));
+      svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`);
+
+      const edges = GAMES.flatMap((g) => g.requires.map((r) => {
+        const [x1, y1] = pos[r], [x2, y2] = pos[g.id];
+        const cls = livePaths[r] && livePaths[g.id] ? "lit" : livePaths[r] ? "next" : "";
+        return `<line class="edge ${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`;
+      })).join("");
+
+      const tiers = L.tiers.map((t) => `<text class="tier" x="${t.x}" y="${t.y}" text-anchor="${t.anchor}">${t.text}</text>`).join("");
+
+      const hexes = GAMES.map((g) => {
+        const [x, y] = pos[g.id], s = stateOf(g);
+        const top = s === "live"
+          ? `<text class="mark" x="${x}" y="${y - 8}" text-anchor="middle">${initials(g.title)}</text>`
+          : `<g class="lock" transform="translate(${x - 7} ${y - 26})"><rect x="0.8" y="7" width="12.4" height="9.5" rx="2" /><path d="M3.5 7V4.8a3.5 3.5 0 0 1 7 0V7" /></g>`;
+        const names = g.lines.map((ln, i) => `<tspan x="${x}" dy="${i ? 15 : 0}">${ln}</tspan>`).join("");
+        const label = `${g.title}, ${BLOOM.find((b) => b.id === g.bloom).name}, ${s === "live" ? "playable" : s === "next" ? "up next" : "locked"}`;
+        return `<g class="hex ${s}${selected === g.id ? " selected" : ""}" data-id="${g.id}" tabindex="0" role="button" aria-pressed="${selected === g.id}" aria-label="${label}">
+          <polygon class="shape" points="${hexPoints(x, y, L.R)}" />
+          ${top}
+          <text class="name" x="${x}" y="${y + 13}" text-anchor="middle">${names}</text>
+        </g>`;
+      }).join("");
+
+      svg.innerHTML = `<g>${edges}</g>${tiers}${hexes}`;
+    }
+
+    function renderDetail() {
+      const g = byId[selected], s = stateOf(g);
+      const bloom = BLOOM.find((b) => b.id === g.bloom);
+      const level = BLOOM.indexOf(bloom) + 1;
+      const names = (ids) => ids.length ? ids.map((id) => byId[id].title).join(" + ") : "Nothing, this is where you start";
+      const next = unlocks(g.id).map((u) => u.id);
+      const status = { live: "Playable now", next: "Up next, being built", locked: "Locked" }[s];
+      const el = document.querySelector("[data-detail]");
+      el.dataset.state = s;
+      el.innerHTML = `
+        <div class="detail-top">
+          <span class="detail-hex" aria-hidden="true">${s === "live" ? initials(g.title) : level}</span>
+          <div>
+            <p class="eyebrow">Bloom level ${level} · ${bloom.name}</p>
+            <h2>${g.title}</h2>
+          </div>
+        </div>
+        <p class="question">${g.question}</p>
+        <p class="goal">${g.goal}</p>
+        <dl class="facts">
+          <dt>Status</dt><dd class="status ${s}">${status}</dd>
+          <dt>Requires</dt><dd>${names(g.requires)}</dd>
+          <dt>Unlocks</dt><dd>${next.length ? names(next) : "The end of the route"}</dd>
+        </dl>
+        ${s === "live"
+          ? `<a class="play-btn" href="../${livePaths[g.id]}" target="_blank" rel="noopener">Play ${g.title}
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></a>`
+          : `<p class="muted-note">${s === "next" ? "This is the next game to be released." : "Opens after " + names(g.requires) + "."}</p>`}`;
+    }
+
+    function renderLadder() {
+      document.querySelector("[data-ladder]").innerHTML = BLOOM.map((b, i) => `
+        <li>
+          <span class="lv">${i + 1}</span>
+          <span class="lv-name">${b.name}</span>
+          <span class="lv-do">${b.does}</span>
+          <span class="lv-games">${GAMES.filter((g) => g.bloom === b.id)
+            .map((g) => `<span class="chip${livePaths[g.id] ? " on" : ""}">${g.title}</span>`).join("")}</span>
+        </li>`).join("");
+    }
+
+    function select(id) {
+      selected = id;
+      renderTree();
+      renderDetail();
     }
 
     async function main() {
-      const res = await fetch("../manifest.json");
-      const { items } = await res.json();
-      const games = items.filter((item) => item.type === "game");
-      const shelf = document.querySelector("[data-games-all]");
-
-      if (games.length === 0) {
-        shelf.innerHTML = '<p class="empty">Nothing here yet.</p>';
-        return;
+      try {
+        const res = await fetch("../manifest.json");
+        const { items } = await res.json();
+        for (const item of items) {
+          const m = item.type === "game" && /^games\/([^/]+)\//.exec(item.path);
+          if (m) livePaths[m[1]] = item.path;
+        }
+      } catch {
+        livePaths = {};
       }
+      const live = GAMES.filter((g) => livePaths[g.id]);
+      document.querySelector("[data-live-count]").innerHTML = `<b>${live.length} of ${GAMES.length}</b> games playable`;
+      // Start on the newest playable game, so the detail panel shows what you can do now.
+      selected = (live[live.length - 1] || GAMES[0]).id;
+      renderTree();
+      renderDetail();
+      renderLadder();
 
-      shelf.innerHTML = games
-        .map(
-          (item) => `
-        <a class="tile" href="../${item.path}" target="_blank" rel="noopener">
-          <span class="tile-badge">${initials(item.title)}</span>
-          <h3>${item.title}</h3>
-          <p>${item.description ?? ""}</p>
-          <span class="tile-play">Play</span>
-        </a>`
-        )
-        .join("");
+      const svg = document.querySelector("[data-tree]");
+      svg.addEventListener("click", (e) => {
+        const hex = e.target.closest(".hex");
+        if (hex) select(hex.dataset.id);
+      });
+      svg.addEventListener("keydown", (e) => {
+        const hex = e.target.closest(".hex");
+        if (hex && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          select(hex.dataset.id);
+          svg.querySelector(`.hex[data-id="${hex.dataset.id}"]`).focus();
+        }
+      });
+      let wasWide = null;
+      new ResizeObserver(() => {
+        const wide = svg.parentElement.clientWidth >= 760;
+        if (wide !== wasWide) { wasWide = wide; renderTree(); }
+      }).observe(svg.parentElement);
     }
 
     main();
