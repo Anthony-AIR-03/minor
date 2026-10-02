@@ -26,6 +26,38 @@
     .legend .k-live i { background: var(--code); box-shadow: 0 0 8px var(--code); }
     .legend .k-next i { background: var(--make); }
     .legend .k-locked i { background: var(--border-strong); }
+    .legend .k-done i { background: var(--code); }
+    .legend .k-open i { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--code), 0 0 8px var(--code); }
+
+    /* player bar: save progress under a made-up ID, or play everything without saving */
+    .player { display: grid; gap: 10px; padding: 16px; border-radius: var(--radius-tile); background: var(--surface-2); border: 1px solid var(--border); }
+    .player label { font-weight: 600; font-size: 0.95rem; }
+    .player-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .player input {
+      flex: 1 1 200px; min-width: 0; font: inherit; color: var(--ink); background: var(--bg);
+      border: 1px solid var(--border-strong); border-radius: var(--pill); padding: 10px 16px;
+    }
+    .player input:focus-visible { outline: 2px solid var(--code-text); outline-offset: 2px; }
+    .btn {
+      font: inherit; font-weight: 600; font-size: 0.92rem; cursor: pointer; border-radius: var(--pill);
+      padding: 10px 18px; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: var(--code); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+    .btn-ghost:hover { border-color: var(--code-text); }
+    .btn[disabled] { opacity: 0.6; cursor: wait; }
+    .or { color: var(--muted-2); font-size: 0.9rem; }
+    .player-help { color: var(--muted); font-size: 0.85rem; max-width: 72ch; }
+    .player-status { font-size: 0.92rem; }
+    .player-status:empty { display: none; }
+    .player-status.error { color: var(--air); }
+    .player-status b { font-weight: 600; }
+    .link-btn { font: inherit; color: var(--code-text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+    .mode-pill {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
+      padding: 3px 10px; border-radius: var(--pill); background: var(--code-soft); color: var(--code-text);
+    }
+    .mode-pill.free { background: var(--make-soft); color: var(--make); }
     .live-count { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
     .live-count b { color: var(--ink); font-weight: 600; }
 
@@ -71,6 +103,12 @@
 
     .hex:hover .shape { stroke: var(--ink); }
     .hex.live:hover .shape { fill: var(--code-soft); }
+    .hex.done .shape { fill: var(--code); stroke: var(--code); stroke-width: 2.5; }
+    .hex.done .emblem, .hex.done .name { color: #fff; fill: #fff; }
+    .hex.done .name { font-weight: 600; }
+    .hex .check-bg { fill: var(--make); }
+    .hex .check { fill: none; stroke: #15121c; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .hex.done:hover .shape { fill: var(--code-text); }
     .hex.selected .shape { stroke: var(--ink); stroke-width: 3; stroke-dasharray: none; }
     .hex:focus-visible .shape { stroke: var(--ink); stroke-width: 3; }
 
@@ -84,6 +122,7 @@
       background: var(--surface-2); color: var(--muted-2); font-weight: 700; font-size: 1.15rem;
     }
     .detail[data-state="live"] .detail-hex { background: var(--code); color: #fff; }
+    .detail[data-state="done"] .detail-hex { background: var(--code); color: #fff; }
     .detail[data-state="next"] .detail-hex { background: var(--make-soft); color: var(--make); }
     .eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); }
     .detail h2 { font-size: 1.4rem; line-height: 1.2; }
@@ -97,12 +136,31 @@
     .status { font-weight: 600; }
     .status.live { color: var(--code-text); }
     .status.next { color: var(--make); }
+    .status.done { color: var(--code-text); }
     .play-btn {
       justify-self: start; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
       background: var(--code); color: #fff; font-weight: 600; font-size: 0.95rem;
       padding: 11px 20px; border-radius: var(--pill);
     }
+    .play-btn { border: 0; cursor: pointer; font-family: inherit; }
     .play-btn svg { width: 15px; height: 15px; }
+
+    /* the game runs in a dialog on this page, so its completion message can be saved */
+    .game-dialog {
+      width: min(1100px, calc(100vw - 24px)); height: calc(100vh - 24px); max-height: none; max-width: none;
+      padding: 0; border: 1px solid var(--border-strong); border-radius: var(--radius-card);
+      background: var(--surface); color: var(--ink); overflow: hidden;
+    }
+    .game-dialog[open] { display: flex; flex-direction: column; }
+    .game-dialog::backdrop { background: rgba(5, 4, 8, 0.75); }
+    .dialog-bar { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 18px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .dialog-bar h2 { font-size: 1.05rem; }
+    .dialog-bar .spacer { flex: 1; }
+    .dialog-status { padding: 10px 18px; font-size: 0.92rem; border-bottom: 1px solid var(--border); }
+    .dialog-status:empty { display: none; }
+    .dialog-status.good { background: var(--code-soft); }
+    .dialog-status.error { background: var(--air-soft); }
+    .game-dialog iframe { flex: 1; width: 100%; border: 0; background: var(--bg); }
     .muted-note { font-size: 0.88rem; color: var(--muted-2); }
 
     .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; counter-reset: step; }
@@ -174,12 +232,23 @@
               Every game trains one level of Bloom's taxonomy, and you unlock the next one by passing the game before it.
             </p>
           </div>
-          <div class="tree-meta">
-            <div class="legend" aria-label="Legend">
-              <span class="chip k-live"><i aria-hidden="true"></i>Playable</span>
-              <span class="chip k-next"><i aria-hidden="true"></i>Up next</span>
-              <span class="chip k-locked"><i aria-hidden="true"></i>Locked</span>
+          <form class="player" data-player-form novalidate>
+            <label for="player-id">Player ID</label>
+            <div class="player-row">
+              <input id="player-id" name="player" maxlength="40" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="e.g. tiger-42" />
+              <button class="btn btn-primary" type="submit" data-load>Save my progress</button>
+              <span class="or">or</span>
+              <button class="btn btn-ghost" type="button" data-free>Free play</button>
             </div>
+            <p class="player-help">
+              Enter a made-up code (lowercase letters, numbers and hyphens). A new code starts a new player; a code you used before
+              loads your progress. Anyone who knows the code can see that progress, so don't use your real name.
+              Free play opens every game and saves nothing.
+            </p>
+            <p class="player-status" data-player-status aria-live="polite"></p>
+          </form>
+          <div class="tree-meta">
+            <div class="legend" aria-label="Legend" data-legend></div>
             <span class="live-count" data-live-count></span>
           </div>
         </div>
@@ -210,6 +279,17 @@
         <ol class="ladder" data-ladder></ol>
       </section>
     </main>
+
+    <dialog class="game-dialog" data-game-dialog aria-labelledby="game-dialog-title">
+      <div class="dialog-bar">
+        <h2 id="game-dialog-title" data-dialog-title></h2>
+        <span class="mode-pill" data-dialog-mode></span>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost" type="button" data-dialog-close>Close</button>
+      </div>
+      <div class="dialog-status" data-dialog-status aria-live="polite"></div>
+      <iframe data-dialog-frame title="Game"></iframe>
+    </dialog>
 
     <footer class="site-footer">
       <p>Made by Anthony Inocencio Ramos for the minor <em>AI, Games &amp; Digitale geletterdheid</em>.</p>
@@ -264,13 +344,33 @@
 
     const byId = Object.fromEntries(GAMES.map((g) => [g.id, g]));
     const unlocks = (id) => GAMES.filter((g) => g.requires.includes(id));
+    const PASS_RATIO = 0.8;
+    const API = "../api.php";
+    const STORE_KEY = "minor-player";
     let livePaths = {};
     let selected = null;
 
+    // How the visitor plays: "none" (just looking), "free" (everything open, nothing saved)
+    // or "player" (progress saved under a made-up ID; games unlock by passing the previous ones).
+    let mode = "none";
+    let player = { id: null, passed: new Set() };
+
+    const built = (id) => Boolean(livePaths[id]);
+    const passed = (id) => player.passed.has(id);
+    const requiresMet = (g) => g.requires.every((r) => (mode === "player" ? passed(r) : built(r)));
+
     function stateOf(g) {
-      if (livePaths[g.id]) return "live";
-      return g.requires.every((r) => livePaths[r]) ? "next" : "locked";
+      if (mode === "player") {
+        if (built(g.id) && passed(g.id)) return "done";
+        if (requiresMet(g)) return built(g.id) ? "live" : "next";
+        return "locked";
+      }
+      if (built(g.id)) return "live";
+      return requiresMet(g) ? "next" : "locked";
     }
+    const canPlay = (g) => ["live", "done"].includes(stateOf(g));
+    const STATE_LABEL = { done: "passed", live: "playable", next: "up next", locked: "locked" };
+
     const emblem = (id) => `emblems/${id}.svg#i`;
     function hexPoints(cx, cy, r) {
       const pts = [];
@@ -280,6 +380,7 @@
       }
       return pts.join(" ");
     }
+    const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
     // Horizontal on wide screens, top-to-bottom on phones.
     function layout(wide) {
@@ -309,6 +410,12 @@
       };
     }
 
+    function edgeClass(from, to) {
+      const a = stateOf(byId[from]), b = stateOf(byId[to]);
+      if (mode === "player") return a === "done" ? (b === "done" ? "lit" : "next") : "";
+      return built(from) && built(to) ? "lit" : built(from) ? "next" : "";
+    }
+
     function renderTree() {
       const svg = document.querySelector("[data-tree]");
       const wide = svg.parentElement.clientWidth >= 760;
@@ -319,8 +426,7 @@
 
       const edges = GAMES.flatMap((g) => g.requires.map((r) => {
         const [x1, y1] = pos[r], [x2, y2] = pos[g.id];
-        const cls = livePaths[r] && livePaths[g.id] ? "lit" : livePaths[r] ? "next" : "";
-        return `<line class="edge ${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`;
+        return `<line class="edge ${edgeClass(r, g.id)}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`;
       })).join("");
 
       const tiers = L.tiers.map((t) => `<text class="tier" x="${t.x}" y="${t.y}" text-anchor="${t.anchor}">${t.text}</text>`).join("");
@@ -330,15 +436,34 @@
         const size = Math.round(L.R * 0.66);
         const top = `<use class="emblem" href="${emblem(g.id)}" transform="translate(${x - size / 2} ${y - size - 6}) scale(${size / 256})" />`;
         const names = g.lines.map((ln, i) => `<tspan x="${x}" dy="${i ? 15 : 0}">${ln}</tspan>`).join("");
-        const label = `${g.title}, ${BLOOM.find((b) => b.id === g.bloom).name}, ${s === "live" ? "playable" : s === "next" ? "up next" : "locked"}`;
+        const cx = x + L.R * 0.62, cy = y - L.R * 0.62;
+        const check = s === "done"
+          ? `<circle class="check-bg" cx="${cx}" cy="${cy}" r="11" /><path class="check" d="M${cx - 5} ${cy} l3.5 3.5 l6.5 -7" />`
+          : "";
+        const label = `${g.title}, ${BLOOM.find((b) => b.id === g.bloom).name}, ${STATE_LABEL[s]}`;
         return `<g class="hex ${s}${selected === g.id ? " selected" : ""}" data-id="${g.id}" tabindex="0" role="button" aria-pressed="${selected === g.id}" aria-label="${label}">
           <polygon class="shape" points="${hexPoints(x, y, L.R)}" />
           ${top}
           <text class="name" x="${x}" y="${y + 16}" text-anchor="middle">${names}</text>
+          ${check}
         </g>`;
       }).join("");
 
       svg.innerHTML = `<g>${edges}</g>${tiers}${hexes}`;
+    }
+
+    function renderMeta() {
+      const legend = mode === "player"
+        ? [["k-done", "Passed"], ["k-open", "Open"], ["k-next", "Up next"], ["k-locked", "Locked"]]
+        : [["k-live", "Playable"], ["k-next", "Up next"], ["k-locked", "Locked"]];
+      document.querySelector("[data-legend]").innerHTML =
+        legend.map(([k, t]) => `<span class="chip ${k}"><i aria-hidden="true"></i>${t}</span>`).join("");
+      const count = document.querySelector("[data-live-count]");
+      if (mode === "player") {
+        count.innerHTML = `<b>${GAMES.filter((g) => passed(g.id)).length} of ${GAMES.length}</b> games passed`;
+      } else {
+        count.innerHTML = `<b>${GAMES.filter((g) => built(g.id)).length} of ${GAMES.length}</b> games playable`;
+      }
     }
 
     function renderDetail() {
@@ -347,7 +472,24 @@
       const level = BLOOM.indexOf(bloom) + 1;
       const names = (ids) => ids.length ? ids.map((id) => byId[id].title).join(" + ") : "Nothing, this is where you start";
       const next = unlocks(g.id).map((u) => u.id);
-      const status = { live: "Playable now", next: "Up next, being built", locked: "Locked" }[s];
+      const status = {
+        done: "Passed",
+        live: mode === "player" ? "Open: pass it to unlock the next game" : "Playable now",
+        next: built(g.id) ? "Locked" : "Up next, being built",
+        locked: built(g.id) ? "Locked" : "Not built yet"
+      }[s];
+      let action;
+      if (canPlay(g) && mode !== "none") {
+        action = `<button class="play-btn" type="button" data-play="${g.id}">${s === "done" ? "Play again" : "Play " + g.title}
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></button>`;
+      } else if (canPlay(g)) {
+        action = `<p class="muted-note">To play, enter a player ID above or choose <button class="link-btn" type="button" data-free>free play</button>.</p>`;
+      } else if (!built(g.id)) {
+        action = `<p class="muted-note">${s === "next" ? "This is the next game to be released." : "This game hasn't been built yet."}</p>`;
+      } else {
+        const missing = g.requires.filter((r) => !passed(r));
+        action = `<p class="muted-note">Pass ${names(missing)} first to unlock this game, or switch to <button class="link-btn" type="button" data-free>free play</button>.</p>`;
+      }
       const el = document.querySelector("[data-detail]");
       el.dataset.state = s;
       el.innerHTML = `
@@ -365,10 +507,7 @@
           <dt>Requires</dt><dd>${names(g.requires)}</dd>
           <dt>Unlocks</dt><dd>${next.length ? names(next) : "The end of the route"}</dd>
         </dl>
-        ${s === "live"
-          ? `<a class="play-btn" href="../${livePaths[g.id]}" target="_blank" rel="noopener">Play ${g.title}
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></a>`
-          : `<p class="muted-note">${s === "next" ? "This is the next game to be released." : "Opens after " + names(g.requires) + "."}</p>`}`;
+        ${action}`;
     }
 
     function renderLadder() {
@@ -378,8 +517,15 @@
           <span class="lv-name">${b.name}</span>
           <span class="lv-do">${b.does}</span>
           <span class="lv-games">${GAMES.filter((g) => g.bloom === b.id)
-            .map((g) => `<span class="chip${livePaths[g.id] ? " on" : ""}">${g.title}</span>`).join("")}</span>
+            .map((g) => `<span class="chip${(mode === "player" ? passed(g.id) : built(g.id)) ? " on" : ""}">${g.title}</span>`).join("")}</span>
         </li>`).join("");
+    }
+
+    function renderAll() {
+      renderMeta();
+      renderTree();
+      renderDetail();
+      renderLadder();
     }
 
     function select(id) {
@@ -388,6 +534,157 @@
       renderDetail();
     }
 
+    // The furthest game you can play right now, so the detail panel opens on what to do next.
+    function suggested() {
+      const open = GAMES.filter((g) => stateOf(g) === "live");
+      const done = GAMES.filter((g) => stateOf(g) === "done");
+      return (open[0] || done[done.length - 1] || GAMES[0]).id;
+    }
+
+    /* ---------- player ID & storage ---------- */
+    const validId = (v) => typeof v === "string" && v.length >= 1 && v.length <= 40 && /^[a-z0-9][a-z0-9-]*$/.test(v);
+
+    async function api(url, options) {
+      const res = await fetch(url, { ...options, cache: "no-store" });
+      let data = null;
+      try { data = await res.json(); } catch { /* not JSON */ }
+      if (!data) throw new Error("The progress server isn't available right now.");
+      if (!res.ok || data.ok !== true) throw new Error(data.message || `The progress server refused the request (HTTP ${res.status}).`);
+      return data;
+    }
+
+    function showStatus(html, error = false) {
+      const el = document.querySelector("[data-player-status]");
+      el.innerHTML = html;
+      el.classList.toggle("error", error);
+    }
+
+    function remember() {
+      try {
+        if (mode === "none") localStorage.removeItem(STORE_KEY);
+        else localStorage.setItem(STORE_KEY, JSON.stringify({ mode, id: player.id }));
+      } catch { /* storage blocked: just don't remember */ }
+    }
+
+    async function loadPlayer(id) {
+      const form = document.querySelector("[data-player-form]");
+      const buttons = form.querySelectorAll("button");
+      buttons.forEach((b) => (b.disabled = true));
+      showStatus(`Loading progress for <b>${esc(id)}</b>…`);
+      try {
+        const data = await api(`${API}?pseudonym=${encodeURIComponent(id)}`);
+        const done = new Set(data.results
+          .filter((r) => byId[r.gameId] && r.maxScore > 0 && r.bestScore / r.maxScore >= PASS_RATIO)
+          .map((r) => r.gameId));
+        mode = "player";
+        player = { id, passed: done };
+        remember();
+        selected = suggested();
+        renderAll();
+        showPlayerStatus();
+      } catch (err) {
+        showStatus(`Couldn't load progress: ${esc(err.message)} You can still use free play.`, true);
+      } finally {
+        buttons.forEach((b) => (b.disabled = false));
+      }
+    }
+
+    function showPlayerStatus() {
+      const n = player.passed.size;
+      const switchBtn = `<button class="link-btn" type="button" data-switch>Switch player</button>`;
+      showStatus(n
+        ? `Playing as <span class="mode-pill">${esc(player.id)}</span> · ${n} ${n === 1 ? "game" : "games"} passed. Your progress is saved each time you pass a game. ${switchBtn}`
+        : `New player <span class="mode-pill">${esc(player.id)}</span> · start with ${byId[suggested()].title}. Your progress is saved each time you pass a game. ${switchBtn}`);
+    }
+
+    function startFreePlay() {
+      mode = "free";
+      player = { id: null, passed: new Set() };
+      remember();
+      selected = suggested();
+      renderAll();
+      showStatus(`<span class="mode-pill free">Free play</span> Every game is open and nothing is saved. <button class="link-btn" type="button" data-switch>Use a player ID instead</button>`);
+    }
+
+    function reset() {
+      mode = "none";
+      player = { id: null, passed: new Set() };
+      remember();
+      showStatus("");
+      renderAll();
+      document.getElementById("player-id").focus();
+    }
+
+    /* ---------- playing a game in the dialog ---------- */
+    let round = null;
+    const dialog = document.querySelector("[data-game-dialog]");
+    const frame = document.querySelector("[data-dialog-frame]");
+
+    function dialogStatus(html, kind = "") {
+      const el = document.querySelector("[data-dialog-status]");
+      el.innerHTML = html;
+      el.className = `dialog-status ${kind}`;
+    }
+
+    function openGame(id) {
+      const g = byId[id];
+      if (!g || !canPlay(g) || mode === "none") return;
+      // One round per opening: only its first completion message is stored.
+      round = { gameId: id, mode, playerId: player.id, received: false, pending: null };
+      document.querySelector("[data-dialog-title]").textContent = g.title;
+      const pill = document.querySelector("[data-dialog-mode]");
+      pill.textContent = mode === "player" ? `Saving for ${player.id}` : "Free play · not saved";
+      pill.classList.toggle("free", mode === "free");
+      dialogStatus("");
+      frame.title = g.title;
+      frame.src = `../${livePaths[id]}`;
+      dialog.showModal();
+    }
+
+    function closeGame() {
+      round = null;
+      frame.src = "about:blank";
+      if (dialog.open) dialog.close();
+    }
+
+    async function saveRound(r) {
+      dialogStatus("You passed! Saving your progress…");
+      try {
+        await api(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(r.pending) });
+        r.pending = null;
+        const before = new Set(GAMES.filter((g) => canPlay(g)).map((g) => g.id));
+        if (mode === "player" && player.id === r.playerId) {
+          player.passed.add(r.gameId);
+          showPlayerStatus();
+        }
+        const opened = GAMES.filter((g) => canPlay(g) && !before.has(g.id) && g.id !== r.gameId);
+        selected = opened[0] ? opened[0].id : r.gameId;
+        renderAll();
+        dialogStatus(`Saved! You passed ${byId[r.gameId].title}.` +
+          (opened.length ? ` Unlocked: <b>${opened.map((g) => g.title).join(" and ")}</b>. Close this window to continue.`
+                         : unlocks(r.gameId).length ? " The next game is still being built." : " That's the end of the route."), "good");
+      } catch (err) {
+        dialogStatus(`Your result wasn't saved: ${esc(err.message)} <button class="link-btn" type="button" data-retry>Try again</button>`, "error");
+      }
+    }
+
+    window.addEventListener("message", (event) => {
+      const r = round;
+      if (!r || event.origin !== location.origin || event.source !== frame.contentWindow) return;
+      const d = event.data;
+      if (!d || d.type !== "GAME_COMPLETED" || d.gameId !== r.gameId) return;
+      if (!Number.isInteger(d.score) || !Number.isInteger(d.maxScore) || d.maxScore < 1 || d.score < 0 || d.score > d.maxScore) return;
+      if (r.received) return;
+      r.received = true;
+      if (r.mode !== "player") {
+        dialogStatus(`You passed ${byId[r.gameId].title}! This is free play, so nothing was saved.`, "good");
+        return;
+      }
+      r.pending = { pseudonym: r.playerId, gameId: r.gameId, score: d.score, maxScore: d.maxScore };
+      saveRound(r);
+    });
+
+    /* ---------- start ---------- */
     async function main() {
       try {
         const res = await fetch("../manifest.json");
@@ -399,13 +696,8 @@
       } catch {
         livePaths = {};
       }
-      const live = GAMES.filter((g) => livePaths[g.id]);
-      document.querySelector("[data-live-count]").innerHTML = `<b>${live.length} of ${GAMES.length}</b> games playable`;
-      // Start on the newest playable game, so the detail panel shows what you can do now.
-      selected = (live[live.length - 1] || GAMES[0]).id;
-      renderTree();
-      renderDetail();
-      renderLadder();
+      selected = suggested();
+      renderAll();
 
       const svg = document.querySelector("[data-tree]");
       svg.addEventListener("click", (e) => {
@@ -425,6 +717,37 @@
         const wide = svg.parentElement.clientWidth >= 760;
         if (wide !== wasWide) { wasWide = wide; renderTree(); }
       }).observe(svg.parentElement);
+
+      const input = document.getElementById("player-id");
+      document.querySelector("[data-player-form]").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const id = input.value.trim().toLowerCase();
+        input.value = id;
+        if (!validId(id)) {
+          showStatus("Use lowercase letters, numbers and hyphens only (max. 40), starting with a letter or number.", true);
+          input.focus();
+          return;
+        }
+        loadPlayer(id);
+      });
+      // Buttons inside re-rendered panels use delegation.
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("[data-free]")) startFreePlay();
+        else if (e.target.closest("[data-switch]")) reset();
+        else if (e.target.closest("[data-play]")) openGame(e.target.closest("[data-play]").dataset.play);
+        else if (e.target.closest("[data-dialog-close]")) closeGame();
+        else if (e.target.closest("[data-retry]") && round && round.pending) saveRound(round);
+      });
+      dialog.addEventListener("close", () => { if (round) closeGame(); });
+
+      // Pick up where this browser left off.
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch { saved = null; }
+      if (saved && saved.mode === "free") startFreePlay();
+      else if (saved && saved.mode === "player" && validId(saved.id)) {
+        input.value = saved.id;
+        loadPlayer(saved.id);
+      }
     }
 
     main();
