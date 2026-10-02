@@ -1,31 +1,20 @@
 const TARGET_GAME_SLOTS = 3;
 
-function initials(title) {
-  return title
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 // Each game has a one-colour emblem in games/emblems/<id>.svg (drawn in currentColor).
-function gameBadge(item) {
-  const id = /^games\/([^/]+)\//.exec(item.path)?.[1];
-  if (!id) return initials(item.title);
-  return `<svg viewBox="0 0 256 256" width="24" height="24" aria-hidden="true"><use href="games/emblems/${id}.svg#i" /></svg>`;
+function gameBadge(game) {
+  return `<svg viewBox="0 0 256 256" width="24" height="24" aria-hidden="true"><use href="games/emblems/${game.id}.svg#i" /></svg>`;
 }
 
-function renderGameTile(item) {
+function renderGameTile(game) {
   const el = document.createElement("a");
   el.className = "tile";
-  el.href = item.path;
+  el.href = game.path;
   el.target = "_blank";
   el.rel = "noopener";
   el.innerHTML = `
-    <span class="tile-badge">${gameBadge(item)}</span>
-    <h3>${item.title}</h3>
-    <p>${item.description ?? ""}</p>
+    <span class="tile-badge">${gameBadge(game)}</span>
+    <h3>${game.title}</h3>
+    <p>${game.learningGoal}</p>
     <span class="tile-play">Play</span>`;
   return el;
 }
@@ -42,9 +31,9 @@ function renderSoonTile() {
 }
 
 async function main() {
-  const res = await fetch("manifest.json");
-  const { items } = await res.json();
-  const games = items.filter((item) => item.type === "game");
+  // games/games.json is the one register of games (see games/registry.js).
+  const { games, errors } = await window.GameRegistry.load("games/games.json");
+  if (errors.length) console.warn("games.json:", errors);
 
   const countEl = document.querySelector('[data-count="games"]');
   if (countEl) countEl.textContent = games.length;

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "games": [
+    {
+      "id": "html-hunter",
+      "title": "HTML Hunter",
+      "learningGoal": "Herken de bouwstenen van het web voor je begint met bouwen.",
+      "path": "/games/html-hunter/",
+      "requires": []
+    },
+    {
+      "id": "build-the-dom",
+      "title": "Build the DOM",
+      "learningGoal": "Ontdek hoe HTML-elementen samen de structuur van een webpagina vormen.",
+      "path": "/games/build-the-dom/",
+      "requires": [
+        { "gameId": "html-hunter", "type": "completed" }
+      ]
+    }
+  ]
+}

@@ -19,8 +19,8 @@
 ## About
 
 A plain HTML/CSS/JavaScript site, no framework or build step, for the work I make during the minor
-*AI, Games & Digitale geletterdheid*. The home page lists everything in `manifest.json` and groups
-it into games and PDFs.
+*AI, Games & Digitale geletterdheid*. Every game is registered in `games/games.json`; the home page
+and the skill tree at `/games/` both read it.
 
 ### Games
 
@@ -31,21 +31,34 @@ it into games and PDFs.
   (building the main structure, placing visible content and spotting structure errors) move from
   placing elements in a DOM tree to explaining why a structure is wrong.
 
-## Adding something
+## Adding a game
 
-1. Put the file in `games/<name>/` or `pdfs/`.
-2. Add an entry to `manifest.json`:
+1. Put the game in `games/<name>/` with an `index.html`. When the player passes, the game sends one
+   message to the page around it:
+   `window.parent.postMessage({ type: "GAME_COMPLETED", gameId, score, maxScore }, location.origin)`.
+2. Add it to `games/games.json` (`schemaVersion` 1, same format as the course's basisskilltree):
 
    ```json
    {
-     "title": "HTML Hunter",
-     "description": "Herken de bouwstenen van het web voor je begint met bouwen.",
-     "type": "game",
-     "path": "games/html-hunter/"
+     "id": "build-the-dom",
+     "title": "Build the DOM",
+     "learningGoal": "Ontdek hoe HTML-elementen samen de structuur van een webpagina vormen.",
+     "path": "/games/build-the-dom/",
+     "requires": [{ "gameId": "html-hunter", "type": "completed" }]
    }
    ```
 
-   `type` is `game` or `pdf`; it decides the section the item appears in.
+   - `id` is exactly the `gameId` the game sends; never rename it.
+   - `requires`: `[]` opens it at once; `{"gameId": "…", "type": "completed"}` needs that game passed;
+     `{"gameId": "…", "type": "minPercent", "value": 80}` needs at least that percentage. All conditions must hold.
+   - Unknown fields, unknown ids, a game that requires itself or a circle are reported on `/games/`
+     and that entry is left out.
+3. Give it a place on the route in the `GAMES` list in `games/index.html` (Bloom level, key question, position),
+   and an emblem in `games/emblems/<id>.svg`.
+
+Players save progress under a made-up player code on `/games/`: the page opens the game in a dialog,
+receives `GAME_COMPLETED` and stores `{pseudonym, gameId, score, maxScore}` through `api.php`, then reads
+the progress back. Free play opens every game and saves nothing.
 
 ## Running it
 

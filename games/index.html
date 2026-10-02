@@ -58,6 +58,8 @@
       padding: 3px 10px; border-radius: var(--pill); background: var(--code-soft); color: var(--code-text);
     }
     .mode-pill.free { background: var(--make-soft); color: var(--make); }
+    .config-errors { padding: 12px 16px; border-radius: var(--radius-tile); background: var(--air-soft); border: 1px solid var(--air); font-size: 0.9rem; }
+    .config-errors b { font-weight: 600; }
     .live-count { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
     .live-count b { color: var(--ink); font-weight: 600; }
 
@@ -247,6 +249,7 @@
             </p>
             <p class="player-status" data-player-status aria-live="polite"></p>
           </form>
+          <p class="config-errors" data-config-errors role="alert" hidden></p>
           <div class="tree-meta">
             <div class="legend" aria-label="Legend" data-legend></div>
             <span class="live-count" data-live-count></span>
@@ -297,8 +300,11 @@
     </footer>
   </div>
 
+  <script src="registry.js"></script>
   <script>
-    // The route through the minor. A game lights up as soon as manifest.json lists games/<id>/.
+    // The route through the minor: Bloom level, key question and place in the tree for every planned game.
+    // Which games exist, where they live and what unlocks them comes from games.json (see registry.js);
+    // the `requires` below only draw the route for games that aren't in games.json yet.
     const BLOOM = [
       { id: "remember", name: "Remember", does: "Recognise the building blocks and name what they are." },
       { id: "understand", name: "Understand", does: "Explain how the parts fit together." },
@@ -343,21 +349,24 @@
     const TIER_COLS = { remember: [0], understand: [1], apply: [2], analyse: [3, 4], evaluate: [5], create: [6] };
 
     const byId = Object.fromEntries(GAMES.map((g) => [g.id, g]));
-    const unlocks = (id) => GAMES.filter((g) => g.requires.includes(id));
-    const PASS_RATIO = 0.8;
+    let registry = new Map();   // id → game from games.json
+    // Conditions for a game: from games.json when it's there, otherwise the planned route ("completed").
+    const reqs = (g) => registry.get(g.id)?.requires ?? g.requires.map((id) => ({ gameId: id, type: "completed" }));
+    const unlocks = (id) => GAMES.filter((g) => reqs(g).some((r) => r.gameId === id));
     const API = "../api.php";
     const STORE_KEY = "minor-player";
-    let livePaths = {};
     let selected = null;
 
     // How the visitor plays: "none" (just looking), "free" (everything open, nothing saved)
     // or "player" (progress saved under a made-up ID; games unlock by passing the previous ones).
     let mode = "none";
-    let player = { id: null, passed: new Set() };
+    let player = { id: null, results: {} };   // results: gameId → { bestScore, maxScore } from api.php
 
-    const built = (id) => Boolean(livePaths[id]);
-    const passed = (id) => player.passed.has(id);
-    const requiresMet = (g) => g.requires.every((r) => (mode === "player" ? passed(r) : built(r)));
+    const built = (id) => registry.has(id);
+    const passed = (id) => Boolean(player.results[id]);   // a stored result means the game was completed
+    const requiresMet = (g) => reqs(g).every((r) =>
+      mode === "player" ? window.GameRegistry.met(r, player.results) : built(r.gameId));
+    const passedCount = () => GAMES.filter((g) => built(g.id) && passed(g.id)).length;
 
     function stateOf(g) {
       if (mode === "player") {
@@ -424,7 +433,7 @@
       svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`);
       svg.classList.toggle("vertical", !wide);
 
-      const edges = GAMES.flatMap((g) => g.requires.map((r) => {
+      const edges = GAMES.flatMap((g) => reqs(g).filter((r) => pos[r.gameId]).map(({ gameId: r }) => {
         const [x1, y1] = pos[r], [x2, y2] = pos[g.id];
         return `<line class="edge ${edgeClass(r, g.id)}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`;
       })).join("");
@@ -460,7 +469,7 @@
         legend.map(([k, t]) => `<span class="chip ${k}"><i aria-hidden="true"></i>${t}</span>`).join("");
       const count = document.querySelector("[data-live-count]");
       if (mode === "player") {
-        count.innerHTML = `<b>${GAMES.filter((g) => passed(g.id)).length} of ${GAMES.length}</b> games passed`;
+        count.innerHTML = `<b>${passedCount()} of ${GAMES.length}</b> games passed`;
       } else {
         count.innerHTML = `<b>${GAMES.filter((g) => built(g.id)).length} of ${GAMES.length}</b> games playable`;
       }
@@ -470,7 +479,10 @@
       const g = byId[selected], s = stateOf(g);
       const bloom = BLOOM.find((b) => b.id === g.bloom);
       const level = BLOOM.indexOf(bloom) + 1;
-      const names = (ids) => ids.length ? ids.map((id) => byId[id].title).join(" + ") : "Nothing, this is where you start";
+      const names = (ids) => ids.length ? ids.map((id) => byId[id]?.title || id).join(" + ") : "Nothing, this is where you start";
+      const conds = (list) => list.length
+        ? list.map((r) => (byId[r.gameId]?.title || r.gameId) + (r.type === "minPercent" ? ` (at least ${r.value}%)` : "")).join(" + ")
+        : "Nothing, this is where you start";
       const next = unlocks(g.id).map((u) => u.id);
       const status = {
         done: "Passed",
@@ -487,8 +499,8 @@
       } else if (!built(g.id)) {
         action = `<p class="muted-note">${s === "next" ? "This is the next game to be released." : "This game hasn't been built yet."}</p>`;
       } else {
-        const missing = g.requires.filter((r) => !passed(r));
-        action = `<p class="muted-note">Pass ${names(missing)} first to unlock this game, or switch to <button class="link-btn" type="button" data-free>free play</button>.</p>`;
+        const missing = reqs(g).filter((r) => !window.GameRegistry.met(r, player.results));
+        action = `<p class="muted-note">Pass ${conds(missing)} first to unlock this game, or switch to <button class="link-btn" type="button" data-free>free play</button>.</p>`;
       }
       const el = document.querySelector("[data-detail]");
       el.dataset.state = s;
@@ -501,10 +513,10 @@
           </div>
         </div>
         <p class="question">${g.question}</p>
-        <p class="goal">${g.goal}</p>
+        <p class="goal">${esc(g.goal)}</p>
         <dl class="facts">
           <dt>Status</dt><dd class="status ${s}">${status}</dd>
-          <dt>Requires</dt><dd>${names(g.requires)}</dd>
+          <dt>Requires</dt><dd>${conds(reqs(g))}</dd>
           <dt>Unlocks</dt><dd>${next.length ? names(next) : "The end of the route"}</dd>
         </dl>
         ${action}`;
@@ -566,18 +578,21 @@
       } catch { /* storage blocked: just don't remember */ }
     }
 
+    // GET api.php?pseudonym=… → { gameId: { bestScore, maxScore } }
+    async function readProgress(id) {
+      const data = await api(`${API}?pseudonym=${encodeURIComponent(id)}`);
+      return Object.fromEntries(data.results.map((r) => [r.gameId, { bestScore: r.bestScore, maxScore: r.maxScore }]));
+    }
+
     async function loadPlayer(id) {
       const form = document.querySelector("[data-player-form]");
       const buttons = form.querySelectorAll("button");
       buttons.forEach((b) => (b.disabled = true));
       showStatus(`Loading progress for <b>${esc(id)}</b>…`);
       try {
-        const data = await api(`${API}?pseudonym=${encodeURIComponent(id)}`);
-        const done = new Set(data.results
-          .filter((r) => byId[r.gameId] && r.maxScore > 0 && r.bestScore / r.maxScore >= PASS_RATIO)
-          .map((r) => r.gameId));
+        const results = await readProgress(id);
         mode = "player";
-        player = { id, passed: done };
+        player = { id, results };
         remember();
         selected = suggested();
         renderAll();
@@ -590,7 +605,7 @@
     }
 
     function showPlayerStatus() {
-      const n = player.passed.size;
+      const n = passedCount();
       const switchBtn = `<button class="link-btn" type="button" data-switch>Switch player</button>`;
       showStatus(n
         ? `Playing as <span class="mode-pill">${esc(player.id)}</span> · ${n} ${n === 1 ? "game" : "games"} passed. Your progress is saved each time you pass a game. ${switchBtn}`
@@ -599,7 +614,7 @@
 
     function startFreePlay() {
       mode = "free";
-      player = { id: null, passed: new Set() };
+      player = { id: null, results: {} };
       remember();
       selected = suggested();
       renderAll();
@@ -608,7 +623,7 @@
 
     function reset() {
       mode = "none";
-      player = { id: null, passed: new Set() };
+      player = { id: null, results: {} };
       remember();
       showStatus("");
       renderAll();
@@ -637,7 +652,7 @@
       pill.classList.toggle("free", mode === "free");
       dialogStatus("");
       frame.title = g.title;
-      frame.src = `../${livePaths[id]}`;
+      frame.src = registry.get(id).path;
       dialog.showModal();
     }
 
@@ -654,7 +669,9 @@
         r.pending = null;
         const before = new Set(GAMES.filter((g) => canPlay(g)).map((g) => g.id));
         if (mode === "player" && player.id === r.playerId) {
-          player.passed.add(r.gameId);
+          // Read the progress back, so the tree shows what the server really stored.
+          try { player.results = await readProgress(r.playerId); }
+          catch { player.results[r.gameId] = { bestScore: r.savedScore, maxScore: r.savedMax }; }
           showPlayerStatus();
         }
         const opened = GAMES.filter((g) => canPlay(g) && !before.has(g.id) && g.id !== r.gameId);
@@ -681,20 +698,22 @@
         return;
       }
       r.pending = { pseudonym: r.playerId, gameId: r.gameId, score: d.score, maxScore: d.maxScore };
+      r.savedScore = d.score;
+      r.savedMax = d.maxScore;
       saveRound(r);
     });
 
     /* ---------- start ---------- */
     async function main() {
-      try {
-        const res = await fetch("../manifest.json");
-        const { items } = await res.json();
-        for (const item of items) {
-          const m = item.type === "game" && /^games\/([^/]+)\//.exec(item.path);
-          if (m) livePaths[m[1]] = item.path;
-        }
-      } catch {
-        livePaths = {};
+      const { games, errors } = await window.GameRegistry.load("games.json");
+      registry = new Map(games.map((g) => [g.id, g]));
+      const outside = games.filter((g) => !byId[g.id]).map((g) => g.id);
+      if (outside.length) errors.push(`Not shown in the tree yet (no place on the route): ${outside.join(", ")}.`);
+      if (errors.length) {
+        const box = document.querySelector("[data-config-errors]");
+        box.innerHTML = `<b>games.json has a problem.</b> ${errors.map(esc).join(" ")}`;
+        box.hidden = false;
+        console.warn("games.json:", errors);
       }
       selected = suggested();
       renderAll();
