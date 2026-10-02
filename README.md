@@ -4,7 +4,7 @@
 
 **Work from my minor, collected on one small site: educational browser games, reports and other pieces.**
 
-[🌐 Live site](https://minor.anthony-air.nl) · [🎮 HTML Hunter](https://minor.anthony-air.nl/games/html-hunter/index.html) · [💼 Portfolio](https://anthony-air.nl)
+[🌐 Live site](https://minor.anthony-air.nl) · [🎮 HTML Hunter](https://minor.anthony-air.nl/games/html-hunter/) · [💼 Portfolio](https://anthony-air.nl)
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=css3&logoColor=white)
@@ -12,7 +12,7 @@
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat-square&logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-<a href="https://minor.anthony-air.nl/games/html-hunter/index.html"><img src="docs/html-hunter.jpg" alt="HTML Hunter: a game for recognising the building blocks of HTML" width="720" /></a>
+<a href="https://minor.anthony-air.nl/games/html-hunter/"><img src="docs/html-hunter.jpg" alt="HTML Hunter: a game for recognising the building blocks of HTML" width="720" /></a>
 
 </div>
 
@@ -41,7 +41,7 @@ it into games and PDFs.
      "title": "HTML Hunter",
      "description": "Herken de bouwstenen van het web voor je begint met bouwen.",
      "type": "game",
-     "path": "games/html-hunter/index.html"
+     "path": "games/html-hunter/"
    }
    ```
 
