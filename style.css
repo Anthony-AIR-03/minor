@@ -126,17 +126,11 @@ p {
   gap: 11px;
   text-decoration: none;
 }
-.hexmark {
-  width: 36px;
+.brand-logo {
+  width: 40px;
   height: 40px;
   flex-shrink: 0;
-  background: var(--code);
-  color: #fff;
-  clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  font-size: 16px;
+  color: var(--code);
 }
 .brand-name {
   font-weight: 600;
