@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Games — Minor</title>
+  <meta name="description" content="All games from Anthony's minor: AI, Games & Digitale geletterdheid." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../index.html">
+        <span class="hexmark" aria-hidden="true">M</span>
+        <span>
+          <span class="brand-name">Minor</span>
+          <span class="brand-sub">AI, Games &amp; Digitale geletterdheid</span>
+        </span>
+      </a>
+      <nav class="topnav" aria-label="Sections">
+        <a href="../index.html#track-code">Back to overview</a>
+      </nav>
+      <a class="pill-cta" href="https://anthony-air.nl" target="_blank" rel="noopener">
+        anthony-air.nl
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14L14 6M14 6H7.5M14 6v6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </a>
+    </header>
+
+    <main id="main">
+      <section class="card track track-code">
+        <div class="track-head">
+          <span class="track-dot" aria-hidden="true"></span>
+          <h2>All games</h2>
+        </div>
+        <p class="track-copy">
+          Every game made for the computational thinking and vibe-coding part of this minor, in one
+          place. Each one still ships from its own small domain.
+        </p>
+        <div class="shelf" data-games-all></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Made by Anthony Inocencio Ramos for the minor <em>AI, Games &amp; Digitale geletterdheid</em>.</p>
+      <a href="https://anthony-air.nl" target="_blank" rel="noopener">anthony-air.nl</a>
+    </footer>
+  </div>
+
+  <script>
+    function initials(title) {
+      return title.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+    }
+
+    async function main() {
+      const res = await fetch("../manifest.json");
+      const { items } = await res.json();
+      const games = items.filter((item) => item.type === "game");
+      const shelf = document.querySelector("[data-games-all]");
+
+      if (games.length === 0) {
+        shelf.innerHTML = '<p class="empty">Nothing here yet.</p>';
+        return;
+      }
+
+      shelf.innerHTML = games
+        .map(
+          (item) => `
+        <a class="tile" href="../${item.path}" target="_blank" rel="noopener">
+          <span class="tile-badge">${initials(item.title)}</span>
+          <h3>${item.title}</h3>
+          <p>${item.description ?? ""}</p>
+          <span class="tile-play">Play</span>
+        </a>`
+        )
+        .join("");
+    }
+
+    main();
+  </script>
+</body>
+</html>
