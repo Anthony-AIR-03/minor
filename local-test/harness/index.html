@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="nl">
+<head><meta charset="utf-8"><title>bezig</title></head>
+<body>
+<!-- Automatische test van opslaan, teruglezen en ontgrendelen tegen de echte lokale api.php + database.
+     Draait de gamespagina (/games/) in een iframe en logt elke API-aanvraag die die pagina doet. -->
+<iframe id="f" style="width:1100px;height:900px;border:0"></iframe>
+<pre id="log"></pre>
+<script>
+(async () => {
+  const log = [], api = [];
+  let fails = 0;
+  const check = (name, ok, extra = "") => { if (!ok) fails++; log.push(`${ok ? "PASS" : "FAIL"}  ${name}${extra ? "  — " + extra : ""}`); };
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const f = document.getElementById("f");
+  const code = "bewijs-" + Date.now().toString(36);
+
+  async function load() {
+    f.src = "/games/?t=" + Date.now();
+    await new Promise((r) => f.addEventListener("load", r, { once: true }));
+    const w = f.contentWindow;
+    const real = w.fetch.bind(w);
+    w.fetch = async (url, opts = {}) => {   // netwerklog, zoals het Network-tabblad
+      const res = await real(url, opts);
+      if (String(url).includes("api.php")) api.push(`${opts.method || "GET"} ${String(url).replace(/^.*api\.php/, "/api.php")} ${opts.body || ""} → HTTP ${res.status}`);
+      return res;
+    };
+    await sleep(400);
+    return w;
+  }
+  const state = (w, id) => w.document.querySelector(`.hex[data-id="${id}"]`).classList[1];
+  async function useCode(w, c) {
+    w.localStorage.removeItem("minor-player");
+    w.document.getElementById("player-id").value = c;
+    w.document.querySelector("[data-load]").click();
+    await sleep(800);
+  }
+
+  try {
+    let w = await load();
+    await useCode(w, code);
+    check(`Nieuwe code ${code}: HTML Hunter open`, state(w, "html-hunter") === "live");
+    check("Build the DOM nog gesloten", state(w, "build-the-dom") === "locked");
+
+    // Speel HTML Hunter in het spelvenster; de echte game stuurt GAME_COMPLETED bij slagen.
+    w.document.querySelector('[data-play="html-hunter"]').click();
+    await sleep(1500);
+    const g = w.document.querySelector("[data-dialog-frame]").contentWindow;
+    check("HTML Hunter laadt in het iframe", g.document.title.includes("HTML Hunter"), g.document.title);
+    g.eval("window.parent.postMessage({type:'GAME_COMPLETED',gameId:'html-hunter',score:17,maxScore:20}, location.origin)");
+    await sleep(1200);
+    const dlg = w.document.querySelector("[data-dialog-status]").textContent.trim();
+    check("Opslaan gemeld", dlg.startsWith("Saved!"), dlg);
+    check("POST bevat alleen pseudonym, gameId, score, maxScore en geeft 201",
+      api.some((a) => a.startsWith("POST") && a.includes(`{"pseudonym":"${code}","gameId":"html-hunter","score":17,"maxScore":20}`) && a.endsWith("HTTP 201")));
+    check("Build the DOM ontgrendeld na opslaan", state(w, "build-the-dom") === "live");
+    w.document.querySelector("[data-dialog-close]").click();
+
+    // Herladen met dezelfde code: voortgang komt uit de database.
+    w = await load();
+    await useCode(w, code);
+    check("Na herladen: HTML Hunter gehaald", state(w, "html-hunter") === "done");
+    check("Na herladen: Build the DOM open", state(w, "build-the-dom") === "live");
+    check("GET leest de voortgang terug (HTTP 200)", api.filter((a) => a.startsWith(`GET /api.php?pseudonym=${code}`) && a.endsWith("HTTP 200")).length >= 2);
+
+    // Andere code begint opnieuw.
+    await useCode(w, code + "-b");
+    check("Andere code: begint opnieuw (HTML Hunter open, Build the DOM dicht)",
+      state(w, "html-hunter") === "live" && state(w, "build-the-dom") === "locked");
+  } catch (e) {
+    check("Geen fouten tijdens de test", false, e.message);
+  }
+  const out = `${fails ? "FAIL" : "OK"} ${log.length - fails}/${log.length}\nspelerscode: ${code}\n\n${log.join("\n")}\n\nAPI-aanvragen:\n${api.join("\n")}`;
+  document.getElementById("log").textContent = out;
+  document.title = "RESULT " + out;
+})();
+</script>
+</body>
+</html>
