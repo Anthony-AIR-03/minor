@@ -9,6 +9,13 @@ function initials(title) {
     .toUpperCase();
 }
 
+// Each game has a one-colour emblem in games/emblems/<id>.svg (drawn in currentColor).
+function gameBadge(item) {
+  const id = /^games\/([^/]+)\//.exec(item.path)?.[1];
+  if (!id) return initials(item.title);
+  return `<svg viewBox="0 0 256 256" width="24" height="24" aria-hidden="true"><use href="games/emblems/${id}.svg#i" /></svg>`;
+}
+
 function renderGameTile(item) {
   const el = document.createElement("a");
   el.className = "tile";
@@ -16,7 +23,7 @@ function renderGameTile(item) {
   el.target = "_blank";
   el.rel = "noopener";
   el.innerHTML = `
-    <span class="tile-badge">${initials(item.title)}</span>
+    <span class="tile-badge">${gameBadge(item)}</span>
     <h3>${item.title}</h3>
     <p>${item.description ?? ""}</p>
     <span class="tile-play">Play</span>`;
