@@ -14,7 +14,7 @@ body{font:17px/1.55 system-ui,sans-serif;color:#173042;background:#f5f8fa;margin
 <section><h2>2. Test opslaan zonder game</h2><p>De testknop bewaart 2 van 3 punten voor <code>verbindingstest</code>. Klik daarna op teruglezen en controleer ook de rij in phpMyAdmin.</p><button id="save">Bewaar testscore 2 / 3</button><button id="read">Lees resultaten terug</button><button id="bad">Test ongeldige score 4 / 3</button><output id="status" aria-live="polite">Nog geen aanvraag gedaan.</output><div id="results"></div></section>
 <section><h2>3. Test je bestaande single-file game</h2><p>Neem de game-id uit de gamestekker exact over. Het testscherm opent de game op jouw eigen website en bewaart het <code>GAME_COMPLETED</code>-bericht. De losse game roept de API niet aan.</p>
 <label>Game-id <input id="gameId" placeholder="t2-samira-breuken" maxlength="80"></label>
-<label>Pad op deze website <input id="path" placeholder="games/t2-samira-breuken/index.html"></label>
+<label>Pad op deze website <input id="path" placeholder="games/t2-samira-breuken/"></label>
 <button id="open">Open game / begin nieuwe ronde</button><button id="retry" hidden>Probeer dezelfde opslag opnieuw</button><output id="gameStatus" aria-live="polite">Nog geen game geopend.</output><div id="frameHost"></div>
 <p>Speel tot het slaagcriterium is bereikt. Controleer de rij in phpMyAdmin. Herlaad het testscherm en klik op ‘Lees resultaten terug’. Begin een nieuwe speelronde met de knop hierboven.</p></section>
 </main>
