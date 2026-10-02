@@ -43,7 +43,8 @@
       background: radial-gradient(ellipse at 30% 50%, transparent 40%, var(--bg) 100%);
       opacity: 0.85;
     }
-    .board svg { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+    .board svg { position: relative; z-index: 1; display: block; width: 100%; height: auto; margin-inline: auto; }
+    .board svg.vertical { max-width: 440px; }
     .board text { font-family: var(--font); }
 
     .edge { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
@@ -55,16 +56,15 @@
     .hex { cursor: pointer; outline: none; }
     .hex .shape { fill: var(--surface); stroke: var(--border-strong); stroke-width: 1.5; transition: stroke 0.15s ease, fill 0.15s ease; }
     .hex .name { fill: var(--muted); font-size: 12.5px; font-weight: 500; }
-    .hex .mark { fill: var(--muted-2); font-size: 18px; font-weight: 700; }
-    .hex .lock { fill: none; stroke: var(--muted-2); stroke-width: 1.6; stroke-linecap: round; }
+    /* one-colour emblem per game (games/emblems/*.svg, drawn in currentColor) */
+    .hex .emblem { color: var(--muted-2); }
 
     .hex.live .shape { fill: var(--surface-2); stroke: var(--code); stroke-width: 2.5; filter: drop-shadow(0 0 10px var(--code)); }
-    .hex.live .mark { fill: var(--code-text); font-size: 20px; }
+    .hex.live .emblem, .hex.next .emblem { color: var(--ink); }
     .hex.live .name { fill: var(--ink); font-weight: 600; }
 
     .hex.next .shape { stroke: var(--make); stroke-width: 2; stroke-dasharray: 6 5; }
     .hex.next .name { fill: var(--ink); }
-    .hex.next .lock { stroke: var(--make); }
 
     .hex:hover .shape { stroke: var(--ink); }
     .hex.live:hover .shape { fill: var(--code-soft); }
@@ -268,9 +268,7 @@
       if (livePaths[g.id]) return "live";
       return g.requires.every((r) => livePaths[r]) ? "next" : "locked";
     }
-    function initials(title) {
-      return title.split(/\s+/).filter((w) => /^[A-Z]/.test(w)).map((w) => w[0]).join("").slice(0, 2);
-    }
+    const emblem = (id) => `emblems/${id}.svg#i`;
     function hexPoints(cx, cy, r) {
       const pts = [];
       for (let i = 0; i < 6; i++) {
@@ -314,6 +312,7 @@
       const L = layout(wide);
       const pos = Object.fromEntries(GAMES.map((g) => [g.id, L.at(POS[g.id])]));
       svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`);
+      svg.classList.toggle("vertical", !wide);
 
       const edges = GAMES.flatMap((g) => g.requires.map((r) => {
         const [x1, y1] = pos[r], [x2, y2] = pos[g.id];
@@ -325,15 +324,14 @@
 
       const hexes = GAMES.map((g) => {
         const [x, y] = pos[g.id], s = stateOf(g);
-        const top = s === "live"
-          ? `<text class="mark" x="${x}" y="${y - 8}" text-anchor="middle">${initials(g.title)}</text>`
-          : `<g class="lock" transform="translate(${x - 7} ${y - 26})"><rect x="0.8" y="7" width="12.4" height="9.5" rx="2" /><path d="M3.5 7V4.8a3.5 3.5 0 0 1 7 0V7" /></g>`;
+        const size = Math.round(L.R * 0.66);
+        const top = `<use class="emblem" href="${emblem(g.id)}" transform="translate(${x - size / 2} ${y - size - 6}) scale(${size / 256})" />`;
         const names = g.lines.map((ln, i) => `<tspan x="${x}" dy="${i ? 15 : 0}">${ln}</tspan>`).join("");
         const label = `${g.title}, ${BLOOM.find((b) => b.id === g.bloom).name}, ${s === "live" ? "playable" : s === "next" ? "up next" : "locked"}`;
         return `<g class="hex ${s}${selected === g.id ? " selected" : ""}" data-id="${g.id}" tabindex="0" role="button" aria-pressed="${selected === g.id}" aria-label="${label}">
           <polygon class="shape" points="${hexPoints(x, y, L.R)}" />
           ${top}
-          <text class="name" x="${x}" y="${y + 13}" text-anchor="middle">${names}</text>
+          <text class="name" x="${x}" y="${y + 16}" text-anchor="middle">${names}</text>
         </g>`;
       }).join("");
 
@@ -351,7 +349,7 @@
       el.dataset.state = s;
       el.innerHTML = `
         <div class="detail-top">
-          <span class="detail-hex" aria-hidden="true">${s === "live" ? initials(g.title) : level}</span>
+          <span class="detail-hex" aria-hidden="true"><svg viewBox="0 0 256 256" width="30" height="30"><use href="${emblem(g.id)}" /></svg></span>
           <div>
             <p class="eyebrow">Bloom level ${level} · ${bloom.name}</p>
             <h2>${g.title}</h2>
