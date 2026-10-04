@@ -16,6 +16,15 @@
       "requires": [
         { "gameId": "html-hunter", "type": "completed" }
       ]
+    },
+    {
+      "id": "layout-builder",
+      "title": "Layout Builder",
+      "learningGoal": "Pas basis-CSS en flexbox toe om elementen volgens een gegeven layout te positioneren.",
+      "path": "/games/layout-builder/",
+      "requires": [
+        { "gameId": "build-the-dom", "type": "completed" }
+      ]
     }
   ]
 }

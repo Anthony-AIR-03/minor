@@ -30,6 +30,11 @@ and the skill tree at `/games/` both read it.
 - **Build the DOM** (Dutch): learn how HTML elements fit together into one page. Three levels
   (building the main structure, placing visible content and spotting structure errors) move from
   placing elements in a DOM tree to explaining why a structure is wrong.
+- **Layout Builder** (Dutch): learn to position elements with CSS and flexbox, on an architect's
+  blueprint. The target layout lies as dashed lines over the player's page; they pick an element and set
+  its CSS until every block fits the lines, then have it inspected. Three phases
+  (side by side or stacked, spacing and alignment, and a card layout across several elements) apply
+  `display`, `flex-direction`, `justify-content`, `align-items`, `gap`, `width`, `padding` and `margin`.
 
 ## Adding a game
 
