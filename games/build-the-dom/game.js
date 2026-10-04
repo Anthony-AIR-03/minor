@@ -884,9 +884,18 @@ function reportCompletion(score, maxScore) {
           ${LEVELS.map((l, i) => `<li><span class="num">${i + 1}</span><span><b>${l.name}</b></span><span class="res">${levelScore(i)} / ${LEVEL_TASKS[i]}</span></li>`).join('')}
         </ol>
         <div class="actions">
+          <button class="btn secondary" id="exit">← Terug naar de skilltree</button>
           <button class="btn" id="again">↺ Opnieuw spelen</button>
         </div>
       </div>`;
+    // Stoppen: in de skilltree vraagt de game de pagina om het spelvenster te sluiten; los geopend gaat hij naar /games/.
+    document.getElementById('exit').addEventListener('click', () => {
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'GAME_EXIT', gameId: gameInfo.gameId }, window.location.origin);
+      } else {
+        window.location.href = '/games/';
+      }
+    });
     document.getElementById('again').addEventListener('click', () => {
       newRound();
       startLevel(0);

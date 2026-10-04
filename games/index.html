@@ -288,7 +288,7 @@
         <h2 id="game-dialog-title" data-dialog-title></h2>
         <span class="mode-pill" data-dialog-mode></span>
         <span class="spacer"></span>
-        <button class="btn btn-ghost" type="button" data-dialog-close>Close</button>
+        <button class="btn btn-ghost" type="button" data-dialog-close>← Back to skill tree</button>
       </div>
       <div class="dialog-status" data-dialog-status aria-live="polite"></div>
       <iframe data-dialog-frame title="Game"></iframe>
@@ -678,8 +678,9 @@
         selected = opened[0] ? opened[0].id : r.gameId;
         renderAll();
         dialogStatus(`Saved! You passed ${byId[r.gameId].title}.` +
-          (opened.length ? ` Unlocked: <b>${opened.map((g) => g.title).join(" and ")}</b>. Close this window to continue.`
-                         : unlocks(r.gameId).length ? " The next game is still being built." : " That's the end of the route."), "good");
+          (opened.length ? ` Unlocked: <b>${opened.map((g) => g.title).join(" and ")}</b>.`
+                         : unlocks(r.gameId).length ? " The next game is still being built." : " That's the end of the route.") +
+          ` <button class="link-btn" type="button" data-dialog-close>Back to the skill tree</button>`, "good");
       } catch (err) {
         dialogStatus(`Your result wasn't saved: ${esc(err.message)} <button class="link-btn" type="button" data-retry>Try again</button>`, "error");
       }
@@ -689,12 +690,14 @@
       const r = round;
       if (!r || event.origin !== location.origin || event.source !== frame.contentWindow) return;
       const d = event.data;
+      // The game's own "Terug naar de skilltree" button.
+      if (d && d.type === "GAME_EXIT" && d.gameId === r.gameId) { closeGame(); return; }
       if (!d || d.type !== "GAME_COMPLETED" || d.gameId !== r.gameId) return;
       if (!Number.isInteger(d.score) || !Number.isInteger(d.maxScore) || d.maxScore < 1 || d.score < 0 || d.score > d.maxScore) return;
       if (r.received) return;
       r.received = true;
       if (r.mode !== "player") {
-        dialogStatus(`You passed ${byId[r.gameId].title}! This is free play, so nothing was saved.`, "good");
+        dialogStatus(`You passed ${byId[r.gameId].title}! This is free play, so nothing was saved. <button class="link-btn" type="button" data-dialog-close>Back to the skill tree</button>`, "good");
         return;
       }
       r.pending = { pseudonym: r.playerId, gameId: r.gameId, score: d.score, maxScore: d.maxScore };

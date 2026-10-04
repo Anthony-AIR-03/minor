@@ -933,9 +933,21 @@
           <summary>Voorbeeld: resultaten-payload (toekomstige verzending, nog niet actief)</summary>
           <pre id="payload-json"></pre>
         </details>
-        <button class="btn btn-primary" onclick="restartGame()">Opnieuw spelen</button>
+        <div style="display:grid; gap:10px; flex-shrink:0;">
+          <button class="btn" onclick="exitGame()">← Terug naar de skilltree</button>
+          <button class="btn btn-primary" onclick="restartGame()">Opnieuw spelen</button>
+        </div>
       </div>
     `;
+  }
+
+  // Stoppen: in de skilltree vraagt de game de pagina om het spelvenster te sluiten; los geopend gaat hij naar /games/.
+  function exitGame(){
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'GAME_EXIT', gameId: 'html-hunter' }, window.location.origin);
+    } else {
+      window.location.href = '/games/';
+    }
   }
 
   function restartGame(){
