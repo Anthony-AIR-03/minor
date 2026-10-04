@@ -610,8 +610,9 @@
       wrongOnce: {},
       selected: null
     };
-    level2 = { index: 0, score: 0, answered: false, selectedId: null };
-    level3 = { index: 0, score: 0, answered: false, selectedId: null };
+    // Opties per vraag één keer per ronde schudden, zodat het goede antwoord niet steeds op dezelfde plek staat.
+    level2 = { index: 0, score: 0, answered: false, selectedId: null, optionOrders: LEVEL2_QUESTIONS.map(q => shuffle(q.options)) };
+    level3 = { index: 0, score: 0, answered: false, selectedId: null, optionOrders: LEVEL3_QUESTIONS.map(q => shuffle(q.options)) };
     screen = 'intro';
   }
 
@@ -765,7 +766,7 @@
     const q = questions[stateObj.index];
     const snippetHtml = q.snippet ? `<div class="snippet">${q.snippet}</div>` : '';
 
-    const optionsHtml = q.options.map(optId => {
+    const optionsHtml = stateObj.optionOrders[stateObj.index].map(optId => {
       let cls = 'option-btn';
       let disabledAttr = '';
       if (stateObj.answered){

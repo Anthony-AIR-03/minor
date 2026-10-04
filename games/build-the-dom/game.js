@@ -132,9 +132,9 @@ function reportCompletion(score, maxScore) {
           hint: 'Loop de elementen in `<head>` langs. Welk element is zichtbare inhoud die je óp de pagina zou zien?',
           found: 'Goed gevonden! `<h1>` staat hier op de verkeerde plek. Maar waarom?',
           options: [
-            { text: '`<h1>` is zichtbare pagina-inhoud en hoort daarom in `<body>`, niet in `<head>`.', ok: true },
-            { text: 'Een pagina mag maar één `<h1>` hebben.', fb: 'Hier staat maar één `<h1>`, dus dat is het probleem niet. Kijk naar de ouder van `<h1>`.' },
-            { text: '`<h1>` moet boven `<title>` staan.', fb: 'De volgorde is niet het probleem. De vraag is of `<h1>` überhaupt in `<head>` hoort.' }
+            { text: '`<h1>` is zichtbare inhoud, dus hoort hij in `<body>` en niet in `<head>`.', ok: true },
+            { text: 'Een pagina mag maar één `<h1>` hebben, en `<title>` telt ook als kop.', fb: 'Hier staat maar één `<h1>`, en `<title>` is geen kop op de pagina. Kijk naar de ouder van `<h1>`.' },
+            { text: '`<h1>` moet in `<head>` boven `<title>` staan, omdat de kop het belangrijkst is.', fb: 'De volgorde is niet het probleem. De vraag is of `<h1>` überhaupt in `<head>` hoort.' }
           ],
           why: 'Goed! `<head>` is voor informatie óver de pagina; een zichtbare kop zoals `<h1>` hoort in `<body>`.',
           fix: '<head>\n  <title>Mijn site</title>\n</head>\n<body>\n  <h1>Welkom!</h1>\n  <p>Leuk dat je er bent.</p>\n</body>'
@@ -144,9 +144,9 @@ function reportCompletion(score, maxScore) {
           hint: 'Kijk naar elk element in `<body>`: wordt het echt óp de pagina getoond, of ergens anders in de browser?',
           found: 'Goed gevonden! `<title>` staat hier niet goed. Maar waarom?',
           options: [
-            { text: '`<title>` is informatie over de pagina (de tekst in het tabblad) en hoort in `<head>`.', ok: true },
-            { text: '`<title>` moet altijd onder `<h1>` staan.', fb: 'De volgorde is niet het probleem: `<title>` hoort helemaal niet in `<body>`. Waar verschijnt de titel in de browser?' },
-            { text: '`<title>` en `<h1>` doen hetzelfde, dus één van de twee is overbodig.', fb: 'Ze doen niet hetzelfde: `<h1>` is een kop óp de pagina, `<title>` verschijnt in het tabblad. Welk deel van de pagina bewaart zulke informatie?' }
+            { text: '`<title>` is de tekst in het tabblad: informatie óver de pagina, dus in `<head>`.', ok: true },
+            { text: '`<title>` moet altijd direct onder `<h1>` staan, anders toont de browser hem niet.', fb: 'De volgorde is niet het probleem: `<title>` hoort helemaal niet in `<body>`. Waar verschijnt de titel in de browser?' },
+            { text: '`<title>` en `<h1>` doen hetzelfde, dus één van de twee is hier overbodig.', fb: 'Ze doen niet hetzelfde: `<h1>` is een kop óp de pagina, `<title>` verschijnt in het tabblad. Welk deel van de pagina bewaart zulke informatie?' }
           ],
           why: 'Goed! `<title>` verschijnt in het tabblad, niet op de pagina, en hoort daarom in `<head>`.',
           fix: '<head>\n  <title>Mijn hobby’s</title>\n</head>\n<body>\n  <h1>Voetbal</h1>\n</body>'
@@ -157,9 +157,9 @@ function reportCompletion(score, maxScore) {
           hint: 'Controleer per element: staat het binnen de juiste ouder? Misschien klopt deze structuur wel helemaal.',
           found: 'Goed gezien! In deze structuur zit geen fout. Maar waaróm klopt hij?',
           options: [
-            { text: 'Informatie over de pagina staat in `<head>` en alle zichtbare inhoud staat in `<body>`.', ok: true },
-            { text: 'Hij klopt omdat alle regels netjes zijn ingesprongen.', fb: 'Inspringen maakt code leesbaar, maar de browser kijkt naar de tags, niet naar spaties. Waar staan de elementen?' },
-            { text: 'Hij klopt omdat elke tag een sluit-tag heeft.', fb: 'Niet helemaal: `<img>` is een leeg element zonder sluit-tag. Het gaat erom dat elk element in de juiste ouder staat.' }
+            { text: 'Hij klopt: informatie over de pagina staat in `<head>`, zichtbare inhoud in `<body>`.', ok: true },
+            { text: 'Hij klopt omdat alle regels netjes zijn ingesprongen, zodat de browser de lagen ziet.', fb: 'Inspringen maakt code leesbaar, maar de browser kijkt naar de tags, niet naar spaties. Waar staan de elementen?' },
+            { text: 'Hij klopt omdat elke tag een sluit-tag heeft, dus niets blijft open staan.', fb: 'Niet helemaal: `<img>` is een leeg element zonder sluit-tag. Het gaat erom dat elk element in de juiste ouder staat.' }
           ],
           why: 'Goed! `<title>` staat in `<head>` en `<h1>`, `<img>` en `<p>` staan als zichtbare inhoud in `<body>`.'
         },
@@ -168,9 +168,9 @@ function reportCompletion(score, maxScore) {
           hint: 'Kijk naar de sluit-tags. Een element dat ín een ander element opent, moet daar ook weer sluiten.',
           found: 'Goed gevonden! De sluit-tags staan in de verkeerde volgorde. Maar waarom is dat fout?',
           options: [
-            { text: '`<a>` is binnen `<p>` geopend, dus moet `</a>` eerst sluiten en daarna pas `</p>`.', ok: true },
-            { text: 'Een `<a>` mag nooit binnen een `<p>` staan.', fb: 'Dat mag juist wel: een link in een zin is heel normaal. Kijk naar de volgorde van de sluit-tags.' },
-            { text: 'Er ontbreekt een sluit-tag.', fb: 'Tel ze maar: `</p>` en `</a>` zijn er allebei. Het gaat om de volgorde waarin ze sluiten.' }
+            { text: '`<a>` is binnen `<p>` geopend, dus eerst `</a>` sluiten en dan pas `</p>`.', ok: true },
+            { text: 'Een `<a>` mag nooit binnen een `<p>` staan; een link hoort altijd los te staan.', fb: 'Dat mag juist wel: een link in een zin is heel normaal. Kijk naar de volgorde van de sluit-tags.' },
+            { text: 'Er ontbreekt een sluit-tag, waardoor de link tot het einde van de pagina doorloopt.', fb: 'Tel ze maar: `</p>` en `</a>` zijn er allebei. Het gaat om de volgorde waarin ze sluiten.' }
           ],
           why: 'Goed! Een kind moet volledig binnen zijn ouder sluiten: eerst `</a>`, dan `</p>`.',
           fix: '<body>\n  <p>Lees <a href="#">meer</a></p>\n</body>'
@@ -180,9 +180,9 @@ function reportCompletion(score, maxScore) {
           hint: 'Welke elementen hebben een speciaal ouder-element nodig om te kunnen bestaan?',
           found: 'Goed gevonden! Deze `<li>`-elementen staan niet goed. Maar waarom?',
           options: [
-            { text: '`<li>` is een lijst-item en heeft een lijst zoals `<ul>` als ouder nodig.', ok: true },
-            { text: '`<li>` hoort in `<head>` te staan.', fb: '`<li>` is zichtbare inhoud, dus `<body>` klopt wel. Maar welk element ontbreekt er tussen `<body>` en `<li>`?' },
-            { text: 'Na een `<h2>` mag geen ander element meer komen.', fb: 'Na een kop mag gewoon meer inhoud komen. Kijk naar de ouder van `<li>`.' }
+            { text: '`<li>` is een lijst-item en heeft altijd een lijst, zoals `<ul>`, als ouder nodig.', ok: true },
+            { text: '`<li>` is informatie over de pagina en hoort daarom in `<head>` te staan.', fb: '`<li>` is zichtbare inhoud, dus `<body>` klopt wel. Maar welk element ontbreekt er tussen `<body>` en `<li>`?' },
+            { text: 'Na een `<h2>` mag geen ander element meer komen, behalve een nieuwe kop.', fb: 'Na een kop mag gewoon meer inhoud komen. Kijk naar de ouder van `<li>`.' }
           ],
           why: 'Goed! Een `<li>` hoort altijd in een lijst: hier ontbreekt het ouder-element `<ul>`.',
           fix: '<body>\n  <h2>Menu</h2>\n  <ul>\n    <li>Pizza</li>\n    <li>Pasta</li>\n  </ul>\n</body>'
@@ -193,9 +193,9 @@ function reportCompletion(score, maxScore) {
           hint: 'Controleer per element of het binnen zijn ouder opent én sluit. Misschien klopt alles wel.',
           found: 'Goed gezien! Deze structuur klopt. Maar waaróm?',
           options: [
-            { text: 'Elke `<a>` opent en sluit binnen een `<li>`, en elke `<li>` staat binnen `<ul>`.', ok: true },
-            { text: 'Hij klopt omdat een `<a>` altijd in een `<li>` moet staan.', fb: 'Een `<a>` mag ook op andere plekken staan, bijvoorbeeld in een `<p>`. Het gaat erom dat hij helemaal binnen zijn ouder sluit.' },
-            { text: 'Hij klopt omdat elk element op een eigen regel staat.', fb: 'Regels maken code leesbaar, maar de browser kijkt naar welke tag binnen welke tag opent en sluit.' }
+            { text: 'Hij klopt: elke `<a>` opent en sluit binnen zijn `<li>`, en elke `<li>` staat in `<ul>`.', ok: true },
+            { text: 'Hij klopt omdat een `<a>` altijd in een `<li>` moet staan, en dat gebeurt hier.', fb: 'Een `<a>` mag ook op andere plekken staan, bijvoorbeeld in een `<p>`. Het gaat erom dat hij helemaal binnen zijn ouder sluit.' },
+            { text: 'Hij klopt omdat elk element op een eigen regel staat, zodat niets in elkaar loopt.', fb: 'Regels maken code leesbaar, maar de browser kijkt naar welke tag binnen welke tag opent en sluit.' }
           ],
           why: 'Goed! `<a>` is een kind van `<li>`, `<li>` een kind van `<ul>` — en elk kind sluit binnen zijn ouder.'
         },
@@ -205,8 +205,8 @@ function reportCompletion(score, maxScore) {
           found: 'Goed gevonden! Hier gaat iets mis met `<html>` en `<body>`. Maar wat precies?',
           options: [
             { text: '`<body>` moet een kind van `<html>` zijn, maar `</html>` sluit te vroeg.', ok: true },
-            { text: '`<body>` moet vóór `<head>` staan.', fb: 'In een HTML-pagina komt `<head>` juist eerst. Kijk naar waar `<html>` sluit.' },
-            { text: '`<h1>` hoort in `<head>` te staan.', fb: '`<h1>` is zichtbare inhoud en staat terecht in `<body>`. Het probleem zit een laag hoger.' }
+            { text: '`<body>` moet vóór `<head>` staan, want de zichtbare inhoud komt altijd eerst.', fb: 'In een HTML-pagina komt `<head>` juist eerst. Kijk naar waar `<html>` sluit.' },
+            { text: '`<h1>` hoort in `<head>` te staan, omdat het de titel van de blog is.', fb: '`<h1>` is zichtbare inhoud en staat terecht in `<body>`. Het probleem zit een laag hoger.' }
           ],
           why: 'Goed! `<head>` én `<body>` zijn kinderen van `<html>`, dus `</html>` hoort helemaal onderaan.',
           fix: '<html>\n  <head>\n    <title>Blog</title>\n  </head>\n  <body>\n    <h1>Mijn blog</h1>\n  </body>\n</html>'
