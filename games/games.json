@@ -34,6 +34,16 @@
       "requires": [
         { "gameId": "build-the-dom", "type": "completed" }
       ]
+    },
+    {
+      "id": "bug-hunter",
+      "title": "Bug Hunter",
+      "learningGoal": "Vind eenvoudige fouten in HTML en CSS, wijs de oorzaak aan en herstel de fout.",
+      "path": "/games/bug-hunter/",
+      "requires": [
+        { "gameId": "style-lab", "type": "completed" },
+        { "gameId": "layout-builder", "type": "completed" }
+      ]
     }
   ]
 }

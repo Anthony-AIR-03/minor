@@ -40,6 +40,11 @@ and the skill tree at `/games/` both read it.
   its CSS until every block fits the lines, then have it inspected. Three phases
   (side by side or stacked, spacing and alignment, and a card layout across several elements) apply
   `display`, `flex-direction`, `justify-content`, `align-items`, `gap`, `width`, `padding` and `margin`.
+- **Bug Hunter** (Dutch): find and fix bugs in HTML and CSS as a pest-control crew for websites. Each
+  job has a client's complaint, the desired and the broken site, and the code: locate the bug's line,
+  pick its cause from identification cards, then repair it. Points go to finding the right line and
+  the right cause, so the game rewards analysis over trial and error. Three rounds: one bug per job,
+  two bugs per job, and bugs that sit between the HTML and the CSS.
 
 ## Adding a game
 
