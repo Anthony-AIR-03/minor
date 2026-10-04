@@ -44,6 +44,15 @@
         { "gameId": "style-lab", "type": "completed" },
         { "gameId": "layout-builder", "type": "completed" }
       ]
+    },
+    {
+      "id": "code-detective",
+      "title": "Code Detective",
+      "learningGoal": "Lees HTML en CSS en voorspel welk visueel resultaat de code oplevert, voordat je het ziet.",
+      "path": "/games/code-detective/",
+      "requires": [
+        { "gameId": "bug-hunter", "type": "completed" }
+      ]
     }
   ]
 }
