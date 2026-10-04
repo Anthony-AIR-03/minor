@@ -18,6 +18,15 @@
       ]
     },
     {
+      "id": "style-lab",
+      "title": "Style Lab",
+      "learningGoal": "Pas eenvoudige CSS-properties en selectors toe om HTML-elementen visueel vorm te geven.",
+      "path": "/games/style-lab/",
+      "requires": [
+        { "gameId": "build-the-dom", "type": "completed" }
+      ]
+    },
+    {
       "id": "layout-builder",
       "title": "Layout Builder",
       "learningGoal": "Pas basis-CSS en flexbox toe om elementen volgens een gegeven layout te positioneren.",

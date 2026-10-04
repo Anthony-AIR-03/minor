@@ -30,6 +30,11 @@ and the skill tree at `/games/` both read it.
 - **Build the DOM** (Dutch): learn how HTML elements fit together into one page. Three levels
   (building the main structure, placing visible content and spotting structure errors) move from
   placing elements in a DOM tree to explaining why a structure is wrong.
+- **Style Lab** (Dutch): learn to style elements with CSS in a science lab. Every task is an
+  experiment: make your sample match the reference sample, then analyse it. Three series move from
+  pouring in one property, to combining properties and choosing the selector, to writing the CSS
+  yourself with a lab assistant that flags typos. Covers selectors, `color`, `background`,
+  `font-size`, `font-weight`, `border`, `border-radius`, `padding` and `margin`.
 - **Layout Builder** (Dutch): learn to position elements with CSS and flexbox, on an architect's
   blueprint. The target layout lies as dashed lines over the player's page; they pick an element and set
   its CSS until every block fits the lines, then have it inspected. Three phases
