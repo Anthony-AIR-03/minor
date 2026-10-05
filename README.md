@@ -12,7 +12,7 @@
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat-square&logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-<a href="https://minor.anthony-air.nl/games/"><img src="docs/skill-tree.jpg" alt="The game skill tree at /games/: eight hexagons from HTML Hunter to Website Challenge, six of them playable" width="720" /></a>
+<a href="https://minor.anthony-air.nl/games/"><img src="docs/skill-tree.jpg" alt="The game skill tree at /games/: eight hexagons from HTML Hunter to Website Challenge, seven of them playable" width="720" /></a>
 
 </div>
 
@@ -37,7 +37,7 @@ both are passed.
 - Games run in a dialog on the page. Each one is a stand-alone page with its own theme and mechanic, and
   talks to the tree only through `GAME_COMPLETED` and `GAME_EXIT` messages.
 
-Six of the eight games are playable now; Code Review and Website Challenge are still being built.
+Seven of the eight games are playable now; only Website Challenge is still being built.
 
 ### Games
 
@@ -67,6 +67,10 @@ All games are in Dutch.
 <tr>
 <td width="46%"><a href="https://minor.anthony-air.nl/games/code-detective/"><img src="og/code-detective.png" alt="Code Detective" width="100%" /></a></td>
 <td><b><a href="https://minor.anthony-air.nl/games/code-detective/">Code Detective</a></b> · <i>Analyse</i><br><br>A film-noir detective office. You only get the code, typed on a case file, and predict what the browser makes of it before you see it: point out the right preview in a police lineup, mark every element a selector hits, and reconstruct what changes when a line is edited (including a specificity trap where nothing changes).</td>
+</tr>
+<tr>
+<td width="46%"><a href="https://minor.anthony-air.nl/games/code-review/"><img src="og/code-review.png" alt="Code Review" width="100%" /></a></td>
+<td><b><a href="https://minor.anthony-air.nl/games/code-review/">Code Review</a></b> · <i>Evaluate</i><br><br>A 70s TV game show, "De Code Jury". Two developers solve the same problem and both solutions work; you pick the winner and raise the jury card that justifies it with a real quality criterion. A clear choice, then trade-offs where the same pair returns in another situation and the winner flips, then a mini code review of a small page on several criteria.</td>
 </tr>
 </table>
 

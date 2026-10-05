@@ -53,6 +53,15 @@
       "requires": [
         { "gameId": "bug-hunter", "type": "completed" }
       ]
+    },
+    {
+      "id": "code-review",
+      "title": "Code Review",
+      "learningGoal": "Vergelijk twee werkende oplossingen en onderbouw met concrete kwaliteitscriteria welke beter is.",
+      "path": "/games/code-review/",
+      "requires": [
+        { "gameId": "code-detective", "type": "completed" }
+      ]
     }
   ]
 }
