@@ -12,7 +12,7 @@
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat-square&logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-<a href="https://minor.anthony-air.nl/games/"><img src="docs/skill-tree.jpg" alt="The game skill tree at /games/: eight hexagons from HTML Hunter to Website Challenge, seven of them playable" width="720" /></a>
+<a href="https://minor.anthony-air.nl/games/"><img src="docs/skill-tree.jpg" alt="The game skill tree at /games/: eight hexagons from HTML Hunter to Website Challenge, all playable" width="720" /></a>
 
 </div>
 
@@ -37,7 +37,7 @@ both are passed.
 - Games run in a dialog on the page. Each one is a stand-alone page with its own theme and mechanic, and
   talks to the tree only through `GAME_COMPLETED` and `GAME_EXIT` messages.
 
-Seven of the eight games are playable now; only Website Challenge is still being built.
+All eight games are playable: the route runs from recognising your first tag in HTML Hunter to launching your own website in Website Challenge.
 
 ### Games
 
@@ -71,6 +71,10 @@ All games are in Dutch.
 <tr>
 <td width="46%"><a href="https://minor.anthony-air.nl/games/code-review/"><img src="og/code-review.png" alt="Code Review" width="100%" /></a></td>
 <td><b><a href="https://minor.anthony-air.nl/games/code-review/">Code Review</a></b> · <i>Evaluate</i><br><br>A 70s TV game show, "De Code Jury". Two developers solve the same problem and both solutions work; you pick the winner and raise the jury card that justifies it with a real quality criterion. A clear choice, then trade-offs where the same pair returns in another situation and the winner flips, then a mini code review of a small page on several criteria.</td>
+</tr>
+<tr>
+<td width="46%"><a href="https://minor.anthony-air.nl/games/website-challenge/"><img src="og/website-challenge.png" alt="Website Challenge" width="100%" /></a></td>
+<td><b><a href="https://minor.anthony-air.nl/games/website-challenge/">Website Challenge</a></b> · <i>Create</i><br><br>Mission control for the final launch. Pick a client, then write <code>index.html</code> and <code>style.css</code> yourself from a list of requirements. A live Go/No-Go board runs 17 automatic checks across HTML structure, CSS styling, layout and code quality, with hints that point back to the game where you learned each skill. Launching plays a full-screen film whose ending depends on your score: from an engine that only sputters, via an explosion or a crash back to earth, to drifting in orbit or flying on into deep space. Then come the telemetry bars per category; your work is saved in the browser.</td>
 </tr>
 </table>
 

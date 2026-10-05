@@ -62,6 +62,15 @@
       "requires": [
         { "gameId": "code-detective", "type": "completed" }
       ]
+    },
+    {
+      "id": "website-challenge",
+      "title": "Website Challenge",
+      "learningGoal": "Combineer zelfstandig HTML en CSS om vanuit requirements een eenvoudige, werkende website te bouwen.",
+      "path": "/games/website-challenge/",
+      "requires": [
+        { "gameId": "code-review", "type": "completed" }
+      ]
     }
   ]
 }
