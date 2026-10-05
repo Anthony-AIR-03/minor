@@ -155,6 +155,22 @@
     @keyframes lock-away { 40% { opacity: 1; transform: translateY(-3px) scale(1.1); } 100% { opacity: 0; transform: translateY(-16px) scale(0.9); } }
     @keyframes burst { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.75); } }
 
+    /* finale: the first time the last game on the route is passed — confetti and stars from its hex */
+    .hex.finale { transform-box: fill-box; transform-origin: center; animation: hex-pop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.3s backwards; }
+    .hex.finale .shape { animation: finale-flash 1.4s ease-out 0.3s backwards; }
+    .finale-ring { fill: none; stroke: var(--make); stroke-width: 3; opacity: 0; transform-box: fill-box; transform-origin: center; pointer-events: none; animation: burst 0.9s ease-out 0.45s; }
+    .finale-ring + .finale-ring { stroke: var(--code-text); stroke-width: 2; animation-delay: 0.65s; }
+    .finale-bit { transform-box: fill-box; transform-origin: center; opacity: 0; pointer-events: none; animation: confetti var(--t) cubic-bezier(.2, .7, .4, 1) var(--d) forwards; }
+    @keyframes finale-flash {
+      0% { fill: var(--code); stroke: var(--code); filter: none; }
+      30% { fill: var(--make); stroke: var(--make); filter: drop-shadow(0 0 22px var(--make)); }
+    }
+    @keyframes confetti {
+      0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(.4); }
+      55% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 46px)) rotate(calc(var(--r) * 1.6)) scale(.9); }
+    }
+
     /* detail + explanation */
     .tree-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-bottom: 16px; }
     .detail { display: grid; gap: 14px; align-content: start; }
@@ -712,6 +728,43 @@
       }, 2500 + ids.length * 350);
     }
 
+    // The last game on the route (nothing comes after it) gets a finale instead of an unlock:
+    // confetti and stars from its hex, the first time it's passed.
+    let toFinale = null;
+    const isLastGame = (id) => built(id) && unlocks(id).length === 0;
+
+    function celebrateFinale() {
+      const id = toFinale;
+      toFinale = null;
+      if (!id || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const svg = document.querySelector("[data-tree]");
+      const hex = svg.querySelector(`.hex[data-id="${id}"]`);
+      if (!hex) return;
+      svg.parentElement.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      const shape = hex.querySelector(".shape");
+      const box = shape.getBBox();
+      const cx = box.x + box.width / 2, cy = box.y + box.height / 2, R = box.height / 2;
+      const colors = ["var(--make)", "var(--code-text)", "var(--air)", "#fff"];
+      const star = (s) => `M0 ${-s}L${s * 0.29} ${-s * 0.4}L${s * 0.95} ${-s * 0.31}L${s * 0.47} ${s * 0.15}L${s * 0.59} ${s * 0.81}L0 ${s * 0.5}L${-s * 0.59} ${s * 0.81}L${-s * 0.47} ${s * 0.15}L${-s * 0.95} ${-s * 0.31}L${-s * 0.29} ${-s * 0.4}Z`;
+      const bits = Array.from({ length: 26 }, (_, i) => {
+        const a = (i / 26) * Math.PI * 2 + Math.random() * 0.4;
+        const dist = R * (0.9 + Math.random() * 0.9);
+        const piece = i % 3 === 0
+          ? `<path d="${star(7 + Math.random() * 4)}" fill="${colors[i % colors.length]}" />`
+          : `<rect x="-5" y="-2.5" width="10" height="5" rx="1.5" fill="${colors[i % colors.length]}" />`;
+        // the position sits on the outer group, the animation on the piece itself: so it spins around its own centre
+        return `<g transform="translate(${cx.toFixed(1)} ${cy.toFixed(1)})"><g class="finale-bit" style="--dx:${(Math.cos(a) * dist).toFixed(1)}px;--dy:${(Math.sin(a) * dist - R * 0.3).toFixed(1)}px;--r:${Math.round(Math.random() * 540 - 270)}deg;--t:${(1.6 + Math.random() * 0.8).toFixed(2)}s;--d:${(0.45 + Math.random() * 0.25).toFixed(2)}s">${piece}</g></g>`;
+      }).join("");
+      hex.classList.add("finale");
+      hex.insertAdjacentHTML("beforeend", `<polygon class="finale-ring" points="${shape.getAttribute("points")}" /><polygon class="finale-ring" points="${shape.getAttribute("points")}" />`);
+      // the confetti goes on top of everything, so it can fly over the neighbouring hexes
+      svg.insertAdjacentHTML("beforeend", `<g class="finale-confetti">${bits}</g>`);
+      setTimeout(() => {
+        svg.querySelectorAll(".finale-ring, .finale-confetti").forEach((el) => el.remove());
+        svg.querySelectorAll(".hex.finale").forEach((el) => el.classList.remove("finale"));
+      }, 3600);
+    }
+
     /* ---------- playing a game in the dialog ---------- */
     let round = null;
     const dialog = document.querySelector("[data-game-dialog]");
@@ -743,6 +796,7 @@
       frame.src = "about:blank";
       if (dialog.open) dialog.close();
       celebrateUnlocks();
+      celebrateFinale();
     }
 
     async function saveRound(r) {
@@ -751,6 +805,7 @@
         await api(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(r.pending) });
         r.pending = null;
         const before = new Set(GAMES.filter((g) => canPlay(g)).map((g) => g.id));
+        const firstFinish = !passed(r.gameId);
         if (mode === "player" && player.id === r.playerId) {
           // Read the progress back, so the tree shows what the server really stored.
           try { player.results = await readProgress(r.playerId); }
@@ -760,13 +815,16 @@
         const opened = GAMES.filter((g) => canPlay(g) && !before.has(g.id) && g.id !== r.gameId);
         selected = opened[0] ? opened[0].id : r.gameId;
         renderAll();
+        const finale = firstFinish && isLastGame(r.gameId);
         if (mode === "player" && player.id === r.playerId) {
           toCelebrate = opened.map((g) => g.id);
-          if (!dialog.open) celebrateUnlocks();   // closed while saving: play it right away
+          toFinale = finale ? r.gameId : null;
+          if (!dialog.open) { celebrateUnlocks(); celebrateFinale(); }   // closed while saving: play it right away
         }
         dialogStatus(`Saved! You passed ${byId[r.gameId].title}.` +
           (opened.length ? ` Unlocked: <b>${opened.map((g) => g.title).join(" and ")}</b>.`
-                         : unlocks(r.gameId).length ? " The next game is still being built." : " That's the end of the route.") +
+                         : unlocks(r.gameId).length ? " The next game is still being built."
+                         : finale ? " 🎉 You've completed the whole skill tree!" : " That's the end of the route.") +
           ` <button class="link-btn" type="button" data-dialog-close>Back to the skill tree</button>`, "good");
       } catch (err) {
         dialogStatus(`Your result wasn't saved: ${esc(err.message)} <button class="link-btn" type="button" data-retry>Try again</button>`, "error");
