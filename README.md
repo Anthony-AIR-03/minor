@@ -70,6 +70,14 @@ All games are in Dutch.
 </tr>
 </table>
 
+## The ON AIR podcast
+
+[`/podcast/`](https://minor.anthony-air.nl/podcast/) is the *Internet & multimedia* part of the minor: ON AIR, a Dutch
+series about what AI does to us as people. It alternates podcast conversations with a guest and videos where an AI is
+the other voice. The series page holds the main question, target audience and story arc;
+every worked-out episode has its own page in `podcast/aflevering-<n>/` with its question, doelgroep, structure, the
+research analysis and the script, plus the filled-in podcast template (episode 1) or the shotlist (episode 2).
+
 ## Adding a game
 
 1. Put the game in `games/<name>/` with an `index.html`. When the player passes, the game sends one
