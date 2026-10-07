@@ -1,23 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Games — Minor</title>
-  <meta name="description" content="The skill tree of games from Anthony's minor: each game trains one Bloom level and unlocks the next." />
+  <meta name="description" content="De skilltree met games uit de minor van Anthony: elke game traint één niveau van Bloom en ontgrendelt de volgende." />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Minor · Anthony Inocencio Ramos" />
-  <meta property="og:title" content="Game skill tree — Minor" />
-  <meta property="og:description" content="The skill tree of games from Anthony's minor: each game trains one Bloom level and unlocks the next." />
+  <meta property="og:title" content="Skilltree met games — Minor" />
+  <meta property="og:description" content="De skilltree met games uit de minor van Anthony: elke game traint één niveau van Bloom en ontgrendelt de volgende." />
   <meta property="og:url" content="https://minor.anthony-air.nl/games/" />
   <meta property="og:image" content="https://minor.anthony-air.nl/og/games.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="The game skill tree: eight hexagons from HTML Hunter to Website Challenge" />
+  <meta property="og:image:alt" content="De skilltree met games: acht zeshoeken van HTML Hunter tot Website Challenge" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/favicon.ico?v=2" sizes="48x48" />
   <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+  <script src="/site.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -250,15 +251,19 @@
       .ladder li { grid-template-columns: 28px 1fr; }
       .ladder .lv-do, .ladder .lv-games { grid-column: 2; justify-content: flex-start; }
     }
+    /* light theme: chosen ("Licht"), or "Systeem" on a light system (see site.js and style.css) */
+    :root[data-theme="light"] .board::after { opacity: 0.6; }
+    :root[data-theme="light"] .hex.live .shape { filter: drop-shadow(0 0 6px var(--code-soft)); }
+    :root[data-theme="light"] .edge.lit { filter: none; }
     @media (prefers-color-scheme: light) {
-      .board::after { opacity: 0.6; }
-      .hex.live .shape { filter: drop-shadow(0 0 6px var(--code-soft)); }
-      .edge.lit { filter: none; }
+      :root:not([data-theme="dark"]):not([data-theme="light"]) .board::after { opacity: 0.6; }
+      :root:not([data-theme="dark"]):not([data-theme="light"]) .hex.live .shape { filter: drop-shadow(0 0 6px var(--code-soft)); }
+      :root:not([data-theme="dark"]):not([data-theme="light"]) .edge.lit { filter: none; }
     }
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
 
   <div class="shell">
     <header class="topbar">
@@ -269,8 +274,8 @@
           <span class="brand-sub">AI, Games &amp; Digitale geletterdheid</span>
         </span>
       </a>
-      <nav class="topnav" aria-label="Sections">
-        <a href="../#track-code">Back to overview</a>
+      <nav class="topnav" aria-label="Onderdelen">
+        <a href="../#track-code">Terug naar het overzicht</a>
       </nav>
       <a class="pill-cta" href="https://anthony-air.nl" target="_blank" rel="noopener">
         anthony-air.nl
@@ -284,36 +289,36 @@
           <div>
             <div class="track-head">
               <span class="track-dot" aria-hidden="true"></span>
-              <h2>Game skill tree</h2>
+              <h2>Skilltree met games</h2>
             </div>
             <p class="track-copy">
-              Eight games, one route: from recognising your first HTML tag to building a small website on your own.
-              Every game trains one level of Bloom's taxonomy, and you unlock the next one by passing the game before it.
+              Acht games, één route: van je eerste HTML-tag herkennen tot zelf een kleine website bouwen.
+              Elke game traint één niveau van de taxonomie van Bloom, en je ontgrendelt de volgende door de game ervoor te halen.
             </p>
           </div>
           <form class="player" data-player-form novalidate>
-            <label for="player-id">Player ID</label>
+            <label for="player-id">Speler-ID</label>
             <div class="player-row">
-              <input id="player-id" name="player" maxlength="40" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="e.g. tiger-42" />
-              <button class="btn btn-primary" type="submit" data-load>Save my progress</button>
-              <span class="or">or</span>
-              <button class="btn btn-ghost" type="button" data-free>Free play</button>
+              <input id="player-id" name="player" maxlength="40" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="bijv. tijger-42" />
+              <button class="btn btn-primary" type="submit" data-load>Voortgang opslaan</button>
+              <span class="or">of</span>
+              <button class="btn btn-ghost" type="button" data-free>Vrij spelen</button>
             </div>
             <p class="player-help">
-              Enter a made-up code (lowercase letters, numbers and hyphens). A new code starts a new player; a code you used before
-              loads your progress. Anyone who knows the code can see that progress, so don't use your real name.
-              Free play opens every game and saves nothing.
+              Vul een zelfbedachte code in (kleine letters, cijfers en streepjes). Een nieuwe code start een nieuwe speler; een code
+              die je al eerder gebruikte laadt je voortgang. Iedereen die de code kent kan die voortgang zien, dus gebruik niet je echte naam.
+              Vrij spelen opent alle games en slaat niets op.
             </p>
             <p class="player-status" data-player-status aria-live="polite"></p>
           </form>
           <p class="config-errors" data-config-errors role="alert" hidden></p>
           <div class="tree-meta">
-            <div class="legend" aria-label="Legend" data-legend></div>
+            <div class="legend" aria-label="Legenda" data-legend></div>
             <span class="live-count" data-live-count></span>
           </div>
         </div>
         <div class="board" data-board>
-          <svg data-tree role="group" aria-label="Skill tree of all games"></svg>
+          <svg data-tree role="group" aria-label="Skilltree van alle games"></svg>
         </div>
       </section>
 
@@ -321,20 +326,20 @@
         <section class="card detail" data-detail aria-live="polite"></section>
 
         <section class="card">
-          <p class="eyebrow">How unlocking works</p>
+          <p class="eyebrow">Zo werkt ontgrendelen</p>
           <ol class="steps" style="margin-top:14px">
-            <li><div><b>Play the open game.</b><p>Each game has three levels and ends with a score.</p></div></li>
-            <li><div><b>Pass it with at least 80%.</b><p>Only your first try per task counts. Passing shows you master the skill; extra points don't buy your way in.</p></div></li>
-            <li><div><b>The next game opens.</b><p>After Build the DOM the tree splits: Style Lab and Layout Builder open together, and Bug Hunter waits until you have passed both.</p></div></li>
+            <li><div><b>Speel de open game.</b><p>Elke game heeft drie levels en eindigt met een score.</p></div></li>
+            <li><div><b>Haal hem met minstens 80%.</b><p>Alleen je eerste poging per opdracht telt. Halen laat zien dat je de vaardigheid beheerst; met extra punten koop je je niet naar binnen.</p></div></li>
+            <li><div><b>De volgende game gaat open.</b><p>Na Build the DOM splitst de boom: Style Lab en Layout Builder gaan samen open, en Bug Hunter wacht tot je ze allebei gehaald hebt.</p></div></li>
           </ol>
         </section>
       </div>
 
       <section class="card track track-code">
-        <p class="eyebrow">The Bloom ladder</p>
+        <p class="eyebrow">De ladder van Bloom</p>
         <p class="track-copy" style="margin-top:10px">
-          Higher in the tree doesn't mean more questions; it means a different kind of thinking.
-          Each step asks something new of you.
+          Hoger in de boom betekent niet meer vragen, maar een ander soort denken.
+          Elke stap vraagt iets nieuws van je.
         </p>
         <ol class="ladder" data-ladder></ol>
       </section>
@@ -345,14 +350,14 @@
         <h2 id="game-dialog-title" data-dialog-title></h2>
         <span class="mode-pill" data-dialog-mode></span>
         <span class="spacer"></span>
-        <button class="btn btn-ghost" type="button" data-dialog-close>Close</button>
+        <button class="btn btn-ghost" type="button" data-dialog-close>Sluiten</button>
       </div>
       <div class="dialog-status" data-dialog-status aria-live="polite"></div>
       <iframe data-dialog-frame title="Game"></iframe>
     </dialog>
 
     <footer class="site-footer">
-      <p>Made by Anthony Inocencio Ramos for the minor <em>AI, Games &amp; Digitale geletterdheid</em>.</p>
+      <p>Gemaakt door Anthony Inocencio Ramos voor de minor <em>AI, Games &amp; Digitale geletterdheid</em>.</p>
       <a href="https://anthony-air.nl" target="_blank" rel="noopener">anthony-air.nl</a>
     </footer>
   </div>
@@ -363,39 +368,39 @@
     // Which games exist, where they live and what unlocks them comes from games.json (see registry.js);
     // the `requires` below only draw the route for games that aren't in games.json yet.
     const BLOOM = [
-      { id: "remember", name: "Remember", does: "Recognise the building blocks and name what they are." },
-      { id: "understand", name: "Understand", does: "Explain how the parts fit together." },
-      { id: "apply", name: "Apply", does: "Use what you know to reach a given result." },
-      { id: "analyse", name: "Analyse", does: "Take code apart: find causes and predict behaviour." },
-      { id: "evaluate", name: "Evaluate", does: "Compare solutions and argue which one is better." },
-      { id: "create", name: "Create", does: "Combine everything into something of your own." }
+      { id: "remember", name: "Onthouden", does: "De bouwstenen herkennen en benoemen wat ze zijn." },
+      { id: "understand", name: "Begrijpen", does: "Uitleggen hoe de onderdelen in elkaar passen." },
+      { id: "apply", name: "Toepassen", does: "Wat je weet gebruiken om een gegeven resultaat te bereiken." },
+      { id: "analyse", name: "Analyseren", does: "Code uit elkaar halen: oorzaken vinden en gedrag voorspellen." },
+      { id: "evaluate", name: "Evalueren", does: "Oplossingen vergelijken en beargumenteren welke beter is." },
+      { id: "create", name: "Creëren", does: "Alles combineren tot iets van jezelf." }
     ];
 
     const GAMES = [
       { id: "html-hunter", title: "HTML Hunter", lines: ["HTML", "Hunter"], bloom: "remember", requires: [],
-        question: "What does this element mean?",
-        goal: "Recognise common HTML elements and name what each one does." },
+        question: "Wat betekent dit element?",
+        goal: "Veelgebruikte HTML-elementen herkennen en benoemen wat ze doen." },
       { id: "build-the-dom", title: "Build the DOM", lines: ["Build the", "DOM"], bloom: "understand", requires: ["html-hunter"],
-        question: "How do these parts fit together?",
-        goal: "Explain how HTML elements form the structure of a page, nest them correctly and spot structure errors." },
+        question: "Hoe passen deze onderdelen in elkaar?",
+        goal: "Uitleggen hoe HTML-elementen de structuur van een pagina vormen, ze goed nesten en structuurfouten zien." },
       { id: "style-lab", title: "Style Lab", lines: ["Style", "Lab"], bloom: "apply", requires: ["build-the-dom"],
-        question: "How do I use CSS to get this result?",
-        goal: "Apply simple CSS properties such as colour, font size, padding and borders to style elements." },
+        question: "Hoe krijg ik dit resultaat met CSS?",
+        goal: "Eenvoudige CSS-eigenschappen zoals kleur, lettergrootte, padding en randen toepassen om elementen op te maken." },
       { id: "layout-builder", title: "Layout Builder", lines: ["Layout", "Builder"], bloom: "apply", requires: ["build-the-dom"],
-        question: "How do I build this layout?",
-        goal: "Use basic CSS and flexbox to position elements according to a given layout." },
+        question: "Hoe bouw ik deze layout?",
+        goal: "Met basis-CSS en flexbox elementen plaatsen volgens een gegeven layout." },
       { id: "bug-hunter", title: "Bug Hunter", lines: ["Bug", "Hunter"], bloom: "analyse", requires: ["style-lab", "layout-builder"],
-        question: "Why doesn't this work?",
-        goal: "Find simple HTML and CSS bugs, point out their cause and fix them." },
+        question: "Waarom werkt dit niet?",
+        goal: "Eenvoudige HTML- en CSS-bugs vinden, de oorzaak aanwijzen en ze oplossen." },
       { id: "code-detective", title: "Code Detective", lines: ["Code", "Detective"], bloom: "analyse", requires: ["bug-hunter"],
-        question: "What will this code do?",
-        goal: "Read HTML and CSS and predict the visual result before seeing it." },
+        question: "Wat gaat deze code doen?",
+        goal: "HTML en CSS lezen en het visuele resultaat voorspellen voordat je het ziet." },
       { id: "code-review", title: "Code Review", lines: ["Code", "Review"], bloom: "evaluate", requires: ["code-detective"],
-        question: "Which solution is better, and why?",
-        goal: "Compare two working solutions and back up a choice with concrete quality criteria." },
+        question: "Welke oplossing is beter, en waarom?",
+        goal: "Twee werkende oplossingen vergelijken en een keuze onderbouwen met concrete kwaliteitscriteria." },
       { id: "website-challenge", title: "Website Challenge", lines: ["Website", "Challenge"], bloom: "create", requires: ["code-review"],
-        question: "Can I build this on my own?",
-        goal: "Combine HTML and CSS to build a small, working website from a list of requirements." }
+        question: "Kan ik dit zelf bouwen?",
+        goal: "HTML en CSS combineren tot een kleine, werkende website vanuit een lijst met eisen." }
     ];
 
     // Grid positions: column = step along the route, row = lane (-1 above, 0 middle, 1 below).
@@ -435,7 +440,7 @@
       return requiresMet(g) ? "next" : "locked";
     }
     const canPlay = (g) => ["live", "done"].includes(stateOf(g));
-    const STATE_LABEL = { done: "passed", live: "playable", next: "up next", locked: "locked" };
+    const STATE_LABEL = { done: "gehaald", live: "speelbaar", next: "komt eraan", locked: "op slot" };
 
     const emblem = (id) => `emblems/${id}.svg#i`;
     function hexPoints(cx, cy, r) {
@@ -520,15 +525,15 @@
 
     function renderMeta() {
       const legend = mode === "player"
-        ? [["k-done", "Passed"], ["k-open", "Open"], ["k-next", "Up next"], ["k-locked", "Locked"]]
-        : [["k-live", "Playable"], ["k-next", "Up next"], ["k-locked", "Locked"]];
+        ? [["k-done", "Gehaald"], ["k-open", "Open"], ["k-next", "Komt eraan"], ["k-locked", "Op slot"]]
+        : [["k-live", "Speelbaar"], ["k-next", "Komt eraan"], ["k-locked", "Op slot"]];
       document.querySelector("[data-legend]").innerHTML =
         legend.map(([k, t]) => `<span class="chip ${k}"><i aria-hidden="true"></i>${t}</span>`).join("");
       const count = document.querySelector("[data-live-count]");
       if (mode === "player") {
-        count.innerHTML = `<b>${passedCount()} of ${GAMES.length}</b> games passed`;
+        count.innerHTML = `<b>${passedCount()} van ${GAMES.length}</b> games gehaald`;
       } else {
-        count.innerHTML = `<b>${GAMES.filter((g) => built(g.id)).length} of ${GAMES.length}</b> games playable`;
+        count.innerHTML = `<b>${GAMES.filter((g) => built(g.id)).length} van ${GAMES.length}</b> games speelbaar`;
       }
     }
 
@@ -536,28 +541,28 @@
       const g = byId[selected], s = stateOf(g);
       const bloom = BLOOM.find((b) => b.id === g.bloom);
       const level = BLOOM.indexOf(bloom) + 1;
-      const names = (ids) => ids.length ? ids.map((id) => byId[id]?.title || id).join(" + ") : "Nothing, this is where you start";
+      const names = (ids) => ids.length ? ids.map((id) => byId[id]?.title || id).join(" + ") : "Niets, hier begin je";
       const conds = (list) => list.length
-        ? list.map((r) => (byId[r.gameId]?.title || r.gameId) + (r.type === "minPercent" ? ` (at least ${r.value}%)` : "")).join(" + ")
-        : "Nothing, this is where you start";
+        ? list.map((r) => (byId[r.gameId]?.title || r.gameId) + (r.type === "minPercent" ? ` (minstens ${r.value}%)` : "")).join(" + ")
+        : "Niets, hier begin je";
       const next = unlocks(g.id).map((u) => u.id);
       const status = {
-        done: "Passed",
-        live: mode === "player" ? "Open: pass it to unlock the next game" : "Playable now",
-        next: built(g.id) ? "Locked" : "Up next, being built",
-        locked: built(g.id) ? "Locked" : "Not built yet"
+        done: "Gehaald",
+        live: mode === "player" ? "Open: haal hem om de volgende game te ontgrendelen" : "Nu speelbaar",
+        next: built(g.id) ? "Op slot" : "Komt eraan, wordt gebouwd",
+        locked: built(g.id) ? "Op slot" : "Nog niet gebouwd"
       }[s];
       let action;
       if (canPlay(g) && mode !== "none") {
-        action = `<button class="play-btn" type="button" data-play="${g.id}">${s === "done" ? "Play again" : "Play " + g.title}
+        action = `<button class="play-btn" type="button" data-play="${g.id}">${s === "done" ? "Opnieuw spelen" : "Speel " + g.title}
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></button>`;
       } else if (canPlay(g)) {
-        action = `<p class="muted-note">To play, enter a player ID above or choose <button class="link-btn" type="button" data-free>free play</button>.</p>`;
+        action = `<p class="muted-note">Vul hierboven een speler-ID in of kies <button class="link-btn" type="button" data-free>vrij spelen</button> om te spelen.</p>`;
       } else if (!built(g.id)) {
-        action = `<p class="muted-note">${s === "next" ? "This is the next game to be released." : "This game hasn't been built yet."}</p>`;
+        action = `<p class="muted-note">${s === "next" ? "Dit is de volgende game die uitkomt." : "Deze game is nog niet gebouwd."}</p>`;
       } else {
         const missing = reqs(g).filter((r) => !window.GameRegistry.met(r, player.results));
-        action = `<p class="muted-note">Pass ${conds(missing)} first to unlock this game, or switch to <button class="link-btn" type="button" data-free>free play</button>.</p>`;
+        action = `<p class="muted-note">Haal eerst ${conds(missing)} om deze game te ontgrendelen, of kies <button class="link-btn" type="button" data-free>vrij spelen</button>.</p>`;
       }
       const el = document.querySelector("[data-detail]");
       el.dataset.state = s;
@@ -565,7 +570,7 @@
         <div class="detail-top">
           <span class="detail-hex" aria-hidden="true"><svg viewBox="0 0 256 256" width="30" height="30"><use href="${emblem(g.id)}" /></svg></span>
           <div>
-            <p class="eyebrow">Bloom level ${level} · ${bloom.name}</p>
+            <p class="eyebrow">Bloom-niveau ${level} · ${bloom.name}</p>
             <h2>${g.title}</h2>
           </div>
         </div>
@@ -573,8 +578,8 @@
         <p class="goal">${esc(g.goal)}</p>
         <dl class="facts">
           <dt>Status</dt><dd class="status ${s}">${status}</dd>
-          <dt>Requires</dt><dd>${conds(reqs(g))}</dd>
-          <dt>Unlocks</dt><dd>${next.length ? names(next) : "The end of the route"}</dd>
+          <dt>Vereist</dt><dd>${conds(reqs(g))}</dd>
+          <dt>Ontgrendelt</dt><dd>${next.length ? names(next) : "Het einde van de route"}</dd>
         </dl>
         ${action}`;
     }
@@ -617,8 +622,8 @@
       const res = await fetch(url, { ...options, cache: "no-store" });
       let data = null;
       try { data = await res.json(); } catch { /* not JSON */ }
-      if (!data) throw new Error("The progress server isn't available right now.");
-      if (!res.ok || data.ok !== true) throw new Error(data.message || `The progress server refused the request (HTTP ${res.status}).`);
+      if (!data) throw new Error("De voortgangsserver is nu niet bereikbaar.");
+      if (!res.ok || data.ok !== true) throw new Error(data.message || `De voortgangsserver weigerde het verzoek (HTTP ${res.status}).`);
       return data;
     }
 
@@ -645,7 +650,7 @@
       const form = document.querySelector("[data-player-form]");
       const buttons = form.querySelectorAll("button");
       buttons.forEach((b) => (b.disabled = true));
-      showStatus(`Loading progress for <b>${esc(id)}</b>…`);
+      showStatus(`Voortgang laden voor <b>${esc(id)}</b>…`);
       try {
         const results = await readProgress(id);
         mode = "player";
@@ -655,7 +660,7 @@
         renderAll();
         showPlayerStatus();
       } catch (err) {
-        showStatus(`Couldn't load progress: ${esc(err.message)} You can still use free play.`, true);
+        showStatus(`Voortgang laden lukte niet: ${esc(err.message)} Je kunt nog wel vrij spelen.`, true);
       } finally {
         buttons.forEach((b) => (b.disabled = false));
       }
@@ -663,10 +668,10 @@
 
     function showPlayerStatus() {
       const n = passedCount();
-      const switchBtn = `<button class="link-btn" type="button" data-switch>Switch player</button>`;
+      const switchBtn = `<button class="link-btn" type="button" data-switch>Andere speler</button>`;
       showStatus(n
-        ? `Playing as <span class="mode-pill">${esc(player.id)}</span> · ${n} ${n === 1 ? "game" : "games"} passed. Your progress is saved each time you pass a game. ${switchBtn}`
-        : `New player <span class="mode-pill">${esc(player.id)}</span> · start with ${byId[suggested()].title}. Your progress is saved each time you pass a game. ${switchBtn}`);
+        ? `Je speelt als <span class="mode-pill">${esc(player.id)}</span> · ${n} ${n === 1 ? "game" : "games"} gehaald. Je voortgang wordt opgeslagen elke keer dat je een game haalt. ${switchBtn}`
+        : `Nieuwe speler <span class="mode-pill">${esc(player.id)}</span> · begin met ${byId[suggested()].title}. Je voortgang wordt opgeslagen elke keer dat je een game haalt. ${switchBtn}`);
     }
 
     function startFreePlay() {
@@ -675,7 +680,7 @@
       remember();
       selected = suggested();
       renderAll();
-      showStatus(`<span class="mode-pill free">Free play</span> Every game is open and nothing is saved. <button class="link-btn" type="button" data-switch>Use a player ID instead</button>`);
+      showStatus(`<span class="mode-pill free">Vrij spelen</span> Alle games zijn open en er wordt niets opgeslagen. <button class="link-btn" type="button" data-switch>Toch een speler-ID gebruiken</button>`);
     }
 
     function reset() {
@@ -783,7 +788,7 @@
       round = { gameId: id, mode, playerId: player.id, received: false, pending: null };
       document.querySelector("[data-dialog-title]").textContent = g.title;
       const pill = document.querySelector("[data-dialog-mode]");
-      pill.textContent = mode === "player" ? `Saving for ${player.id}` : "Free play · not saved";
+      pill.textContent = mode === "player" ? `Opslaan voor ${player.id}` : "Vrij spelen · niet opgeslagen";
       pill.classList.toggle("free", mode === "free");
       dialogStatus("");
       frame.title = g.title;
@@ -800,7 +805,7 @@
     }
 
     async function saveRound(r) {
-      dialogStatus("You passed! Saving your progress…");
+      dialogStatus("Gehaald! Je voortgang wordt opgeslagen…");
       try {
         await api(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(r.pending) });
         r.pending = null;
@@ -821,13 +826,13 @@
           toFinale = finale ? r.gameId : null;
           if (!dialog.open) { celebrateUnlocks(); celebrateFinale(); }   // closed while saving: play it right away
         }
-        dialogStatus(`Saved! You passed ${byId[r.gameId].title}.` +
-          (opened.length ? ` Unlocked: <b>${opened.map((g) => g.title).join(" and ")}</b>.`
-                         : unlocks(r.gameId).length ? " The next game is still being built."
-                         : finale ? " 🎉 You've completed the whole skill tree!" : " That's the end of the route.") +
-          ` <button class="link-btn" type="button" data-dialog-close>Back to the skill tree</button>`, "good");
+        dialogStatus(`Opgeslagen! Je hebt ${byId[r.gameId].title} gehaald.` +
+          (opened.length ? ` Ontgrendeld: <b>${opened.map((g) => g.title).join(" en ")}</b>.`
+                         : unlocks(r.gameId).length ? " De volgende game wordt nog gebouwd."
+                         : finale ? " 🎉 Je hebt de hele skilltree voltooid!" : " Dat is het einde van de route.") +
+          ` <button class="link-btn" type="button" data-dialog-close>Terug naar de skilltree</button>`, "good");
       } catch (err) {
-        dialogStatus(`Your result wasn't saved: ${esc(err.message)} <button class="link-btn" type="button" data-retry>Try again</button>`, "error");
+        dialogStatus(`Je resultaat is niet opgeslagen: ${esc(err.message)} <button class="link-btn" type="button" data-retry>Opnieuw proberen</button>`, "error");
       }
     }
 
@@ -842,7 +847,7 @@
       if (r.received) return;
       r.received = true;
       if (r.mode !== "player") {
-        dialogStatus(`You passed ${byId[r.gameId].title}! This is free play, so nothing was saved. <button class="link-btn" type="button" data-dialog-close>Back to the skill tree</button>`, "good");
+        dialogStatus(`Je hebt ${byId[r.gameId].title} gehaald! Dit is vrij spelen, dus er is niets opgeslagen. <button class="link-btn" type="button" data-dialog-close>Terug naar de skilltree</button>`, "good");
         return;
       }
       r.pending = { pseudonym: r.playerId, gameId: r.gameId, score: d.score, maxScore: d.maxScore };
@@ -856,10 +861,10 @@
       const { games, errors } = await window.GameRegistry.load("games.json");
       registry = new Map(games.map((g) => [g.id, g]));
       const outside = games.filter((g) => !byId[g.id]).map((g) => g.id);
-      if (outside.length) errors.push(`Not shown in the tree yet (no place on the route): ${outside.join(", ")}.`);
+      if (outside.length) errors.push(`Nog niet in de boom (geen plek op de route): ${outside.join(", ")}.`);
       if (errors.length) {
         const box = document.querySelector("[data-config-errors]");
-        box.innerHTML = `<b>games.json has a problem.</b> ${errors.map(esc).join(" ")}`;
+        box.innerHTML = `<b>Er is een probleem met games.json.</b> ${errors.map(esc).join(" ")}`;
         box.hidden = false;
         console.warn("games.json:", errors);
       }
@@ -891,7 +896,7 @@
         const id = input.value.trim().toLowerCase();
         input.value = id;
         if (!validId(id)) {
-          showStatus("Use lowercase letters, numbers and hyphens only (max. 40), starting with a letter or number.", true);
+          showStatus("Gebruik alleen kleine letters, cijfers en streepjes (max. 40), en begin met een letter of cijfer.", true);
           input.focus();
           return;
         }

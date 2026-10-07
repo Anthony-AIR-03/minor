@@ -24,15 +24,15 @@ window.GameRegistry = (() => {
     data.games.forEach((g, i) => {
       const where = `game ${i + 1}${g && typeof g.id === "string" ? ` (${g.id})` : ""}`;
       const problems = [];
-      if (!g || typeof g !== "object" || Array.isArray(g)) { errors.push(`${where}: not an object.`); return; }
+      if (!g || typeof g !== "object" || Array.isArray(g)) { errors.push(`${where}: geen object.`); return; }
       const extra = Object.keys(g).filter((k) => !GAME_FIELDS.includes(k));
-      if (extra.length) problems.push(`unknown field ${extra.join(", ")}`);
-      if (!validId(g.id)) problems.push("id must use lowercase letters, numbers and hyphens");
-      else if (seen.has(g.id)) problems.push("id is used twice");
-      if (typeof g.title !== "string" || !g.title.trim()) problems.push("title is missing");
-      if (g.learningGoal !== undefined && typeof g.learningGoal !== "string") problems.push("learningGoal must be text");
-      if (typeof g.path !== "string" || !g.path.startsWith("/")) problems.push("path must start with /");
-      if (!Array.isArray(g.requires)) problems.push("requires must be a list");
+      if (extra.length) problems.push(`onbekend veld ${extra.join(", ")}`);
+      if (!validId(g.id)) problems.push("id mag alleen kleine letters, cijfers en streepjes bevatten");
+      else if (seen.has(g.id)) problems.push("id wordt twee keer gebruikt");
+      if (typeof g.title !== "string" || !g.title.trim()) problems.push("title ontbreekt");
+      if (g.learningGoal !== undefined && typeof g.learningGoal !== "string") problems.push("learningGoal moet tekst zijn");
+      if (typeof g.path !== "string" || !g.path.startsWith("/")) problems.push("path moet met / beginnen");
+      if (!Array.isArray(g.requires)) problems.push("requires moet een lijst zijn");
       if (problems.length) { errors.push(`${where}: ${problems.join("; ")}.`); return; }
       seen.add(g.id);
       games.push({ id: g.id, title: g.title.trim(), learningGoal: g.learningGoal || "", path: g.path, requires: g.requires });
@@ -44,19 +44,19 @@ window.GameRegistry = (() => {
       const problems = [];
       const refs = new Set();
       g.requires = g.requires.map((r) => {
-        if (!r || typeof r !== "object") { problems.push("a condition is not an object"); return null; }
+        if (!r || typeof r !== "object") { problems.push("een voorwaarde is geen object"); return null; }
         const extra = Object.keys(r).filter((k) => !["gameId", "type", "value"].includes(k));
-        if (extra.length) problems.push(`unknown field ${extra.join(", ")} in a condition`);
-        if (r.gameId === g.id) problems.push("it requires itself");
-        else if (!ids.has(r.gameId)) problems.push(`it requires unknown game "${r.gameId}"`);
-        else if (refs.has(r.gameId)) problems.push(`"${r.gameId}" is listed twice`);
+        if (extra.length) problems.push(`onbekend veld ${extra.join(", ")} in een voorwaarde`);
+        if (r.gameId === g.id) problems.push("hij vereist zichzelf");
+        else if (!ids.has(r.gameId)) problems.push(`hij vereist onbekende game "${r.gameId}"`);
+        else if (refs.has(r.gameId)) problems.push(`"${r.gameId}" staat er twee keer in`);
         refs.add(r.gameId);
         if (r.type === "completed") return { gameId: r.gameId, type: "completed" };
         if (r.type === "minPercent") {
-          if (!Number.isInteger(r.value) || r.value < 1 || r.value > 100) problems.push("minPercent needs a whole value from 1 to 100");
+          if (!Number.isInteger(r.value) || r.value < 1 || r.value > 100) problems.push("minPercent heeft een geheel getal van 1 tot 100 nodig");
           return { gameId: r.gameId, type: "minPercent", value: r.value };
         }
-        problems.push(`unknown condition type "${r.type}"`);
+        problems.push(`onbekend type voorwaarde "${r.type}"`);
         return null;
       });
       if (problems.length) { errors.push(`${g.id}: ${problems.join("; ")}.`); ids.delete(g.id); return false; }
@@ -69,7 +69,7 @@ window.GameRegistry = (() => {
       changed = false;
       games = games.filter((g) => {
         const broken = g.requires.find((r) => !ids.has(r.gameId));
-        if (broken) { errors.push(`${g.id}: depends on "${broken.gameId}", which has an error.`); ids.delete(g.id); changed = true; return false; }
+        if (broken) { errors.push(`${g.id}: hangt af van "${broken.gameId}", en daarin zit een fout.`); ids.delete(g.id); changed = true; return false; }
         return true;
       });
     }
@@ -85,7 +85,7 @@ window.GameRegistry = (() => {
     };
     games.forEach((g) => visit(g.id, []));
     if (inCycle.size) {
-      errors.push(`These games require each other in a circle: ${[...inCycle].join(", ")}.`);
+      errors.push(`Deze games vereisen elkaar in een cirkel: ${[...inCycle].join(", ")}.`);
       games = games.filter((g) => !inCycle.has(g.id) && !g.requires.some((r) => inCycle.has(r.gameId)));
     }
     return { games, errors };
@@ -94,10 +94,10 @@ window.GameRegistry = (() => {
   async function load(url) {
     try {
       const res = await fetch(url, { cache: "no-cache" });
-      if (!res.ok) return { games: [], errors: [`games.json could not be loaded (HTTP ${res.status}).`] };
+      if (!res.ok) return { games: [], errors: [`games.json kon niet worden geladen (HTTP ${res.status}).`] };
       return check(await res.json());
     } catch {
-      return { games: [], errors: ["games.json is not valid JSON or could not be loaded."] };
+      return { games: [], errors: ["games.json is geen geldige JSON of kon niet worden geladen."] };
     }
   }
 

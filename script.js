@@ -15,7 +15,7 @@ function renderGameTile(game) {
     <span class="tile-badge">${gameBadge(game)}</span>
     <h3>${game.title}</h3>
     <p>${game.learningGoal}</p>
-    <span class="tile-play">Play</span>`;
+    <span class="tile-play">Spelen</span>`;
   return el;
 }
 
@@ -24,9 +24,9 @@ function renderSoonTile() {
   el.className = "tile tile--soon";
   el.innerHTML = `
     <span class="tile-badge">?</span>
-    <h3>New game</h3>
-    <p>Not built yet. Reserved for a later part of the minor.</p>
-    <span class="chip">Coming soon</span>`;
+    <h3>Nieuwe game</h3>
+    <p>Nog niet gebouwd. Gereserveerd voor een later deel van de minor.</p>
+    <span class="chip">Binnenkort</span>`;
   return el;
 }
 
@@ -47,7 +47,7 @@ async function main() {
   ];
 
   if (tiles.length === 0) {
-    shelf.innerHTML = '<p class="empty">Nothing here yet.</p>';
+    shelf.innerHTML = '<p class="empty">Nog niets te zien.</p>';
     return;
   }
   shelf.append(...tiles);

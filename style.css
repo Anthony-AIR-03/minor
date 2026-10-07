@@ -26,8 +26,30 @@
   --font: "Kanit", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+/* Light theme: when the visitor picks "Licht" (site.js sets data-theme), or "Systeem" on a light system.
+   Without data-theme (a page without site.js) the site just follows the system, as before. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f5f8;
+  --surface: #ffffff;
+  --surface-2: #f3f1f7;
+  --border: rgba(16, 12, 24, 0.09);
+  --border-strong: rgba(16, 12, 24, 0.22);
+  --ink: #15121c;
+  --muted: #665f74;
+  --muted-2: #6e6680;
+  --speck: rgba(16, 12, 24, 0.14);
+
+  --code: #7c3aed;
+  --code-text: #7c3aed;
+  --code-soft: rgba(124, 58, 237, 0.1);
+  --air: #b3450a;
+  --air-soft: rgba(179, 69, 10, 0.1);
+  --make: #8a6200;
+  --make-soft: rgba(138, 98, 0, 0.12);
+}
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme="dark"]):not([data-theme="light"]) {
     color-scheme: light;
     --bg: #f6f5f8;
     --surface: #ffffff;
@@ -157,6 +179,42 @@ p {
 }
 .topnav a:hover {
   color: var(--ink);
+}
+/* the theme switch (built by site.js): three buttons in one pill */
+.topbar .topnav {
+  margin-inline: auto;
+}
+.theme-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--pill);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.theme-switch button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.theme-switch button:hover {
+  color: var(--ink);
+}
+.theme-switch button[aria-checked="true"] {
+  background: var(--code);
+  color: #fff;
+}
+.theme-switch svg {
+  width: 17px;
+  height: 17px;
 }
 .pill-cta {
   display: inline-flex;
