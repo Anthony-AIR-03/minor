@@ -6,5 +6,6 @@ COPY og/ /usr/share/nginx/html/og/
 COPY podcast/ /usr/share/nginx/html/podcast/
 COPY images/ /usr/share/nginx/html/images/
 COPY fabricatie/ /usr/share/nginx/html/fabricatie/
+COPY videos/ /usr/share/nginx/html/videos/
 RUN find /usr/share/nginx/html -type d -exec chmod 755 {} \; && \
     find /usr/share/nginx/html -type f -exec chmod 644 {} \;

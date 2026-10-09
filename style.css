@@ -687,6 +687,47 @@ ul.chips {
   object-fit: cover;
 }
 
+.video-strip {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.video-strip li {
+  flex: 0 1 300px;
+  min-width: 0;
+}
+.video-strip video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--radius-tile);
+  border: 1px solid var(--border);
+  background: #000;
+}
+/* Phones: a sideways swipe strip, like a social media feed, with the next video peeking in. */
+@media (max-width: 560px) {
+  .video-strip {
+    margin-inline: -22px;
+    padding-inline: 22px;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 22px;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .video-strip::-webkit-scrollbar {
+    display: none;
+  }
+  .video-strip li {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+}
+
 .lightbox {
   position: fixed;
   inset: 0;
