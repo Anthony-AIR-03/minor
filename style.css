@@ -569,40 +569,187 @@ p {
 /* Track C: object gallery */
 .workbench {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
 }
 .object {
-  margin: 0;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 14px 14px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-tile);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.object:hover {
+  border-color: var(--make);
+  transform: translateY(-2px);
 }
 .object-shot {
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radius-tile);
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--surface-2);
-  display: grid;
-  place-items: center;
-  color: var(--make);
-  margin-bottom: 12px;
-}
-.object-shot svg {
-  width: 32px;
-  height: 32px;
-  opacity: 0.75;
+  background: var(--surface);
+  margin-bottom: 14px;
 }
 .object h3 {
-  font-size: 0.98rem;
-  margin-bottom: 7px;
+  font-size: 1rem;
+  margin-bottom: 6px;
 }
 .object p {
   font-size: 0.87rem;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-.object .chip {
+.object-more {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--make);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.track-make .chip {
   color: var(--make);
   border-color: var(--make-soft);
   background: var(--make-soft);
+}
+.track-make .arrow-cta-circle {
+  color: var(--make);
+}
+
+/* Fabrication detail pages, laid out like the portfolio's project pages:
+   banner, title, copy and tags in one card; photos in their own card below. */
+.detail-banner {
+  display: block;
+  width: 100%;
+  height: clamp(240px, 40vw, 440px);
+  object-fit: cover;
+  border-radius: var(--radius-tile);
+  margin-bottom: 22px;
+}
+.detail-title {
+  font-size: clamp(1.25rem, 2.3vw, 1.55rem);
+  line-height: 1.2;
+}
+.detail-title span {
+  display: block;
+  padding-left: 1.6em;
+}
+.detail-copy {
+  max-width: 64ch;
+  color: var(--muted);
+  font-size: 0.97rem;
+  display: grid;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.detail-copy strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+ul.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.photo-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.photo-thumb {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.15s ease-in-out;
+}
+.photo-thumb:hover {
+  transform: scale(1.03);
+}
+.photo-thumb img {
+  display: block;
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(10, 9, 13, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.lightbox[hidden] {
+  display: none;
+}
+.lightbox-image {
+  max-width: min(1100px, 90vw);
+  max-height: 85vh;
+  border-radius: 12px;
+  object-fit: contain;
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 22px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+.lightbox-nav--prev {
+  left: 20px;
+}
+.lightbox-nav--next {
+  right: 20px;
+}
+.lightbox-count {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.8;
 }
 
 /* ---------- empty state (reused by script.js) ---------- */
@@ -640,7 +787,8 @@ p {
     padding: 22px;
   }
   .lead-head span,
-  .track h2 span {
+  .track h2 span,
+  .detail-title span {
     padding-left: 0;
   }
   .episode {
