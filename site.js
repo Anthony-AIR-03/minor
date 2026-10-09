@@ -73,6 +73,56 @@
     sync();
   }
 
+  /* ---------- the phone menu (hamburger) ---------- */
+  // On narrow screens the CSS hides the links, theme switch and CTA behind this button.
+  // Without JS the .has-menu class is never set, so everything stays visible.
+  const MENU_ICON = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path class="menu-bar menu-bar--top" d="M4 7h16" /><path class="menu-bar menu-bar--mid" d="M4 12h16" /><path class="menu-bar menu-bar--bot" d="M4 17h16" /></svg>';
+
+  function buildMenu() {
+    const bar = document.querySelector(".topbar");
+    const nav = bar && bar.querySelector(".topnav");
+    if (!nav || bar.querySelector(".menu-toggle")) return;
+    nav.id ||= "site-menu";
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "menu-toggle";
+    toggle.setAttribute("aria-controls", nav.id);
+    toggle.innerHTML = MENU_ICON;
+    bar.querySelector(".brand").after(toggle);
+    bar.classList.add("has-menu");
+
+    const setOpen = (open) => {
+      bar.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Menu sluiten" : "Menu openen");
+    };
+    setOpen(false);
+
+    toggle.addEventListener("click", () => setOpen(!bar.classList.contains("is-open")));
+    // A link to a section on the same page doesn't navigate away, so close the menu ourselves.
+    nav.addEventListener("click", (e) => {
+      if (e.target.closest("a")) setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && bar.classList.contains("is-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (bar.classList.contains("is-open") && !bar.contains(e.target)) setOpen(false);
+    });
+    window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+
+  function buildTopbar() {
+    buildSwitch();
+    buildMenu();
+  }
+
   // Follow a change made in another tab.
   window.addEventListener("storage", (e) => {
     if (e.key !== KEY) return;
@@ -80,6 +130,6 @@
     syncSwitch();
   });
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", buildSwitch);
-  else buildSwitch();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", buildTopbar);
+  else buildTopbar();
 })();
