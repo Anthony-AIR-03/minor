@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verstoppertje met micro:bits — Minor</title>
+  <meta name="description" content="Verstoppertje spelen met twee micro:bits v2: de verstopper zendt een radiosignaal uit, de zoeker laat met een grafiek en piepjes zien hoe dichtbij je bent." />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Minor · Anthony Inocencio Ramos" />
+  <meta property="og:title" content="Verstoppertje met micro:bits" />
+  <meta property="og:description" content="Verstoppertje spelen met twee micro:bits v2: de verstopper zendt een radiosignaal uit, de zoeker laat met een grafiek en piepjes zien hoe dichtbij je bent." />
+  <meta property="og:url" content="https://minor.anthony-air.nl/fabricatie/microbit-verstoppertje/" />
+  <meta property="og:image" content="https://minor.anthony-air.nl/og/home.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Minor: AI, Games &amp; Digitale geletterdheid, door Anthony Inocencio Ramos" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.ico?v=2" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+  <script src="/site.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <svg class="brand-logo" viewBox="0 0 256 256" aria-hidden="true"><path d="M44 159 L44 59 L128 143 L212 59 L212 159" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/><path d="M44.0 33.0 L66.5 46.0 L66.5 72.0 L44.0 85.0 L21.5 72.0 L21.5 46.0Z" fill="currentColor"/><path d="M128.0 117.0 L150.5 130.0 L150.5 156.0 L128.0 169.0 L105.5 156.0 L105.5 130.0Z" fill="currentColor"/><path d="M212.0 33.0 L234.5 46.0 L234.5 72.0 L212.0 85.0 L189.5 72.0 L189.5 46.0Z" fill="currentColor"/><path d="M44.0 159.0 L71.7 175.0 L71.7 207.0 L44.0 223.0 L16.3 207.0 L16.3 175.0Z M44.0 171.0 L61.3 181.0 L61.3 201.0 L44.0 211.0 L26.7 201.0 L26.7 181.0Z" fill="currentColor" fill-rule="evenodd"/><path d="M212.0 159.0 L239.7 175.0 L239.7 207.0 L212.0 223.0 L184.3 207.0 L184.3 175.0Z M212.0 171.0 L229.3 181.0 L229.3 201.0 L212.0 211.0 L194.7 201.0 L194.7 181.0Z" fill="currentColor" fill-rule="evenodd"/></svg>
+        <span>
+          <span class="brand-name">Minor</span>
+          <span class="brand-sub">AI, Games &amp; Digitale geletterdheid</span>
+        </span>
+      </a>
+      <nav class="topnav" aria-label="Onderdelen">
+        <a href="/#track-code">Games</a>
+        <a href="/podcast/">Podcast</a>
+        <a href="/#track-make" aria-current="page">Maken</a>
+      </nav>
+      <a class="pill-cta" href="https://anthony-air.nl" target="_blank" rel="noopener">
+        anthony-air.nl
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14L14 6M14 6H7.5M14 6v6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </a>
+    </header>
+
+    <main id="main">
+      <article class="card track track-make">
+        <img class="detail-banner" src="/images/fabricatie/verstoppertje-makecode-02.jpeg" width="1536" height="2048" alt="De MakeCode-blokken van de verstopper op een laptop, met de twee micro:bits ervoor." style="object-position: center 38%;" />
+        <div class="track-head">
+          <span class="track-dot" aria-hidden="true"></span>
+          <h1 class="detail-title">Verstoppertje<span>met micro:bits</span></h1>
+        </div>
+        <div class="detail-copy">
+          <p>Verstoppertje spelen met twee <strong>micro:bits v2</strong>: de ene is de <strong>verstopper</strong>, de andere de <strong>zoeker</strong>.</p>
+          <p>De verstopper zendt steeds een radiosignaal uit. De zoeker leest hoe sterk dat signaal binnenkomt en laat dat zien als een grafiek op het ledscherm: hoe voller de grafiek, hoe dichter je bij de verstopper bent. De zoeker piept ook sneller naarmate je dichterbij komt. Het geluid kun je aan- en uitzetten.</p>
+          <p>Met de knoppen stel je de zendsterkte van de verstopper in, van 0 tot 7. Hoe lager het signaal, hoe dichterbij de zoeker moet komen om het op te pikken, en hoe lastiger het spel.</p>
+          <p>Er kunnen meerdere zoekers tegelijk meedoen. Ook kunnen er meerdere spellen naast elkaar lopen: elk koppel van verstopper en zoekers gebruikt een eigen signaal, zodat ze elkaar niet storen.</p>
+        </div>
+        <ul class="chips" aria-label="Wat het is">
+          <li class="chip">micro:bit v2</li>
+          <li class="chip">Radio</li>
+          <li class="chip">MakeCode</li>
+          <li class="chip">Zendsterkte 0–7</li>
+          <li class="chip">Geluid aan/uit</li>
+          <li class="chip">Meerdere zoekers</li>
+        </ul>
+      </article>
+
+      <section class="card track track-make" aria-labelledby="videos-title">
+        <div class="track-head">
+          <span class="track-dot" aria-hidden="true"></span>
+          <h2 id="videos-title">Video's</h2>
+        </div>
+        <ul class="video-strip">
+          <li><video controls playsinline preload="metadata" width="576" height="1024" aria-label="Verstoppertje in actie, video 1"><source src="/videos/fabricatie/verstoppertje-demo-01.mp4#t=0.1" type="video/mp4" /><a href="/videos/fabricatie/verstoppertje-demo-01.mp4">Bekijk de video</a></video></li>
+          <li><video controls playsinline preload="metadata" width="576" height="1024" aria-label="Verstoppertje in actie, video 2"><source src="/videos/fabricatie/verstoppertje-demo-02.mp4#t=0.1" type="video/mp4" /><a href="/videos/fabricatie/verstoppertje-demo-02.mp4">Bekijk de video</a></video></li>
+        </ul>
+      </section>
+
+      <section class="card track track-make" aria-labelledby="photos-title">
+        <div class="track-head">
+          <span class="track-dot" aria-hidden="true"></span>
+          <h2 id="photos-title">Foto's</h2>
+        </div>
+        <ul class="photo-strip" data-lightbox>
+          <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-zoeker-en-verstopper-04.jpeg"><img src="/images/fabricatie/verstoppertje-zoeker-en-verstopper-04.jpeg" width="1536" height="2048" loading="lazy" alt="De verstopper (groen) en de zoeker (met een 3) naast elkaar; de zoeker toont een grafiek op het ledscherm." /></a></li>
+          <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-zoeker-en-verstopper-02.jpeg"><img src="/images/fabricatie/verstoppertje-zoeker-en-verstopper-02.jpeg" width="1536" height="2048" loading="lazy" alt="De verstopper en de zoeker op tafel, allebei met een batterijhouder." /></a></li>
+          <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-zoeker-en-verstopper-05.jpeg"><img src="/images/fabricatie/verstoppertje-zoeker-en-verstopper-05.jpeg" width="1536" height="2048" loading="lazy" alt="De zoeker toont de signaalgrafiek terwijl de verstopper zendt." /></a></li>
+          <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-makecode-02.jpeg"><img src="/images/fabricatie/verstoppertje-makecode-02.jpeg" width="1536" height="2048" loading="lazy" alt="De MakeCode-blokken van de verstopper, met de twee micro:bits voor de laptop." /></a></li>
+          <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-makecode-03.jpeg"><img src="/images/fabricatie/verstoppertje-makecode-03.jpeg" width="1536" height="2048" loading="lazy" alt="De twee micro:bits voor de laptop met de code." /></a></li>
+        </ul>
+        <a class="arrow-cta" href="/#track-make">
+          <span class="arrow-cta-label">Alle objecten</span>
+          <span class="arrow-cta-line" aria-hidden="true"></span>
+          <span class="arrow-cta-circle" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h11M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Gemaakt door Anthony Inocencio Ramos voor de minor <em>AI, Games &amp; Digitale geletterdheid</em>.</p>
+      <a href="https://anthony-air.nl" target="_blank" rel="noopener">anthony-air.nl</a>
+    </footer>
+  </div>
+
+  <script src="/fabricatie/lightbox.js"></script>
+</body>
+</html>
