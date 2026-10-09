@@ -233,6 +233,82 @@ p {
   height: 15px;
 }
 
+/* the phone menu (built by site.js): hidden on wide screens */
+.menu-toggle {
+  display: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  cursor: pointer;
+}
+.menu-toggle svg {
+  width: 22px;
+  height: 22px;
+}
+.menu-bar {
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  transform-origin: 12px 12px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.is-open .menu-bar--top {
+  transform: rotate(45deg) translateY(5px);
+}
+.is-open .menu-bar--mid {
+  opacity: 0;
+}
+.is-open .menu-bar--bot {
+  transform: rotate(-45deg) translateY(-5px);
+}
+
+@media (max-width: 860px) {
+  .topbar.has-menu {
+    gap: 12px;
+  }
+  /* keep the button on the logo's row: the brand shrinks (its subtitle wraps) instead */
+  .topbar.has-menu .brand {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .topbar.has-menu .menu-toggle {
+    display: grid;
+    flex-shrink: 0;
+  }
+  .topbar.has-menu .topnav,
+  .topbar.has-menu .theme-switch,
+  .topbar.has-menu .pill-cta {
+    display: none;
+  }
+  .topbar.has-menu.is-open .topnav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    order: 3;
+    width: 100%;
+    margin: 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .topbar.has-menu.is-open .topnav a {
+    padding: 10px 4px;
+    font-size: 1.05rem;
+  }
+  .topbar.has-menu.is-open .topnav a[aria-current="page"] {
+    color: var(--ink);
+  }
+  .topbar.has-menu.is-open .theme-switch,
+  .topbar.has-menu.is-open .pill-cta {
+    display: inline-flex;
+    order: 4;
+  }
+}
+
 /* ---------- bento ---------- */
 .bento {
   display: grid;
