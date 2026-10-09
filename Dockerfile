@@ -4,5 +4,7 @@ COPY index.html script.js site.js style.css testscherm.html favicon.ico favicon.
 COPY games/ /usr/share/nginx/html/games/
 COPY og/ /usr/share/nginx/html/og/
 COPY podcast/ /usr/share/nginx/html/podcast/
+COPY images/ /usr/share/nginx/html/images/
+COPY fabricatie/ /usr/share/nginx/html/fabricatie/
 RUN find /usr/share/nginx/html -type d -exec chmod 755 {} \; && \
     find /usr/share/nginx/html -type f -exec chmod 644 {} \;
