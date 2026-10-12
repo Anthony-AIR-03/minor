@@ -5,7 +5,9 @@ header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-store, private');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: no-referrer');
-header("Content-Security-Policy: default-src 'none'; style-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+// top3.php also loads the site's Kanit font from Google Fonts; the standard page stays fully self-contained.
+$fontSources = defined('DASHBOARD_LEADERBOARD') ? [' https://fonts.googleapis.com', "; font-src https://fonts.gstatic.com"] : ['', ''];
+header("Content-Security-Policy: default-src 'none'; style-src 'self'{$fontSources[0]}{$fontSources[1]}; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
 require_once __DIR__ . '/functions.php';
 
 $user = dashboardAuthenticatedUser($_SERVER);
@@ -13,6 +15,7 @@ $error = '';
 $games = [];
 $filters = ['game' => '', 'from' => '', 'until' => '', 'upper' => ''];
 $overview = null;
+$leaders = null;
 $timezone = '';
 if ($user === '') {
     http_response_code(403);
@@ -42,6 +45,7 @@ if ($user === '') {
         $timezone = (string) $zone['session_zone'];
         if ($timezone === 'SYSTEM') $timezone .= ' / ' . (string) $zone['system_zone'];
         $overview = dashboardRead($pdo, $games, $filters);
+        if (defined('DASHBOARD_LEADERBOARD')) $leaders = dashboardLeaders($pdo, $games);
     } catch (InvalidArgumentException $exception) {
         http_response_code(422);
         $error = $exception->getMessage();

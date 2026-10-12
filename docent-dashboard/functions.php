@@ -128,3 +128,28 @@ function dashboardTime(string $value): string {
     $date = DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $value, new DateTimeZone('UTC'));
     return $date && $date->format('Y-m-d H:i:s') === $value ? $date->format('d-m-Y H:i') : $value;
 }
+
+// All-time ranking for top3.php, independent of the filters: most games passed (best result at
+// least 80%, the skilltree's pass mark), then the higher average best score, then who got there first.
+function dashboardLeaders(PDO $pdo, array $games, int $limit = 3): array {
+    $all = dashboardRead($pdo, $games, ['game' => '', 'from' => '', 'until' => '', 'upper' => '']);
+    $players = [];
+    foreach ($all['rows'] as $row) {
+        $code = $row['code'];
+        if (!isset($players[$code])) {
+            $players[$code] = ['code' => $code, 'passed' => 0, 'played' => 0, 'percentSum' => 0.0,
+                'latest' => $row['latest'], 'states' => array_fill_keys(array_keys($games), 'open')];
+        }
+        $passed = $row['score'] * 5 >= $row['maxScore'] * 4;
+        $players[$code]['played']++;
+        $players[$code]['passed'] += $passed ? 1 : 0;
+        $players[$code]['percentSum'] += 100 * $row['score'] / $row['maxScore'];
+        $players[$code]['states'][$row['gameId']] = $passed ? 'passed' : 'played';
+        if ($row['latest'] > $players[$code]['latest']) $players[$code]['latest'] = $row['latest'];
+    }
+    foreach ($players as &$player) $player['average'] = $player['percentSum'] / $player['played'];
+    unset($player);
+    usort($players, fn(array $a, array $b): int => [$b['passed'], $b['average'], $a['latest'], $a['code']]
+        <=> [$a['passed'], $a['average'], $b['latest'], $b['code']]);
+    return array_slice($players, 0, $limit);
+}

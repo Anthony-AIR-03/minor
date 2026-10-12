@@ -1,14 +1,23 @@
 <?php
 // Rendering is separate so dashboard.css can be replaced without changing data access.
 if (!isset($user, $error, $games, $filters)) { http_response_code(404); exit; }
+$leaderboard = defined('DASHBOARD_LEADERBOARD');
+$self = $leaderboard ? 'top3.php' : 'index.php';
 ?>
 <!doctype html>
 <html lang="nl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Voortgang · Docentdashboard</title>
+  <title><?= $leaderboard ? 'Top 3 · Docentdashboard' : 'Voortgang · Docentdashboard' ?></title>
+<?php if ($leaderboard): ?>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="leaderboard.css">
+<?php else: ?>
   <link rel="stylesheet" href="dashboard.css">
+<?php endif; ?>
 </head>
 <body>
 <a class="skip-link" href="#overzicht">Naar het overzicht</a>
@@ -17,22 +26,55 @@ if (!isset($user, $error, $games, $filters)) { http_response_code(404); exit; }
     <p class="eyebrow">DOCENTDASHBOARD</p>
     <h1>Voortgang van spelers</h1>
     <p class="intro">Bekijk opgeslagen spelafrondingen en kies welke resultaten je wilt zien.</p>
-    <?php if ($user !== ''): ?><p class="login-state">Ingelogd als <?= dashboardEscape($user) ?> · sluit dit privévenster na gebruik.</p><?php endif; ?>
+    <?php if ($user !== ''): ?><p class="login-state">Ingelogd als <?= dashboardEscape($user) ?> · sluit dit privévenster na gebruik.</p>
+    <p class="view-switch"><?= $leaderboard ? '<a href="index.php">Standaardoverzicht</a>' : '<a href="top3.php">Top 3-weergave</a>' ?></p><?php endif; ?>
   </header>
   <?php if ($error !== ''): ?>
     <div class="notice error" role="alert"><h2>Controleer deze stap</h2><p><?= dashboardEscape($error) ?></p></div>
   <?php endif; ?>
+  <?php if ($leaders !== null): ?>
+  <section class="podium" aria-labelledby="podium-heading">
+    <div class="podium-heading">
+      <p class="eyebrow">ALL-TIME</p>
+      <h2 id="podium-heading">Top 3 spelers</h2>
+      <p class="hint">Over alle registraties, los van je filters. Eerst het aantal gehaalde spellen (beste resultaat minstens 80%), dan het gemiddelde van de beste scores; bij gelijke stand telt wie er het eerst was.</p>
+    </div>
+    <?php if (!$leaders): ?>
+      <p class="empty">Nog geen opgeslagen afrondingen, dus nog geen top 3.</p>
+    <?php else: ?>
+    <ol class="podium-list">
+      <?php foreach ($leaders as $index => $leader): $place = $index + 1; ?>
+      <li class="place place-<?= $place ?>">
+        <p class="place-badge"><span class="medal" aria-hidden="true"><?= $place ?></span><span><?= $place ?>e plaats</span></p>
+        <p class="place-code"><?= dashboardEscape($leader['code']) ?></p>
+        <p class="place-figure"><strong><?= $leader['passed'] ?></strong><span>van <?= count($games) ?> spellen gehaald</span></p>
+        <ol class="route" aria-label="Spellen in de route">
+          <?php foreach ($leader['states'] as $id => $state): ?>
+          <li class="step <?= $state ?>" title="<?= dashboardEscape($games[$id]) ?>"><span class="visually-hidden"><?= dashboardEscape($games[$id]) ?>: <?= ['passed' => 'gehaald', 'played' => 'gespeeld, nog niet gehaald', 'open' => 'nog niet gespeeld'][$state] ?></span></li>
+          <?php endforeach; ?>
+        </ol>
+        <dl class="place-stats">
+          <div><dt>Gemiddelde beste score</dt><dd><?= dashboardEscape(number_format($leader['average'], 1, ',', '')) ?>%</dd></div>
+          <div><dt>Laatste registratie</dt><dd><?= dashboardEscape(dashboardTime($leader['latest'])) ?></dd></div>
+        </dl>
+      </li>
+      <?php endforeach; ?>
+    </ol>
+    <p class="route-legend" aria-hidden="true"><span class="step passed"></span>gehaald <span class="step played"></span>gespeeld <span class="step open"></span>nog open</p>
+    <?php endif; ?>
+  </section>
+  <?php endif; ?>
   <?php if ($user !== '' && $games): ?>
   <section class="filters" aria-labelledby="filter-heading">
     <h2 id="filter-heading">Kies je selectie</h2>
-    <form method="get" action="index.php">
+    <form method="get" action="<?= $self ?>">
       <div class="field"><label for="game">Spel</label><select id="game" name="game">
         <option value="">Alle spellen uit mijn skilltree</option>
         <?php foreach ($games as $id => $title): ?><option value="<?= dashboardEscape($id) ?>"<?= $filters['game'] === (string) $id ? ' selected' : '' ?>><?= dashboardEscape($title) ?></option><?php endforeach; ?>
       </select></div>
       <div class="field"><label for="from">Van</label><input id="from" name="from" type="date" min="1970-01-01" max="9998-12-31" value="<?= dashboardEscape($filters['from']) ?>"></div>
       <div class="field"><label for="until">Tot en met</label><input id="until" name="until" type="date" min="1970-01-01" max="9998-12-31" value="<?= dashboardEscape($filters['until']) ?>"></div>
-      <div class="actions"><button type="submit">Toepassen / verversen</button><a class="clear" href="index.php">Filters wissen</a></div>
+      <div class="actions"><button type="submit">Toepassen / verversen</button><a class="clear" href="<?= $self ?>">Filters wissen</a></div>
     </form>
     <p class="hint">Laat de datums leeg voor alle registraties. Het overzicht volgt de spellen in je huidige games.json.</p>
   </section>
