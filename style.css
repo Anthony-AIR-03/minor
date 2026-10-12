@@ -783,6 +783,115 @@ ul.chips {
   border: 1px solid var(--border);
   background: #000;
 }
+
+/* Downloadable files on a detail page, each with its code behind a toggle. */
+.downloads {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+.download {
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+.download-row {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+}
+.download-art {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-tile);
+  background: var(--make-soft);
+  color: var(--make);
+  display: grid;
+  place-items: center;
+}
+.download-art svg {
+  width: 23px;
+  height: 23px;
+}
+.download-body h3 {
+  font-size: 1rem;
+  margin-bottom: 3px;
+}
+.download-body p {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.download-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--make);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 8px 16px;
+  border: 1px solid var(--make-soft);
+  border-radius: var(--pill);
+  background: var(--make-soft);
+}
+.download-link span {
+  font-weight: 400;
+  color: var(--muted-2);
+  margin-left: 4px;
+}
+.download-link:hover {
+  border-color: var(--make);
+}
+.code-toggle {
+  margin-top: 12px;
+  margin-left: 70px;
+}
+.code-toggle summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--make);
+  list-style: none;
+  display: inline-flex;
+  gap: 8px;
+}
+.code-toggle summary::-webkit-details-marker {
+  display: none;
+}
+.code-toggle summary::after {
+  content: "+";
+  font-weight: 700;
+}
+.code-toggle[open] summary::after {
+  content: "−";
+}
+.code-toggle pre {
+  margin: 12px 0 0;
+  padding: 16px;
+  overflow-x: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-tile);
+  font: 0.82rem/1.55 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--ink);
+  tab-size: 4;
+}
+@media (max-width: 560px) {
+  .download-row {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .download-art {
+    width: 44px;
+    height: 44px;
+  }
+  .download-link {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .code-toggle {
+    margin-left: 0;
+  }
+}
+
 /* Phones: a sideways swipe strip, like a social media feed, with the next video peeking in. */
 @media (max-width: 560px) {
   .video-strip {

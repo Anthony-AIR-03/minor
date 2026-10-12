@@ -93,6 +93,104 @@
           <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-makecode-02.jpeg"><img src="/images/fabricatie/verstoppertje-makecode-02.jpeg" width="1536" height="2048" loading="lazy" alt="De MakeCode-blokken van de verstopper, met de twee micro:bits voor de laptop." /></a></li>
           <li><a class="photo-thumb" href="/images/fabricatie/verstoppertje-makecode-03.jpeg"><img src="/images/fabricatie/verstoppertje-makecode-03.jpeg" width="1536" height="2048" loading="lazy" alt="De twee micro:bits voor de laptop met de code." /></a></li>
         </ul>
+      </section>
+
+      <section class="card track track-make" aria-labelledby="downloads-title">
+        <div class="track-head">
+          <span class="track-dot" aria-hidden="true"></span>
+          <h2 id="downloads-title">Code en downloads</h2>
+        </div>
+        <p class="track-copy">
+          Zet het .hex-bestand op een micro:bit v2 door het naar de MICROBIT-schijf te slepen. Wil je de blokken
+          bekijken of aanpassen? Sleep het bestand dan naar <a href="https://makecode.microbit.org/" target="_blank" rel="noopener">makecode.microbit.org</a>.
+          Speel je met meerdere koppels tegelijk? Verander dan in beide bestanden <code>radio.setGroup(1)</code> naar
+          een ander nummer, zoals 2.
+        </p>
+        <ul class="downloads">
+          <li class="download">
+            <div class="download-row">
+              <span class="download-art" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M5 12a7 7 0 0114 0M8 12a4 4 0 018 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><path d="M12 14v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              </span>
+              <div class="download-body">
+                <h3>Verstopper</h3>
+                <p>Zendt elke 200 ms een radiosignaal uit. Knop A en B zetten de zendsterkte lager of hoger (0–7).</p>
+              </div>
+              <a class="download-link" href="/fabricatie/microbit-verstoppertje/verstoppertje-verstopper.hex" download>Download .hex <span>1,3 MB</span></a>
+            </div>
+            <details class="code-toggle">
+              <summary>Lees de code</summary>
+              <pre><code>radio.setGroup(1)
+let kracht = 7
+let toonTot = 0
+radio.setTransmitPower(kracht)
+
+function wijzig(verschil: number) {
+    kracht = Math.constrain(kracht + verschil, 0, 7)
+    radio.setTransmitPower(kracht)
+    toonTot = input.runningTime() + 2000
+    basic.showNumber(kracht)
+}
+input.onButtonPressed(Button.A, function () { wijzig(-1) })
+input.onButtonPressed(Button.B, function () { wijzig(1) })
+
+basic.forever(function () {
+    for (let r = 0; r &lt;= 2; r++) {
+        if (input.runningTime() &gt; toonTot) {
+            basic.clearScreen()
+            for (let x = 0; x &lt;= 4; x++) {
+                for (let y = 0; y &lt;= 4; y++) {
+                    if (Math.max(Math.abs(x - 2), Math.abs(y - 2)) == r) { led.plot(x, y) }
+                }
+            }
+        }
+        radio.sendNumber(0)
+        basic.pause(200)
+    }
+})</code></pre>
+            </details>
+          </li>
+          <li class="download">
+            <div class="download-row">
+              <span class="download-art" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6" stroke="currentColor" stroke-width="1.6" /><path d="M15 15l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              </span>
+              <div class="download-body">
+                <h3>Zoeker</h3>
+                <p>Toont de signaalsterkte als grafiek en piept sneller als je dichterbij komt. Knop A zet het geluid aan of uit.</p>
+              </div>
+              <a class="download-link" href="/fabricatie/microbit-verstoppertje/verstoppertje-zoeker.hex" download>Download .hex <span>1,3 MB</span></a>
+            </div>
+            <details class="code-toggle">
+              <summary>Lees de code</summary>
+              <pre><code>radio.setGroup(1)
+let sterkte = -95
+let laatste = -10000
+let geluid = true
+radio.onReceivedNumber(function (receivedNumber) {
+    let nieuw = radio.receivedPacket(RadioPacketProperty.SignalStrength)
+    sterkte = (sterkte * 3 + nieuw) / 4
+    laatste = input.runningTime()
+})
+basic.forever(function () {
+    if (input.runningTime() - laatste &gt; 1000) {
+        led.plot(2, 2)
+        basic.pause(500)
+        basic.clearScreen()
+        basic.pause(500)
+    } else {
+        let s = Math.constrain(sterkte, -95, -42)
+        led.plotBarGraph(Math.map(s, -95, -42, 0, 9), 9)
+        if (geluid) { music.playTone(Math.map(s, -95, -42, 400, 1200), 50) }
+        basic.pause(Math.map(s, -95, -42, 1000, 50))
+    }
+})
+input.onButtonPressed(Button.A, function () {
+    geluid = !geluid
+})</code></pre>
+            </details>
+          </li>
+        </ul>
         <a class="arrow-cta" href="/#track-make">
           <span class="arrow-cta-label">Alle objecten</span>
           <span class="arrow-cta-line" aria-hidden="true"></span>
