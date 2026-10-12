@@ -12,6 +12,7 @@ name: Deploy to NAS
 # concrete value lives in the operator's own notes). NAS prerequisites (one-time, see the runbook):
 #   - $NAS_DEPLOY_DIR/.env                        (MariaDB root password)
 #   - $NAS_DEPLOY_DIR/private/db-config.php       (DB DSN/user/password/origin for api.php)
+#   - $NAS_DEPLOY_DIR/private/docent.htpasswd     (teacher login for /docent-dashboard/, htpasswd -B)
 #   - the external `npm` Docker network exists (shared with Nginx Proxy Manager)
 
 on:
@@ -44,20 +45,26 @@ jobs:
             echo "::error::$DEPLOY_DIR is missing .env or private/db-config.php - one-time setup not done yet (docs/runbooks/nas-runner-setup.md)"
             exit 1
           fi
+          # Without it Docker would bind-mount an empty directory and the teacher dashboard would only return 500s.
+          if [ ! -s "${{ vars.NAS_DEPLOY_DIR }}/private/docent.htpasswd" ]; then
+            echo "::error::$DEPLOY_DIR/private/docent.htpasswd is missing - create the teacher login first (docs/runbooks/nas-runner-setup.md)"
+            exit 1
+          fi
 
       - uses: actions/checkout@v4
 
       - name: Sync the repo to the NAS deploy directory
         run: |
           mkdir -p "$DEPLOY_DIR"
-          # --delete keeps the deploy dir a mirror of the commit; the three excludes are host-only
-          # state that must survive every redeploy: .env and private/db-config.php hold secrets that
-          # are never in git, and db/ is MariaDB's live data directory (created by the container, not
-          # by a checkout).
+          # --delete keeps the deploy dir a mirror of the commit; the excludes are host-only state that
+          # must survive every redeploy: .env, private/db-config.php and private/docent.htpasswd hold
+          # secrets that are never in git, and db/ is MariaDB's live data directory (created by the
+          # container, not by a checkout).
           rsync -a --delete \
             --exclude '.git/' \
             --exclude '.env' \
             --exclude 'private/db-config.php' \
+            --exclude 'private/docent.htpasswd' \
             --exclude 'db/' \
             ./ "$DEPLOY_DIR/"
 

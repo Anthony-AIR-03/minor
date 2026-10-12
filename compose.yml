@@ -5,6 +5,9 @@ services:
     restart: unless-stopped
     depends_on:
       - minor-php
+    volumes:
+      # Docentlogin voor /docent-dashboard/ (htpasswd -B), staat net als db-config.php buiten git
+      - ./private/docent.htpasswd:/etc/nginx/docent.htpasswd:ro
     networks:
       - npm
       - minor-internal
