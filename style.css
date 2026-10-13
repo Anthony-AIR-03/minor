@@ -655,12 +655,16 @@ p {
   scrollbar-width: thin;
   scrollbar-color: var(--make-soft) transparent;
 }
+/* Three cards fill the row (the old grid's size); the rest scroll in. Never narrower than 260px. */
 .workbench .object {
-  flex: 0 0 min(260px, 78%);
+  flex: 0 0 min(max(260px, calc((100% - 32px) / 3)), 78%);
   scroll-snap-align: start;
 }
+/* Column layout so "Bekijk details" sits at the bottom of every card, however long its text. */
 .object {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   text-decoration: none;
   color: inherit;
   padding: 14px 14px 18px;
@@ -695,7 +699,8 @@ p {
 }
 .object-more {
   display: inline-block;
-  margin-top: 14px;
+  margin-top: auto;
+  padding-top: 14px;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--make);
