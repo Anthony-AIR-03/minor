@@ -1,10 +1,10 @@
 // Photo lightbox for the fabrication detail pages, modelled on the portfolio's project screenshots.
 // Each thumbnail is a plain link to the full image, so without JS the photos still open.
-const strip = document.querySelector("[data-lightbox]");
+// A page can have several [data-lightbox] groups; the arrows stay within the group you opened.
+const strips = [...document.querySelectorAll("[data-lightbox]")];
 
-if (strip) {
-  const links = [...strip.querySelectorAll("a.photo-thumb")];
-  const photos = links.map((a) => ({ src: a.href, alt: a.querySelector("img")?.alt ?? "" }));
+if (strips.length) {
+  let photos = [];
   let active = null;
   let opener = null;
 
@@ -48,12 +48,17 @@ if (strip) {
     opener?.focus();
   }
 
-  links.forEach((a, i) =>
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      open(i);
-    })
-  );
+  strips.forEach((strip) => {
+    const links = [...strip.querySelectorAll("a.photo-thumb")];
+    const group = links.map((a) => ({ src: a.href, alt: a.querySelector("img")?.alt ?? "" }));
+    links.forEach((a, i) =>
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        photos = group;
+        open(i);
+      })
+    );
+  });
   closeBtn.addEventListener("click", close);
   box.querySelector(".lightbox-nav--prev").addEventListener("click", () => show(active - 1));
   box.querySelector(".lightbox-nav--next").addEventListener("click", () => show(active + 1));

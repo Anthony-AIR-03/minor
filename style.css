@@ -642,11 +642,22 @@ p {
   text-decoration: underline;
 }
 
-/* Track C: object gallery */
+/* Track C: object gallery, one row that scrolls sideways and runs to the card's edges */
 .workbench {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  display: flex;
   gap: 16px;
+  margin-inline: -28px;
+  padding: 4px 28px 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 28px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--make-soft) transparent;
+}
+.workbench .object {
+  flex: 0 0 min(260px, 78%);
+  scroll-snap-align: start;
 }
 .object {
   display: block;
@@ -763,6 +774,56 @@ ul.chips {
   object-fit: cover;
 }
 
+/* Versions of a design, oldest first: a landscape thumbnail next to what changed. */
+.iterations {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+.iteration {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+.iteration .photo-thumb {
+  border: 1px solid var(--border);
+}
+.iteration .photo-thumb img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: top left;
+}
+.iteration-tag {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--make);
+  margin-bottom: 2px;
+}
+.iteration h3 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+.iteration p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  max-width: 64ch;
+}
+.iteration p + p {
+  margin-top: 8px;
+}
+@media (max-width: 560px) {
+  .iteration {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
 .video-strip {
   display: flex;
   gap: 16px;
@@ -840,6 +901,12 @@ ul.chips {
 .download-link:hover {
   border-color: var(--make);
 }
+.download-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
 .code-toggle {
   margin-top: 12px;
   margin-left: 70px;
@@ -883,7 +950,8 @@ ul.chips {
     width: 44px;
     height: 44px;
   }
-  .download-link {
+  .download-link,
+  .download-links {
     grid-column: 1 / -1;
     justify-self: start;
   }
@@ -1011,6 +1079,11 @@ ul.chips {
 @media (max-width: 560px) {
   .card {
     padding: 22px;
+  }
+  .workbench {
+    margin-inline: -22px;
+    padding-inline: 22px;
+    scroll-padding-inline: 22px;
   }
   .lead-head span,
   .track h2 span,
