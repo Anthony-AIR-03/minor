@@ -73,7 +73,13 @@ jobs:
 
       - name: Build and start the stack
         working-directory: ${{ env.DEPLOY_DIR }}
-        run: docker compose up -d --build --remove-orphans
+        # --pull refreshes the php/nginx base images so upstream security fixes land on every deploy
+        # instead of reusing whatever the NAS has cached. phpMyAdmin is pulled explicitly for the same
+        # reason; mariadb:lts is deliberately left out, since that tag can jump to a new major version.
+        run: |
+          docker compose build --pull
+          docker compose pull minor-pma
+          docker compose up -d --remove-orphans
 
       - name: Diagnostics on failure
         if: failure()
