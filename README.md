@@ -19,8 +19,11 @@
 ## About
 
 A plain HTML/CSS/JavaScript site, no framework or build step, for the work I make during the minor
-*AI, Games & Digitale geletterdheid*. Every game is registered in `games/games.json`; the home page
-and the skill tree at `/games/` both read it.
+*AI, Games & Digitale geletterdheid*. The home page has one track per part of the minor:
+*Computational thinking* (the game skill tree), *Internet & multimedia* (the ON AIR podcast) and
+*Digitale fabricatie* (things I made with a 3D printer, a laser cutter and micro:bits). The site is in
+Dutch, with a light, dark and system theme. Every game is registered in `games/games.json`; the home
+page and the skill tree at `/games/` both read it.
 
 ## The skill tree
 
@@ -86,6 +89,25 @@ the other voice. The series page holds the main question, target audience and st
 every worked-out episode has its own page in `podcast/aflevering-<n>/` with its question, doelgroep, structure, the
 research analysis and the script, plus the filled-in podcast template (episode 1) or the shotlist (episode 2).
 
+## Digital fabrication
+
+The *Digitale fabricatie* track collects the physical side of the minor. Each piece has its own page in
+`fabricatie/<name>/` with photos, how it was made and the source files:
+
+- **[Kwartet Softwareontwikkeling](https://minor.anthony-air.nl/fabricatie/kwartet-softwareontwikkeling/):**
+  a 32-card quartet game about software development, laminated, in a folding box I designed with the rules
+  printed on it. The page shows the iterations, with the cards (PDF and PowerPoint) and the box template to download.
+- **[Light Fury & Night Fury](https://minor.anthony-air.nl/fabricatie/light-en-night-fury/):** two 3D prints
+  of the same dragon model from *How to Train Your Dragon*, at 60% and 35% scale, with credit to the model's
+  designer.
+- **[Laser-cut card box](https://minor.anthony-air.nl/fabricatie/kaartendoos/):** a 3 mm wooden box with
+  finger joints and a lid that opens on a hinge, glued by hand.
+- **[Hide-and-seek with micro:bits](https://minor.anthony-air.nl/fabricatie/microbit-verstoppertje/):** the
+  hider sends a radio signal, and the seeker shows how close you are with a bar graph and beeps. The `.hex`
+  files and the MakeCode program are on the page.
+
+Photos live in `images/fabricatie/`.
+
 ## Adding a game
 
 1. Put the game in `games/<name>/` with an `index.html`. When the player passes, the game sends one
@@ -126,8 +148,13 @@ Open `index.html` through any static file server, for example:
 npx serve .
 ```
 
-In production the site runs as an `nginx:alpine` container (see `Dockerfile` and `compose.yml`)
-behind a reverse proxy.
+That serves every page and game, and free play works. Saving progress with a player ID needs `api.php`
+and its database, so it only works in the full stack.
+
+In production `compose.yml` runs the full stack behind a reverse proxy: the site as an `nginx:alpine`
+container (`Dockerfile`), `api.php` on PHP-FPM (`Dockerfile.php`), MariaDB for the progress, and
+phpMyAdmin for managing it, reachable only on the local network. The database credentials are kept in
+`private/`, outside git. A push to `main` deploys automatically with GitHub Actions.
 
 ---
 
