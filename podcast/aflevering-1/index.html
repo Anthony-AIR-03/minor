@@ -19,6 +19,8 @@
   <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
   <script src="/site.js"></script>
+  <script src="https://collect.telumera.nl/telumera.js" defer></script>
+  <script src="/analytics.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -71,7 +73,7 @@
           <span class="chip">Host: Anthony</span>
           <span class="chip">Gast: Berkan Kaya</span>
         </div>
-        <div class="player" data-title="ON AIR #1: Maakt AI ons slimmer, of juist afhankelijker?" data-artwork="cover.jpg">
+        <div class="player" data-track-id="podcast_EP_1" data-title="ON AIR #1: Maakt AI ons slimmer, of juist afhankelijker?" data-artwork="cover.jpg">
           <img class="player-cover" src="cover.jpg" alt="" width="854" height="480" />
           <div class="player-body">
             <audio preload="metadata">
@@ -85,7 +87,7 @@
             </div>
             <div class="player-tools">
               <button type="button" class="player-speed" aria-label="Afspeelsnelheid">1×</button>
-              <a class="player-download" href="audio/on-air-aflevering-1.mp4" download>
+              <a class="player-download" href="audio/on-air-aflevering-1.mp4" download data-track="download_podcast_EP_1">
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v10m0 0l-4-4m4 4l4-4M4 16h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Download
               </a>

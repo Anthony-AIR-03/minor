@@ -105,6 +105,30 @@
     syncMini();
   });
   audio.addEventListener("timeupdate", syncTime);
+
+  /* ---------- analytics: one "played" event once 10% has actually been listened to ---------- */
+  // Counts audio that really played (small timeupdate steps), so seeking ahead doesn't count.
+  const trackId = player.dataset.trackId;
+  const LISTEN_SHARE = 0.1;
+  let listened = 0;
+  let lastT = null;
+  let reported = false;
+  audio.addEventListener("timeupdate", () => {
+    if (!trackId || reported) return;
+    const t = audio.currentTime;
+    if (lastT !== null && !audio.paused && !audio.seeking) {
+      const step = t - lastT;
+      if (step > 0 && step < 2) listened += step;
+    }
+    lastT = t;
+    if (audio.duration && listened >= audio.duration * LISTEN_SHARE) {
+      reported = true;
+      window.minorTrack?.(`played_${trackId}`, { path: location.pathname, share: LISTEN_SHARE });
+    }
+  });
+  audio.addEventListener("seeking", () => {
+    lastT = null;
+  });
   audio.addEventListener("loadedmetadata", () => {
     timeTotal.textContent = fmt(audio.duration);
     player.classList.add("is-ready");
