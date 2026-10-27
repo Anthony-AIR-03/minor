@@ -159,7 +159,10 @@
     }
   }
   (last || audio).addEventListener("error", unavailable);
-  if (audio.error || audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) unavailable();
+  // NETWORK_NO_SOURCE also means "not started yet" (iOS Safari doesn't preload until a tap), so it
+  // is no proof the file is missing: restart source selection and let the error event decide.
+  if (audio.error) unavailable();
+  else if (audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) audio.load();
 
   /* ---------- transcript: click a timestamp to jump, highlight what's playing ---------- */
   const marks = [...document.querySelectorAll("[data-seek]")].map((el) => ({
