@@ -14,7 +14,7 @@ is `.github/workflows/deploy-nas.yml`; what it deploys is the repo's own `compos
 push to main
   └─▶ Deploy to NAS (.github/workflows/deploy-nas.yml, self-hosted runner on the NAS)
         checkout this commit
-        rsync the tree ▶ $NAS_DEPLOY_DIR   (excludes .env, private/db-config.php, db/ - host-only state)
+        rsync the tree ▶ $NAS_DEPLOY_DIR   (excludes .env, private/db-config.php, private/docent.htpasswd, db/ - host-only state)
         chmod the synced tree world-readable (skips the three excluded paths)
         docker compose up -d --build --remove-orphans
         wait for api.php?action=health over the internal `npm` Docker network
@@ -88,12 +88,23 @@ sudo mkdir -p "$NAS_DEPLOY_DIR/private"
 sudo chown -R "$RUNNER_USER" "$NAS_DEPLOY_DIR"   # the deploy runs as $RUNNER_USER and chmods the tree
 ```
 
-Create the two files the workflow refuses to run without, both **outside git**:
+Create the three files the workflow refuses to run without, all **outside git**:
 
 - `$NAS_DEPLOY_DIR/.env` - one line, `DB_ROOT_PASSWORD=<a strong password>`.
 - `$NAS_DEPLOY_DIR/private/db-config.php` - copy `private/db-config.example.php`, fill in the DSN
   host (the `minor-db` service name, not `localhost`), the `spel` user, its password, and `origin`
   (the exact public HTTPS URL, no trailing slash).
+- `$NAS_DEPLOY_DIR/private/docent.htpasswd` - the teacher login for `/docent-dashboard/` (nginx
+  basic auth, the stand-in for cPanel Directory Privacy). Create it with bcrypt; `htpasswd` asks for
+  the password, so it never lands in your shell history:
+
+  ```bash
+  htpasswd -cB "$NAS_DEPLOY_DIR/private/docent.htpasswd" docent
+  ```
+
+  Only bcrypt hashes are in it, and nginx (its own UID in the container) must be able to read it, so
+  leave it world-readable (the deploy's chmod pass does that). Add another teacher by running the
+  same command without `-c`.
 
 **Ownership matters:** `docker compose --env-file`/bind-mounts read these as `$RUNNER_USER`. If you
 created them with `sudo`, fix ownership up after:
@@ -104,7 +115,7 @@ chmod 600 "$NAS_DEPLOY_DIR/.env"
 chmod 640 "$NAS_DEPLOY_DIR/private/db-config.php"
 ```
 
-Both files are excluded from the workflow's `rsync --delete`, so redeploys never touch them. Same
+All three files are excluded from the workflow's `rsync --delete`, so redeploys never touch them. Same
 goes for `$NAS_DEPLOY_DIR/db/` (MariaDB's data directory) once it exists - never created by git, and
 excluded from both the rsync and the post-sync chmod pass.
 
@@ -139,7 +150,7 @@ From here every push to `main` redeploys automatically.
 
 - **Run doesn't start** - runner Offline, or wrong repo/label. Check `svc.sh status` and that the
   runner is registered to this repo with the `minor` label.
-- **`NAS_DEPLOY_DIR is not set` / missing `.env` or `private/db-config.php`** - step 3/4 not done yet.
+- **`NAS_DEPLOY_DIR is not set` / missing `.env`, `private/db-config.php` or `private/docent.htpasswd`** - step 3/4 not done yet.
 - **`permission denied … /var/run/docker.sock`** - step 1 not done, or the runner service wasn't
   restarted after `usermod`.
 - **`docker compose up` fails with a name conflict** - an old, non-compose-managed container is
@@ -154,5 +165,5 @@ From here every push to `main` redeploys automatically.
   has files owned by `root` (from a `sudo mkdir`) that `$RUNNER_USER` couldn't chmod - re-run step 4's
   `chown -R`.
 - **Deploy overwrote something on the NAS** - `rsync --delete` mirrors the repo into
-  `$NAS_DEPLOY_DIR`. Only `.env`, `private/db-config.php` and `db/` are excluded; keep no other
+  `$NAS_DEPLOY_DIR`. Only `.env`, `private/db-config.php`, `private/docent.htpasswd` and `db/` are excluded; keep no other
   hand-edited state there.
