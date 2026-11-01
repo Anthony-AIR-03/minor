@@ -201,6 +201,27 @@ input.onButtonPressed(Button.A, function () {
           </span>
         </a>
       </section>
+
+      <!-- Toelichting voor de beoordeling. Kan na de beoordeling weg: de pagina is zonder deze sectie compleet. -->
+      <section class="card track track-make assessment" aria-labelledby="assessment-title">
+        <div class="track-head">
+          <span class="track-dot" aria-hidden="true"></span>
+          <h2 id="assessment-title">Toelichting voor de beoordeling</h2>
+        </div>
+        <div class="detail-copy">
+          <h3>Wat is er te zien?</h3>
+          <p>De twee micro:bits, het programma in MakeCode, de code en twee video's waarin het spel echt gespeeld wordt. Ze laten een complete creatie zien met input (het radiosignaal en de knoppen) en output (het ledscherm en het geluid).</p>
+          <h3>Praktische bruikbaarheid voor mijn beroepscontext</h3>
+          <p>Een microcontroller verbindt code met de fysieke wereld. Voor een ontwikkelaar is dat de basis van alles wat met sensoren en apparaten werkt. Het verstoppertje liet me vooral zien dat echte input nooit netjes is: de zoeker neemt daarom steeds driekwart van de oude signaalsterkte en een kwart van de nieuwe, zodat de grafiek niet flikkert.</p>
+          <h3>Twee concrete voorbeelden</h3>
+          <ol>
+            <li><strong>Plaatsbepaling binnen.</strong> Afstand schatten uit signaalsterkte is hetzelfde principe als Bluetooth-beacons. Een app kan daarmee weten in welk lokaal of bij welk museumstuk iemand staat, of automatisch aanwezigheid registreren.</li>
+            <li><strong>Ruis in data afvlakken.</strong> Het lopende gemiddelde in de zoeker gebruik je ook bij het tonen van meetwaarden in een dashboard of bij het debouncen van invoer. De keuze voor driekwart oud en een kwart nieuw is dezelfde afweging tussen rust en snelheid.</li>
+          </ol>
+          <h3>Aanknopingspunt voor maakonderwijs</h3>
+          <p>Input, verwerking en output worden tastbaar: leerlingen lopen letterlijk door de school met hun programma. Met de zendsterkte ontwerpen ze zelf de moeilijkheidsgraad van het spel.</p>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">

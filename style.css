@@ -850,6 +850,22 @@ ul.chips {
   background: #000;
 }
 
+/* Toelichting voor de beoordeling on a detail page. Can be removed together with that section. */
+.assessment .detail-copy {
+  margin-bottom: 0;
+}
+.assessment .detail-copy h3 {
+  font-size: 1rem;
+  color: var(--ink);
+  margin-top: 6px;
+}
+.assessment .detail-copy ol {
+  margin: 0;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 10px;
+}
+
 /* Downloadable files on a detail page, each with its code behind a toggle. */
 .downloads {
   list-style: none;

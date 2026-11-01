@@ -105,8 +105,14 @@ The *Digitale fabricatie* track collects the physical side of the minor. Each pi
 - **[Hide-and-seek with micro:bits](https://minor.anthony-air.nl/fabricatie/microbit-verstoppertje/):** the
   hider sends a radio signal, and the seeker shows how close you are with a bar graph and beeps. The `.hex`
   files and the MakeCode program are on the page.
+- **[HUBlab excursion](https://minor.anthony-air.nl/fabricatie/hublab/):** programming a robot on a tablet
+  to greet, dance and bow, and what VR showed about usability and experience, with a video of the robot.
 
-Photos live in `images/fabricatie/`.
+Photos live in `images/fabricatie/`, videos in `videos/fabricatie/`.
+
+Every page ends with a *Toelichting voor de beoordeling* card (what the evidence shows, its practical use,
+two examples and a link to maker education). It is only there for grading: remove the section after the
+`<!-- Toelichting voor de beoordeling … -->` comment on each page, and the `.assessment` block in `style.css`.
 
 ## Adding a game
 
