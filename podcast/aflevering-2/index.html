@@ -26,6 +26,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../style.css" />
   <link rel="stylesheet" href="../podcast.css" />
+  <script src="../player.js?v=4" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Naar de inhoud</a>
@@ -69,8 +70,29 @@
           <span class="chip chip--air">Video</span>
           <span class="chip">Gesprek met ChatGPT, Gemini en Claude</span>
           <span class="chip">Rotterdam</span>
-          <span class="chip">ca. 10 min</span>
+          <span class="chip">10 min</span>
           <span class="chip">Host: Anthony</span>
+        </div>
+        <div class="player player--video" data-track-id="podcast_EP_2" data-title="ON AIR #2: Hoeveel AI gebruik jij eigenlijk zonder het door te hebben?" data-artwork="cover.jpg">
+          <video class="player-video" preload="metadata" playsinline poster="cover.jpg">
+            <source src="video/on-air-aflevering-2.mp4" type="video/mp4" />
+          </video>
+          <div class="player-body">
+            <div class="player-row">
+              <button type="button" class="player-play" aria-label="Afspelen"></button>
+              <input class="player-seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Positie in de aflevering" />
+              <span class="player-time"><span class="player-now">0:00</span> / <span class="player-total">10:26</span></span>
+            </div>
+            <div class="player-tools">
+              <button type="button" class="player-speed" aria-label="Afspeelsnelheid">1×</button>
+              <button type="button" class="player-fullscreen" aria-label="Volledig scherm">Volledig scherm</button>
+              <a class="player-download" href="video/on-air-aflevering-2.mp4" download data-track="download_podcast_EP_2">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v10m0 0l-4-4m4 4l4-4M4 16h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download
+              </a>
+              <span class="player-status" hidden>De video volgt binnenkort.</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -149,7 +171,7 @@
       <section class="card sec" id="opbouw">
         <div class="sec-head"><span class="track-dot" aria-hidden="true"></span><h2>Opbouw</h2></div>
         <p class="sec-sub">
-          Hoe de video is opgebouwd: ongeveer 10 minuten in plaats van de geplande 15, in 13 delen. De tijden kloppen met de video.
+          Hoe de video is opgebouwd: ongeveer 10 minuten in plaats van de geplande 15, in 13 delen. De tijden kloppen met de speler hierboven.
         </p>
         <ol class="timeline">
           <li><span class="when">0:00–0:48</span><div><h3>Cold open thuis</h3><p>In de badkamer en de slaapkamer, nog voor Anthony de deur uit is: “Wacht. Zit hier nog een AI in?”</p></div></li>
@@ -168,17 +190,17 @@
         </ol>
         <div class="panel panel--wide asked">
           <h3>Gestelde vragen</h3>
-          <p>De vragen van Anthony aan de AI, in eigen woorden, niet letterlijk.</p>
+          <p>De vragen van Anthony aan de AI, in eigen woorden, niet letterlijk. Klik op een tijd om daar te kijken.</p>
           <ol class="qlist">
-            <li><span class="ts">2:18</span><span>Waar gebruiken we gedurende de dag allemaal AI voor, zonder dat we het doorhebben?</span></li>
-            <li><span class="ts">2:50</span><span>Gebruiken we AI dus bij bijna alles, zonder dat we er bewust voor kiezen?</span></li>
-            <li><span class="ts">3:22</span><span>Kunnen we nog zonder, of is AI een dagelijkse behoefte geworden?</span></li>
-            <li><span class="ts">3:54</span><span>Moeten we bang zijn dat we vergeten hoe het moet als we geen AI kunnen gebruiken?</span></li>
-            <li><span class="ts">4:56</span><span>Hoeveel AI heb ik al gebruikt voordat ik ook maar iets typ?</span></li>
-            <li><span class="ts">5:40</span><span>Is dit echt AI, of gewoon een slim systeem dat werkt?</span></li>
-            <li><span class="ts">7:27</span><span>Wie bepaalt wat we als eerste zien op social media?</span></li>
-            <li><span class="ts">8:07</span><span>Is het niet eng dat een AI zo precies onze aandacht weet te trekken?</span></li>
-            <li><span class="ts">9:43</span><span>Aan de kijker: hoeveel AI heb jij vandaag gebruikt zonder het door te hebben?</span></li>
+            <li><button type="button" class="ts" data-seek="138" aria-label="Speel vanaf 2:18">2:18</button><span>Waar gebruiken we gedurende de dag allemaal AI voor, zonder dat we het doorhebben?</span></li>
+            <li><button type="button" class="ts" data-seek="170" aria-label="Speel vanaf 2:50">2:50</button><span>Gebruiken we AI dus bij bijna alles, zonder dat we er bewust voor kiezen?</span></li>
+            <li><button type="button" class="ts" data-seek="202" aria-label="Speel vanaf 3:22">3:22</button><span>Kunnen we nog zonder, of is AI een dagelijkse behoefte geworden?</span></li>
+            <li><button type="button" class="ts" data-seek="234" aria-label="Speel vanaf 3:54">3:54</button><span>Moeten we bang zijn dat we vergeten hoe het moet als we geen AI kunnen gebruiken?</span></li>
+            <li><button type="button" class="ts" data-seek="296" aria-label="Speel vanaf 4:56">4:56</button><span>Hoeveel AI heb ik al gebruikt voordat ik ook maar iets typ?</span></li>
+            <li><button type="button" class="ts" data-seek="340" aria-label="Speel vanaf 5:40">5:40</button><span>Is dit echt AI, of gewoon een slim systeem dat werkt?</span></li>
+            <li><button type="button" class="ts" data-seek="447" aria-label="Speel vanaf 7:27">7:27</button><span>Wie bepaalt wat we als eerste zien op social media?</span></li>
+            <li><button type="button" class="ts" data-seek="487" aria-label="Speel vanaf 8:07">8:07</button><span>Is het niet eng dat een AI zo precies onze aandacht weet te trekken?</span></li>
+            <li><button type="button" class="ts" data-seek="583" aria-label="Speel vanaf 9:43">9:43</button><span>Aan de kijker: hoeveel AI heb jij vandaag gebruikt zonder het door te hebben?</span></li>
           </ol>
         </div>
       </section>
@@ -310,32 +332,32 @@
         <p class="sec-sub">Alles wat in de video gezegd wordt, uitgeschreven en licht opgeschoond: haperingen en herhalingen zijn weggelaten, de inhoud is niet veranderd. De gesprekken met Claude staan in het Engels, zoals ze zijn opgenomen.</p>
         <details class="doc-toggle">
           <summary>Toon het transcript</summary>
-          <p class="transcript-note">De tijden kloppen met de video. Waar niemand praat, zoals bij de b-roll, staat niets.</p>
+          <p class="transcript-note">Klik op een tijd om de video vanaf dat moment te bekijken. Tijdens het afspelen licht het stuk op dat je hoort. Waar niemand praat, zoals bij de b-roll, staat niets.</p>
           <div class="transcript">
-            <div class="line" data-line><span class="ts">0:06</span><div><span class="who">Anthony</span><p>Wacht. Zit hier nog een AI in?</p></div></div>
-            <div class="line" data-line><span class="ts">0:30</span><div><span class="who">Anthony</span><p>Hey Google, wat is het weer vandaag?</p></div></div>
-            <div class="line" data-line><span class="ts">0:34</span><div><span class="who">Slimme speaker</span><p>Vandaag wordt het overwegend bewolkt in Rotterdam, met een maximum van 18 en een minimum van 11. Op dit moment is het 12 graden en overwegend bewolkt.</p></div></div>
-            <div class="line" data-line><span class="ts">0:45</span><div><span class="who">Anthony</span><p>Zouden we daar AI voor gebruiken?</p></div></div>
-            <div class="line" data-line><span class="ts">1:04</span><div><span class="who">Anthony</span><p>Vorige keer ging het over AI die we bewust gebruiken. Ik open ChatGPT en ik weet precies wanneer ik dat doe. Maar hoeveel AI gebruiken we eigenlijk zonder dat we het doorhebben? Dat vraag ik vandaag niet aan een expert. Ik loop een dag door Rotterdam en ik vraag het aan AI zelf.</p></div></div>
-            <div class="line" data-line><span class="ts">2:18</span><div><span class="who">Anthony</span><p>Hey Chat, waar gebruiken we gedurende de dag allemaal AI voor, zonder dat we het doorhebben?</p></div></div>
-            <div class="line" data-line><span class="ts">2:23</span><div><span class="who">ChatGPT</span><p>Meer dan je denkt. Als je je telefoon ontgrendelt met gezichtsherkenning, of als je door je mail scrolt en de spam is er al uitgefilterd: dat is AI. Als je route in Google Maps ineens wordt aangepast vanwege het verkeer: dat is AI. En die aanbevelingen op Netflix of Spotify: allemaal machine learning. Het zit zo verweven in dagelijkse tools dat het bijna onzichtbaar is geworden.</p></div></div>
-            <div class="line" data-line><span class="ts">2:49</span><div><span class="who">Anthony</span><p>Dus eigenlijk gebruiken we AI in het dagelijks leven bij bijna alles, zonder dat we het doorhebben of daar bewust voor kiezen?</p></div></div>
-            <div class="line" data-line><span class="ts">2:58</span><div><span class="who">ChatGPT</span><p>Klopt. Meestal is het al ingebouwd in diensten die we toch gebruiken, zonder dat er groot "AI" op staat. Soms kies je er bewust voor, zoals bij ChatGPT of vertaalapps. Maar vaak niet. Het zit op de achtergrond en helpt systemen slimmer te reageren. En dat roept ook vragen op over bewustzijn, transparantie en controle.</p></div></div>
-            <div class="line" data-line><span class="ts">3:21</span><div><span class="who">Anthony</span><p>Is het dan nog wel iets waar we zonder kunnen? Of moeten we gewoon accepteren dat AI een dagelijkse behoefte is geworden?</p></div></div>
-            <div class="line" data-line><span class="ts">3:32</span><div><span class="who">ChatGPT</span><p>Ik denk dat het allebei is. We zouden best zonder kunnen, maar de systemen zijn er inmiddels zo op gebouwd dat het bijna onvermijdelijk is. De vraag is dus niet óf we het gebruiken, maar hoe. Misschien gaat het erom dat we leren het bewust te gebruiken: snappen waar het gebeurt en waar niet.</p></div></div>
-            <div class="line" data-line><span class="ts">3:53</span><div><span class="who">Anthony</span><p>Moeten we dan niet bang zijn voor als we geen AI kunnen gebruiken, dat we dan vergeten zijn hoe het zonder moet?</p></div></div>
-            <div class="line" data-line><span class="ts">4:02</span><div><span class="who">ChatGPT</span><p>Ja, dat is precies de zorg. Als technologie te comfortabel wordt, verleer je soms de basis. Net als mensen die zonder gps geen kaart meer kunnen lezen. Maar je bewust blijven van die afhankelijkheid is al een stap. Je hoeft niet per se bang te zijn, maar blijf wel alert. Zolang je weet wat je uit handen geeft, kun je kiezen wanneer je het stuur weer zelf in handen neemt.</p></div></div>
-            <div class="line" data-line><span class="ts">4:56</span><div><span class="who">Anthony</span><p lang="en">Hey Claude, I just started studying, and I opened my email and searched something. How much AI have I used before really typing something?</p></div></div>
-            <div class="line" data-line><span class="ts">5:07</span><div><span class="who">Claude</span><p lang="en">Honestly, more than you'd expect. Before you typed anything, your spam filter had already sorted your inbox, deciding what reaches you and what gets buried. Your search bar was likely suggesting queries before you'd finished the thought. And if there's a little summary above your search results, that's AI too, picking out what it reckons you need. So you've done nothing active yet, and three or four systems have already made choices for you. The spam filter is the quiet one. Nobody thinks of it as AI, but it's one of the cleverest things you touch all day.</p></div></div>
-            <div class="line" data-line><span class="ts">5:39</span><div><span class="who">Anthony</span><p lang="en">Is this really AI, or just a smart system that works?</p></div></div>
-            <div class="line" data-line><span class="ts">5:44</span><div><span class="who">Claude</span><p lang="en">Ah, good. Push on that, because you're right to. Not all of it is AI. The honest line is this: it counts as AI when the system learns to work things out for itself. A spam filter that's trained on millions of examples and figures out what spam looks like: that's AI. But a filter that just follows fixed rules a person wrote, like "block this address, flag that word": that's just a clever program. Same job, different thing under the bonnet. And this cuts both ways. People slap "AI" on things to sound modern. Regulators have actually fined companies for claiming AI they didn't have. But the opposite happens too: the moment something works well, we stop calling it AI at all. Spam filters and navigation are exactly that: real AI that nobody bothers to call AI anymore. So your instinct is the whole point. The useful question isn't: is it AI? It's: is this thing actually learning, or just following orders?</p></div></div>
-            <div class="line" data-line><span class="ts">6:56</span><div><span class="who">TikTok</span><p>[TikTok-video's over AI]</p></div></div>
-            <div class="line" data-line><span class="ts">7:26</span><div><span class="who">Anthony</span><p>We scrollen de hele dag met z'n allen op social media. Maar wie bepaalt wat we als eerste zien?</p></div></div>
-            <div class="line" data-line><span class="ts">7:34</span><div><span class="who">Gemini</span><p>Het algoritme. Dat is een aanbevelingssysteem dat op basis van jouw gedrag, wat je bekijkt, hoelang en of je iets deelt, voorspelt wat je waarschijnlijk het leukst vindt. Wat ik zeker weet: TikTok gebruikt een aanbevelingsalgoritme, en dat is publiek bekend. Wat ik vermoed: hoe de weging precies werkt, houdt TikTok geheim. Voordeel is dat je sneller iets vindt dat je aanspreekt. Nadeel is dat je in een bubbel kunt belanden en minder diversiteit ziet. Zal ik uitleggen hoe zo'n aanbevelingssysteem technisch in elkaar zit?</p></div></div>
-            <div class="line" data-line><span class="ts">8:07</span><div><span class="who">Anthony</span><p>Is het niet heel eng dat een AI achter dit algoritme zo precies onze aandacht weet te trekken?</p></div></div>
-            <div class="line" data-line><span class="ts">8:17</span><div><span class="who">Gemini</span><p>Eng is een gevoel, geen feit. Maar de zorg erachter is reëel. Wat ik zeker weet: TikTok optimaliseert voor kijktijd, en dat is gedocumenteerd. Wat ik vermoed: dat het systeem niet per se met opzet manipuleert, maar dat het effect hetzelfde is. Voordeel: je krijgt content die bij je past. Nadeel: aandacht wordt een product dat aan adverteerders wordt verkocht, en jij betaalt met je focus. Het verschil met een menselijke redacteur: een algoritme heeft geen moreel kompas. Het stopt pas als jij stopt.</p></div></div>
-            <div class="line" data-line><span class="ts">9:17</span><div><span class="who">Anthony (AI)</span><p>Ik begon vanochtend met het idee dat ik AI gebruik als ik ChatGPT open. Maar vandaag kwam ik AI tegen in mijn gezicht, mijn route, mijn mail, mijn feed en mijn avond. En de meeste daarvan heb ik nooit zelf gekozen. Dus de vraag is niet alleen: zit hier AI in? Maar ook: wat doet die AI met mijn keuzes? Dus mijn vraag aan jou: hoeveel AI heb jij vandaag gebruikt… zonder het door te hebben?</p></div></div>
-            <div class="line" data-line><span class="ts">9:51</span><div><span class="who">Anthony</span><p>Oké, die had je wel door. Dat was ik niet. Mijn stem, gezicht, Rotterdam Centraal: allemaal met AI. En dat je het zag, is precies het punt. Die AI zie je, omdat hij nog niet goed genoeg is. Maar de AI in je camera, je route, je feed, je mail: zie je die ook? Tot de volgende keer, bij On Air.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="6" aria-label="Speel vanaf 0:06">0:06</button><div><span class="who">Anthony</span><p>Wacht. Zit hier nog een AI in?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="30" aria-label="Speel vanaf 0:30">0:30</button><div><span class="who">Anthony</span><p>Hey Google, wat is het weer vandaag?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="34" aria-label="Speel vanaf 0:34">0:34</button><div><span class="who">Slimme speaker</span><p>Vandaag wordt het overwegend bewolkt in Rotterdam, met een maximum van 18 en een minimum van 11. Op dit moment is het 12 graden en overwegend bewolkt.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="45" aria-label="Speel vanaf 0:45">0:45</button><div><span class="who">Anthony</span><p>Zouden we daar AI voor gebruiken?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="64" aria-label="Speel vanaf 1:04">1:04</button><div><span class="who">Anthony</span><p>Vorige keer ging het over AI die we bewust gebruiken. Ik open ChatGPT en ik weet precies wanneer ik dat doe. Maar hoeveel AI gebruiken we eigenlijk zonder dat we het doorhebben? Dat vraag ik vandaag niet aan een expert. Ik loop een dag door Rotterdam en ik vraag het aan AI zelf.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="138" aria-label="Speel vanaf 2:18">2:18</button><div><span class="who">Anthony</span><p>Hey Chat, waar gebruiken we gedurende de dag allemaal AI voor, zonder dat we het doorhebben?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="143" aria-label="Speel vanaf 2:23">2:23</button><div><span class="who">ChatGPT</span><p>Meer dan je denkt. Als je je telefoon ontgrendelt met gezichtsherkenning, of als je door je mail scrolt en de spam is er al uitgefilterd: dat is AI. Als je route in Google Maps ineens wordt aangepast vanwege het verkeer: dat is AI. En die aanbevelingen op Netflix of Spotify: allemaal machine learning. Het zit zo verweven in dagelijkse tools dat het bijna onzichtbaar is geworden.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="169" aria-label="Speel vanaf 2:49">2:49</button><div><span class="who">Anthony</span><p>Dus eigenlijk gebruiken we AI in het dagelijks leven bij bijna alles, zonder dat we het doorhebben of daar bewust voor kiezen?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="178" aria-label="Speel vanaf 2:58">2:58</button><div><span class="who">ChatGPT</span><p>Klopt. Meestal is het al ingebouwd in diensten die we toch gebruiken, zonder dat er groot "AI" op staat. Soms kies je er bewust voor, zoals bij ChatGPT of vertaalapps. Maar vaak niet. Het zit op de achtergrond en helpt systemen slimmer te reageren. En dat roept ook vragen op over bewustzijn, transparantie en controle.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="201" aria-label="Speel vanaf 3:21">3:21</button><div><span class="who">Anthony</span><p>Is het dan nog wel iets waar we zonder kunnen? Of moeten we gewoon accepteren dat AI een dagelijkse behoefte is geworden?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="212" aria-label="Speel vanaf 3:32">3:32</button><div><span class="who">ChatGPT</span><p>Ik denk dat het allebei is. We zouden best zonder kunnen, maar de systemen zijn er inmiddels zo op gebouwd dat het bijna onvermijdelijk is. De vraag is dus niet óf we het gebruiken, maar hoe. Misschien gaat het erom dat we leren het bewust te gebruiken: snappen waar het gebeurt en waar niet.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="233" aria-label="Speel vanaf 3:53">3:53</button><div><span class="who">Anthony</span><p>Moeten we dan niet bang zijn voor als we geen AI kunnen gebruiken, dat we dan vergeten zijn hoe het zonder moet?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="242" aria-label="Speel vanaf 4:02">4:02</button><div><span class="who">ChatGPT</span><p>Ja, dat is precies de zorg. Als technologie te comfortabel wordt, verleer je soms de basis. Net als mensen die zonder gps geen kaart meer kunnen lezen. Maar je bewust blijven van die afhankelijkheid is al een stap. Je hoeft niet per se bang te zijn, maar blijf wel alert. Zolang je weet wat je uit handen geeft, kun je kiezen wanneer je het stuur weer zelf in handen neemt.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="296" aria-label="Speel vanaf 4:56">4:56</button><div><span class="who">Anthony</span><p lang="en">Hey Claude, I just started studying, and I opened my email and searched something. How much AI have I used before really typing something?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="307" aria-label="Speel vanaf 5:07">5:07</button><div><span class="who">Claude</span><p lang="en">Honestly, more than you'd expect. Before you typed anything, your spam filter had already sorted your inbox, deciding what reaches you and what gets buried. Your search bar was likely suggesting queries before you'd finished the thought. And if there's a little summary above your search results, that's AI too, picking out what it reckons you need. So you've done nothing active yet, and three or four systems have already made choices for you. The spam filter is the quiet one. Nobody thinks of it as AI, but it's one of the cleverest things you touch all day.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="339" aria-label="Speel vanaf 5:39">5:39</button><div><span class="who">Anthony</span><p lang="en">Is this really AI, or just a smart system that works?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="344" aria-label="Speel vanaf 5:44">5:44</button><div><span class="who">Claude</span><p lang="en">Ah, good. Push on that, because you're right to. Not all of it is AI. The honest line is this: it counts as AI when the system learns to work things out for itself. A spam filter that's trained on millions of examples and figures out what spam looks like: that's AI. But a filter that just follows fixed rules a person wrote, like "block this address, flag that word": that's just a clever program. Same job, different thing under the bonnet. And this cuts both ways. People slap "AI" on things to sound modern. Regulators have actually fined companies for claiming AI they didn't have. But the opposite happens too: the moment something works well, we stop calling it AI at all. Spam filters and navigation are exactly that: real AI that nobody bothers to call AI anymore. So your instinct is the whole point. The useful question isn't: is it AI? It's: is this thing actually learning, or just following orders?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="416" aria-label="Speel vanaf 6:56">6:56</button><div><span class="who">TikTok</span><p>[TikTok-video's over AI]</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="446" aria-label="Speel vanaf 7:26">7:26</button><div><span class="who">Anthony</span><p>We scrollen de hele dag met z'n allen op social media. Maar wie bepaalt wat we als eerste zien?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="454" aria-label="Speel vanaf 7:34">7:34</button><div><span class="who">Gemini</span><p>Het algoritme. Dat is een aanbevelingssysteem dat op basis van jouw gedrag, wat je bekijkt, hoelang en of je iets deelt, voorspelt wat je waarschijnlijk het leukst vindt. Wat ik zeker weet: TikTok gebruikt een aanbevelingsalgoritme, en dat is publiek bekend. Wat ik vermoed: hoe de weging precies werkt, houdt TikTok geheim. Voordeel is dat je sneller iets vindt dat je aanspreekt. Nadeel is dat je in een bubbel kunt belanden en minder diversiteit ziet. Zal ik uitleggen hoe zo'n aanbevelingssysteem technisch in elkaar zit?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="487" aria-label="Speel vanaf 8:07">8:07</button><div><span class="who">Anthony</span><p>Is het niet heel eng dat een AI achter dit algoritme zo precies onze aandacht weet te trekken?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="497" aria-label="Speel vanaf 8:17">8:17</button><div><span class="who">Gemini</span><p>Eng is een gevoel, geen feit. Maar de zorg erachter is reëel. Wat ik zeker weet: TikTok optimaliseert voor kijktijd, en dat is gedocumenteerd. Wat ik vermoed: dat het systeem niet per se met opzet manipuleert, maar dat het effect hetzelfde is. Voordeel: je krijgt content die bij je past. Nadeel: aandacht wordt een product dat aan adverteerders wordt verkocht, en jij betaalt met je focus. Het verschil met een menselijke redacteur: een algoritme heeft geen moreel kompas. Het stopt pas als jij stopt.</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="557" aria-label="Speel vanaf 9:17">9:17</button><div><span class="who">Anthony (AI)</span><p>Ik begon vanochtend met het idee dat ik AI gebruik als ik ChatGPT open. Maar vandaag kwam ik AI tegen in mijn gezicht, mijn route, mijn mail, mijn feed en mijn avond. En de meeste daarvan heb ik nooit zelf gekozen. Dus de vraag is niet alleen: zit hier AI in? Maar ook: wat doet die AI met mijn keuzes? Dus mijn vraag aan jou: hoeveel AI heb jij vandaag gebruikt… zonder het door te hebben?</p></div></div>
+            <div class="line" data-line><button type="button" class="ts" data-seek="591" aria-label="Speel vanaf 9:51">9:51</button><div><span class="who">Anthony</span><p>Oké, die had je wel door. Dat was ik niet. Mijn stem, gezicht, Rotterdam Centraal: allemaal met AI. En dat je het zag, is precies het punt. Die AI zie je, omdat hij nog niet goed genoeg is. Maar de AI in je camera, je route, je feed, je mail: zie je die ook? Tot de volgende keer, bij On Air.</p></div></div>
           </div>
         </details>
       </section>

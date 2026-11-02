@@ -1,19 +1,21 @@
-// ON AIR audio player: wraps an <audio> inside .player with play, seek, speed and download.
+// ON AIR player: wraps an <audio> or <video> inside .player with play, seek, speed and download
+// (and fullscreen for video).
 // Once playback has started and the player scrolls out of view, a compact copy of the controls
 // appears top right (.player-mini). Buttons with data-seek="<seconds>" (transcript timestamps)
 // jump to that moment and start playing.
-// The audio file itself is delivered later (.mp4 or .wav): until it exists, the player says so.
+// The media file itself may be delivered later (.mp4 or .wav): until it exists, the player says so.
 (function () {
   "use strict";
 
   const player = document.querySelector(".player");
   if (!player) return;
-  const audio = player.querySelector("audio");
+  const audio = player.querySelector("audio, video"); // named audio for history; a <video> works the same
   const playBtn = player.querySelector(".player-play");
   const seek = player.querySelector(".player-seek");
   const timeNow = player.querySelector(".player-now");
   const timeTotal = player.querySelector(".player-total");
   const speedBtn = player.querySelector(".player-speed");
+  const fullBtn = player.querySelector(".player-fullscreen");
   const download = player.querySelector(".player-download");
   const status = player.querySelector(".player-status");
   const title = player.dataset.title || document.title;
@@ -92,6 +94,13 @@
   }
 
   playBtn.addEventListener("click", toggle);
+  if (audio.tagName === "VIDEO") audio.addEventListener("click", toggle);
+  if (fullBtn) {
+    fullBtn.addEventListener("click", () => {
+      if (audio.requestFullscreen) audio.requestFullscreen().catch(() => {});
+      else if (audio.webkitEnterFullscreen) audio.webkitEnterFullscreen(); // iOS Safari
+    });
+  }
   miniPlay.addEventListener("click", toggle);
   audio.addEventListener("play", () => {
     started = true;
@@ -152,7 +161,7 @@
   function unavailable() {
     player.classList.add("is-missing");
     status.hidden = false;
-    for (const el of [playBtn, seek, speedBtn]) el.disabled = true;
+    for (const el of [playBtn, seek, speedBtn, fullBtn]) if (el) el.disabled = true;
     if (download) {
       download.removeAttribute("href");
       download.setAttribute("aria-disabled", "true");
