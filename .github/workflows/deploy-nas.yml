@@ -14,6 +14,9 @@ name: Deploy to NAS
 #   - $NAS_DEPLOY_DIR/private/db-config.php       (DB DSN/user/password/origin for api.php)
 #   - $NAS_DEPLOY_DIR/private/docent.htpasswd     (teacher login for /docent-dashboard/, htpasswd -B)
 #   - the external `npm` Docker network exists (shared with Nginx Proxy Manager)
+# Optional: $NAS_DEPLOY_DIR/media/ holds large media that are kept out of git (the full-quality ON AIR
+# videos). nginx serves it at /media/; when a file is missing the pages fall back to the smaller
+# version in git, so a missing media/ only gives a warning.
 
 on:
   push:
@@ -50,6 +53,10 @@ jobs:
             echo "::error::$DEPLOY_DIR/private/docent.htpasswd is missing - create the teacher login first (docs/runbooks/nas-runner-setup.md)"
             exit 1
           fi
+          # Not an error: the video players fall back to the smaller files in git.
+          if [ -z "$(ls -A "${{ vars.NAS_DEPLOY_DIR }}/media" 2>/dev/null)" ]; then
+            echo "::warning::$DEPLOY_DIR/media/ is missing or empty - the site falls back to the smaller videos in git (copy the full-quality files there, see docs/runbooks/nas-runner-setup.md)"
+          fi
 
       - uses: actions/checkout@v4
 
@@ -59,19 +66,26 @@ jobs:
           # --delete keeps the deploy dir a mirror of the commit; the excludes are host-only state that
           # must survive every redeploy: .env, private/db-config.php and private/docent.htpasswd hold
           # secrets that are never in git, and db/ is MariaDB's live data directory (created by the
-          # container, not by a checkout).
+          # container, not by a checkout). media/ holds the full-quality videos that are copied to the NAS
+          # by hand and never in git; rsync doesn't read .gitignore, so without this exclude --delete would
+          # wipe them on every deploy.
           rsync -a --delete \
             --exclude '.git/' \
             --exclude '.env' \
             --exclude 'private/db-config.php' \
             --exclude 'private/docent.htpasswd' \
             --exclude 'db/' \
+            --exclude '/media/' \
             ./ "$DEPLOY_DIR/"
+          # Create media/ as the deploy user before compose bind-mounts it; otherwise Docker creates it
+          # owned by root and files can't be copied into it without sudo.
+          mkdir -p "$DEPLOY_DIR/media"
 
           # This NAS's umask yields modes the containers (running as their own UIDs, e.g. php-fpm's
           # www-data) can't read after a plain rsync. Force world read + directory-traverse across the
           # tree, but never touch the excluded paths above - db/ especially, since MariaDB manages its
-          # own data-directory permissions and a blanket chmod there can break it.
+          # own data-directory permissions and a blanket chmod there can break it. media/ deliberately
+          # does get the chmod: nginx must be able to read the hand-copied videos, and a+r is harmless.
           find "$DEPLOY_DIR" \( -name db -o -name .env -o -path "$DEPLOY_DIR/private/db-config.php" \) -prune -o -type d -exec chmod a+rx {} + 2>/dev/null || true
           find "$DEPLOY_DIR" \( -name db -o -name .env -o -path "$DEPLOY_DIR/private/db-config.php" \) -prune -o -type f -exec chmod a+r {} + 2>/dev/null || true
           # Best-effort re-lock of the two secret files; a no-op if they're not owned by this user.
