@@ -45,3 +45,6 @@ private/*.htpasswd
 # Optional: keep generated assets or archives if needed
 # *.zip
 # *.tar.gz
+
+# Grote media (video in volle kwaliteit): staan op de NAS, gekoppeld via compose.yml
+media/

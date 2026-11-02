@@ -8,6 +8,8 @@ services:
     volumes:
       # Docentlogin voor /docent-dashboard/ (htpasswd -B), staat net als db-config.php buiten git
       - ./private/docent.htpasswd:/etc/nginx/docent.htpasswd:ro
+      # Grote media (video in volle kwaliteit) staan op de NAS en niet in git; nginx serveert ze onder /media/
+      - ./media:/usr/share/nginx/html/media:ro
     networks:
       - npm
       - minor-internal
