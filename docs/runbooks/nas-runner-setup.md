@@ -14,7 +14,7 @@ is `.github/workflows/deploy-nas.yml`; what it deploys is the repo's own `compos
 push to main
   └─▶ Deploy to NAS (.github/workflows/deploy-nas.yml, self-hosted runner on the NAS)
         checkout this commit
-        rsync the tree ▶ $NAS_DEPLOY_DIR   (excludes .env, private/db-config.php, private/docent.htpasswd, db/ - host-only state)
+        rsync the tree ▶ $NAS_DEPLOY_DIR   (excludes .env, private/db-config.php, private/docent.htpasswd, db/, media/ - host-only state)
         chmod the synced tree world-readable (skips the three excluded paths)
         docker compose up -d --build --remove-orphans
         wait for api.php?action=health over the internal `npm` Docker network
@@ -118,6 +118,22 @@ chmod 640 "$NAS_DEPLOY_DIR/private/db-config.php"
 All three files are excluded from the workflow's `rsync --delete`, so redeploys never touch them. Same
 goes for `$NAS_DEPLOY_DIR/db/` (MariaDB's data directory) once it exists - never created by git, and
 excluded from both the rsync and the post-sync chmod pass.
+
+### Optional: full-quality media in `media/`
+
+Large media that don't belong in git (the full-quality ON AIR videos) live in
+`$NAS_DEPLOY_DIR/media/`. `compose.yml` mounts it read-only into nginx at `/media/`, and the pages
+play `/media/<file>` first with the smaller version in git as fallback. The deploy creates the
+directory as `$RUNNER_USER`, excludes it from `rsync --delete` (rsync doesn't read `.gitignore`), and
+lets the chmod pass make its files world-readable for nginx. If it's missing or empty the deploy only
+warns. Copy a file in with, for example:
+
+```bash
+cp on-air-aflevering-2.mp4 "$NAS_DEPLOY_DIR/media/"
+```
+
+No redeploy needed: nginx serves it straight from the mount. If you copy with `sudo`, make the file
+readable (`chmod a+r`) or wait for the next deploy's chmod pass.
 
 ### 5. The `npm` network, and a stale container name
 
